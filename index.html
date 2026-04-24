@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="fr" data-lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SANKARA P. DJAMILATOU PRISCA — Ingénieure Informatique DevSecOps & Cloud. Portfolio."/>
+  <title>SANKARA P. DJAMILATOU PRISCA — Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loading-screen" id="loader">
+  <div class="loader-box">
+    <div class="loader-name">SP<span class="accent">.</span></div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- CURSOR -->
+<div class="custom-cursor" id="cursor"></div>
+
+<!-- MOBILE MENU BUTTON -->
+<button class="btn-rond-menu" id="menuToggle">
+  <div class="menu-icon" id="menuIcon"><span></span><span></span><span></span></div>
+</button>
+
+<!-- LANGUAGE SWITCH -->
+<div class="lang-switch" id="langSwitch">
+  <button class="lang-btn active" data-lang="fr">FR</button>
+  <span class="lang-sep">|</span>
+  <button class="lang-btn" data-lang="en">EN</button>
+</div>
+
+<!-- NAV GAUCHE -->
+<nav class="nav-gauche" id="nav">
+  <div class="nav-header">
+    <div class="cercle-portrait">
+      <img src="images/portrait.jpg" alt="SANKARA Djamilatou Prisca" onerror="this.style.display='none'; this.parentElement.classList.add('no-photo')"/>
+      <div class="portrait-placeholder"><i class="fas fa-user"></i></div>
+    </div>
+    <div class="nav-name">SANKARA P.<br>DJAMILATOU PRISCA</div>
+    <div class="nav-title" data-i18n="nav-title">Ingénieure Informatique</div>
+    <div class="nav-sub" data-i18n="nav-sub">DevSecOps · Cloud · Cybersécurité</div>
+  </div>
+  <div class="nav-menu">
+    <a href="#accueil" class="nav-menu-item active"><i class="fas fa-home"></i><span data-i18n="nav-home">Accueil</span></a>
+    <a href="#about" class="nav-menu-item"><i class="fas fa-user"></i><span data-i18n="nav-about">À propos</span></a>
+    <a href="#skills" class="nav-menu-item"><i class="fas fa-code"></i><span data-i18n="nav-skills">Compétences</span></a>
+    <a href="#portfolio" class="nav-menu-item"><i class="fas fa-briefcase"></i><span data-i18n="nav-portfolio">Portfolio</span></a>
+    <a href="#experience" class="nav-menu-item"><i class="fas fa-graduation-cap"></i><span data-i18n="nav-experience">Parcours</span></a>
+    <a href="#articles" class="nav-menu-item"><i class="fas fa-pen-nib"></i><span data-i18n="nav-articles">Articles</span></a>
+    <a href="#contact" class="nav-menu-item"><i class="fas fa-envelope"></i><span data-i18n="nav-contact">Contact</span></a>
+  </div>
+  <div class="nav-footer">
+    <a href="assets/CV_SANKARA_Djamilatou_Prisca.pdf" download class="cv-download-btn">
+      <i class="fas fa-download"></i> <span data-i18n="download-cv">Télécharger CV</span>
+    </a>
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+      <span id="themeLabel">Mode sombre</span>
+    </button>
+    <div class="social-links">
+      <a href="https://github.com/Prisca-SANKARA" target="_blank" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://linkedin.com/in/sankara-djamilatou-prisca" target="_blank" class="social-link" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+      <a href="mailto:djamilatoupriscasankara@gmail.com" class="social-link" title="Email"><i class="fas fa-envelope"></i></a>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- HERO -->
+  <section class="hero" id="accueil">
+    <div id="particles-js"></div>
+    <div class="hero-wrapper">
+      <!-- LEFT: Text -->
+      <div class="hero-content">
+        <div class="hero-tag" data-i18n="hero-tag">👋 Bienvenue sur mon portfolio</div>
+        <h1 class="hero-title">
+          <span data-i18n="hero-line1">Ingénieure informatique <br> DevSecOps</span><br>
+          <span class="accent" data-i18n="hero-line2">&amp; Cloud · Africa Tech 🇧🇫</span>
+        </h1>
+        <div class="hero-subtitle">
+          <span data-i18n="hero-iam">Je suis</span> <strong>SANKARA DJAMILATOU PRISCA</strong>,
+          <span class="typed-text" id="typed"></span>
+        </div>
+        <p class="hero-description" data-i18n="hero-desc">
+          Ingénieure informatique Bac+5 passionnée par le DevSecOps, la cybersécurité et le cloud.
+        </p>
+        <div class="hero-buttons">
+          <a href="#portfolio" class="btn btn-primary"><i class="fas fa-rocket"></i> <span data-i18n="hero-btn1">Voir mes projets</span></a>
+          <a href="#contact" class="btn btn-secondary"><i class="fas fa-paper-plane"></i> <span data-i18n="hero-btn2">Me contacter</span></a>
+          <a href="assets/CV_SANKARA_Djamilatou_Prisca.pdf" class="btn btn-secondary" download><i class="fas fa-download"></i> <span data-i18n="hero-btn3">Télécharger CV</span></a>
+        </div>
+      </div>
+      <!-- RIGHT: Photo -->
+      <div class="hero-photo-wrapper">
+        <div class="hero-photo-ring"></div>
+        <div class="hero-photo-ring ring2"></div>
+        <div class="hero-photo-frame">
+          <img src="images/portrait.jpg" alt="SANKARA P. Djamilatou Prisca" class="hero-photo" onerror="this.parentElement.classList.add('no-img')"/>
+          <div class="hero-photo-placeholder"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="hero-photo-badge">
+          <i class="fas fa-shield-alt"></i>
+          <span>DevSecOps</span>
+        </div>
+        <div class="hero-photo-badge badge2">
+          <i class="fas fa-cloud"></i>
+          <span>Cloud AWS</span>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-indicator"><i class="fas fa-chevron-down"></i></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-header">
+      <div class="section-label" data-i18n="about-tag">Qui suis-je ?</div>
+      <h2 class="section-title" data-i18n="about-title">Passionnée par l'innovation tech</h2>
+    </div>
+    <div class="about-content reveal">
+      <div class="about-text">
+        <h3 data-i18n="about-sub">De la passion à l'expertise</h3>
+        <p data-i18n="about-p1">Ingénieure informatique en dernière année (Bac+5), passionnée par le <strong>DevSecOps</strong>, la <strong>cybersécurité</strong> et le <strong>cloud AWS</strong>. Actuellement en stage PFE chez <span class="highlight">Arcashield Cybersecurity</span> à Casablanca.</p>
+        <p data-i18n="about-p2">Deux stages terrain au Burkina Faso — <span class="highlight">Box Africa</span> et Switch Maker — m'ont donné une vision concrète de la transformation digitale en Afrique et forgé une approche orientée impact.</p>
+        <p data-i18n="about-p3">Mon objectif : devenir ingénieure DevSecOps de référence et contribuer au rayonnement technologique de l'Afrique. <strong>Always learning. Always building. 🇧🇫🚀</strong></p>
+        <div class="about-flags">
+          <span>🇲🇦 Casablanca, Maroc</span>
+          <span>🇧🇫 Burkina Faso</span>
+          <span class="available-badge">● <span data-i18n="available">Disponible Sept. 2026</span></span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><span class="stat-number" data-target="3">0</span><span class="stat-label" data-i18n="stat1">Stages</span></div>
+        <div class="stat-card"><span class="stat-number" data-target="7">0</span><span class="stat-label" data-i18n="stat2">Projets</span></div>
+        <div class="stat-card"><span class="stat-number" data-target="3">0</span><span class="stat-label" data-i18n="stat3">Entreprises</span></div>
+        <div class="stat-card"><span class="stat-number" data-target="8">0</span><span class="stat-label" data-i18n="stat4">Technologies</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS — Infinite sliders -->
+  <section class="skills" id="skills">
+    <div class="section-header">
+      <div class="section-label" data-i18n="skills-tag">Expertise</div>
+      <h2 class="section-title" data-i18n="skills-title">Mes compétences</h2>
+      <p class="section-subtitle" data-i18n="skills-sub">Survolez une technologie pour en savoir plus</p>
+    </div>
+
+    <!-- SLIDER 1 : Langages -->
+    <div class="tech-category reveal">
+      <h3 class="tech-category-title"><i class="fas fa-code"></i> Langages</h3>
+      <div class="tech-slider">
+        <div class="tech-track">
+          <div class="tech-item" data-info="Java · Orienté objet · Spring Boot" data-level="Intermédiaire" data-icon="fab fa-java"><i class="fab fa-java"></i><span>Java</span></div>
+          <div class="tech-item" data-info="Scripting · Automatisation · FastAPI" data-level="Intermédiaire" data-icon="fab fa-python"><i class="fab fa-python"></i><span>Python</span></div>
+          <div class="tech-item" data-info="Interfaces modernes · ES6+" data-level="Intermédiaire" data-icon="fab fa-js-square"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
+          <div class="tech-item" data-info="Typage fort · Angular · Scalabilité" data-level="Intermédiaire" data-icon="fas fa-code"><i class="fas fa-code"></i><span>TypeScript</span></div>
+          <div class="tech-item" data-info="Structure · Sémantique · SEO" data-level="Avancé" data-icon="fab fa-html5"><i class="fab fa-html5"></i><span>HTML5</span></div>
+          <div class="tech-item" data-info="Style · Animations · Responsive" data-level="Avancé" data-icon="fab fa-css3-alt"><i class="fab fa-css3-alt"></i><span>CSS3</span></div>
+          <!-- Duplicate for infinite loop -->
+          <div class="tech-item" data-info="Java · Orienté objet · Spring Boot" data-level="Intermédiaire" data-icon="fab fa-java"><i class="fab fa-java"></i><span>Java</span></div>
+          <div class="tech-item" data-info="Scripting · Automatisation · FastAPI" data-level="Intermédiaire" data-icon="fab fa-python"><i class="fab fa-python"></i><span>Python</span></div>
+          <div class="tech-item" data-info="Interfaces modernes · ES6+" data-level="Intermédiaire" data-icon="fab fa-js-square"><i class="fab fa-js-square"></i><span>JavaScript</span></div>
+          <div class="tech-item" data-info="Typage fort · Angular · Scalabilité" data-level="Intermédiaire" data-icon="fas fa-code"><i class="fas fa-code"></i><span>TypeScript</span></div>
+          <div class="tech-item" data-info="Structure · Sémantique · SEO" data-level="Avancé" data-icon="fab fa-html5"><i class="fab fa-html5"></i><span>HTML5</span></div>
+          <div class="tech-item" data-info="Style · Animations · Responsive" data-level="Avancé" data-icon="fab fa-css3-alt"><i class="fab fa-css3-alt"></i><span>CSS3</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDER 2 : Frameworks (reverse) -->
+    <div class="tech-category reveal">
+      <h3 class="tech-category-title"><i class="fas fa-layer-group"></i> Frameworks & Outils</h3>
+      <div class="tech-slider">
+        <div class="tech-track tech-track-reverse">
+          <div class="tech-item" data-info="REST API · Spring Security · JPA" data-level="Intermédiaire" data-icon="fas fa-leaf"><i class="fas fa-leaf"></i><span>Spring Boot</span></div>
+          <div class="tech-item" data-info="SPA · Components · RxJS" data-level="Intermédiaire" data-icon="fab fa-angular"><i class="fab fa-angular"></i><span>Angular</span></div>
+          <div class="tech-item" data-info="API Python · Async · Swagger auto" data-level="Notions" data-icon="fas fa-bolt"><i class="fas fa-bolt"></i><span>FastAPI</span></div>
+          <div class="tech-item" data-info="SSR · Full-stack React · Vercel" data-level="Notions" data-icon="fab fa-react"><i class="fab fa-react"></i><span>Next.js</span></div>
+          <div class="tech-item" data-info="CMS · Sites vitrines · e-commerce" data-level="Avancé" data-icon="fab fa-wordpress"><i class="fab fa-wordpress"></i><span>WordPress</span></div>
+          <div class="tech-item" data-info="Automatisation · Workflows · No-code" data-level="Notions" data-icon="fas fa-project-diagram"><i class="fas fa-project-diagram"></i><span>n8n</span></div>
+          <!-- Duplicate -->
+          <div class="tech-item" data-info="REST API · Spring Security · JPA" data-level="Intermédiaire" data-icon="fas fa-leaf"><i class="fas fa-leaf"></i><span>Spring Boot</span></div>
+          <div class="tech-item" data-info="SPA · Components · RxJS" data-level="Intermédiaire" data-icon="fab fa-angular"><i class="fab fa-angular"></i><span>Angular</span></div>
+          <div class="tech-item" data-info="API Python · Async · Swagger auto" data-level="Notions" data-icon="fas fa-bolt"><i class="fas fa-bolt"></i><span>FastAPI</span></div>
+          <div class="tech-item" data-info="SSR · Full-stack React · Vercel" data-level="Notions" data-icon="fab fa-react"><i class="fab fa-react"></i><span>Next.js</span></div>
+          <div class="tech-item" data-info="CMS · Sites vitrines · e-commerce" data-level="Avancé" data-icon="fab fa-wordpress"><i class="fab fa-wordpress"></i><span>WordPress</span></div>
+          <div class="tech-item" data-info="Automatisation · Workflows · No-code" data-level="Notions" data-icon="fas fa-project-diagram"><i class="fas fa-project-diagram"></i><span>n8n</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDER 3 : DevSecOps & Outils -->
+    <div class="tech-category reveal">
+      <h3 class="tech-category-title"><i class="fas fa-shield-alt"></i> DevSecOps & Outils</h3>
+      <div class="tech-slider">
+        <div class="tech-track">
+          <div class="tech-item" data-info="Conteneurs · Docker Compose · CI/CD" data-level="Notions" data-icon="fab fa-docker"><i class="fab fa-docker"></i><span>Docker</span></div>
+          <div class="tech-item" data-info="IAM · SSO · Multi-tenant · Realms" data-level="Notions" data-icon="fas fa-key"><i class="fas fa-key"></i><span>Keycloak</span></div>
+          <div class="tech-item" data-info="BaaS · PostgreSQL · Auth · Storage" data-level="Notions" data-icon="fas fa-database"><i class="fas fa-database"></i><span>Supabase</span></div>
+          <div class="tech-item" data-info="Cloud · EC2 · S3 · Certification en cours" data-level="Débutant" data-icon="fab fa-aws"><i class="fab fa-aws"></i><span>AWS</span></div>
+          <div class="tech-item" data-info="Version control · Branches · Pull requests" data-level="Intermédiaire" data-icon="fab fa-github"><i class="fab fa-github"></i><span>GitHub</span></div>
+          <div class="tech-item" data-info="Modélisation · Séquence · Use Case" data-level="Avancé" data-icon="fas fa-sitemap"><i class="fas fa-sitemap"></i><span>UML</span></div>
+          <div class="tech-item" data-info="SQL · Conception · Requêtes" data-level="Intermédiaire" data-icon="fas fa-table"><i class="fas fa-table"></i><span>MySQL</span></div>
+          <!-- Duplicate -->
+          <div class="tech-item" data-info="Conteneurs · Docker Compose · CI/CD" data-level="Notions" data-icon="fab fa-docker"><i class="fab fa-docker"></i><span>Docker</span></div>
+          <div class="tech-item" data-info="IAM · SSO · Multi-tenant · Realms" data-level="Notions" data-icon="fas fa-key"><i class="fas fa-key"></i><span>Keycloak</span></div>
+          <div class="tech-item" data-info="BaaS · PostgreSQL · Auth · Storage" data-level="Notions" data-icon="fas fa-database"><i class="fas fa-database"></i><span>Supabase</span></div>
+          <div class="tech-item" data-info="Cloud · EC2 · S3 · Certification en cours" data-level="Débutant" data-icon="fab fa-aws"><i class="fab fa-aws"></i><span>AWS</span></div>
+          <div class="tech-item" data-info="Version control · Branches · Pull requests" data-level="Intermédiaire" data-icon="fab fa-github"><i class="fab fa-github"></i><span>GitHub</span></div>
+          <div class="tech-item" data-info="Modélisation · Séquence · Use Case" data-level="Avancé" data-icon="fas fa-sitemap"><i class="fas fa-sitemap"></i><span>UML</span></div>
+          <div class="tech-item" data-info="SQL · Conception · Requêtes" data-level="Intermédiaire" data-icon="fas fa-table"><i class="fas fa-table"></i><span>MySQL</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOVER CARD -->
+    <div class="tech-hover-card" id="techCard">
+      <div class="tech-card-icon"><i id="techCardIcon"></i></div>
+      <div class="tech-card-body">
+        <h4 id="techCardName"></h4>
+        <p id="techCardInfo"></p>
+        <span class="tech-card-level" id="techCardLevel"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="portfolio" id="portfolio">
+    <div class="section-header">
+      <div class="section-label" data-i18n="portfolio-tag">Réalisations</div>
+      <h2 class="section-title" data-i18n="portfolio-title">Mes Projets</h2>
+    </div>
+    <div class="portfolio-filters">
+      <button class="filter-btn active" data-filter="all" data-i18n="filter-all">Tous</button>
+      <button class="filter-btn" data-filter="fullstack">Full-Stack</button>
+      <button class="filter-btn" data-filter="frontend">Frontend</button>
+      <button class="filter-btn" data-filter="backend">Backend</button>
+      <button class="filter-btn" data-filter="devsecops">DevSecOps</button>
+    </div>
+    <div class="portfolio-grid reveal" id="portfolioGrid"></div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="experience" id="experience">
+    <div class="section-header">
+      <div class="section-label" data-i18n="exp-tag">Parcours</div>
+      <h2 class="section-title" data-i18n="exp-title">Mon expérience</h2>
+    </div>
+    <div class="timeline reveal" id="timeline"></div>
+  </section>
+
+  <!-- ARTICLES -->
+  <section class="articles-section" id="articles">
+    <div class="section-header">
+      <div class="section-label" data-i18n="articles-tag">Blog & Réflexions</div>
+      <h2 class="section-title" data-i18n="articles-title">Mes Articles</h2>
+      <p class="section-subtitle" data-i18n="articles-sub">Partage de connaissances, retours d'expérience et vision tech africaine</p>
+    </div>
+    <div class="articles-grid reveal" id="articlesGrid"></div>
+    <div class="articles-cta">
+      <a href="https://linkedin.com/in/sankara-djamilatou-prisca" target="_blank" class="btn btn-primary">
+        <i class="fab fa-linkedin"></i> <span data-i18n="articles-more">Voir tous mes articles sur LinkedIn</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="section-header">
+      <div class="section-label" data-i18n="contact-tag">Contact</div>
+      <h2 class="section-title" data-i18n="contact-title">Travaillons ensemble</h2>
+    </div>
+    <div class="contact-container">
+      <div class="contact-info reveal">
+        <a href="mailto:djamilatoupriscasankara@gmail.com" class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <div><h4>Email</h4><p>djamilatoupriscasankara@gmail.com</p></div>
+        </a>
+        <a href="tel:+212775767001" class="contact-item">
+          <i class="fas fa-phone"></i>
+          <div><h4><span data-i18n="phone">Téléphone</span></h4><p>+212 775 767 001</p></div>
+        </a>
+        <div class="contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <div><h4><span data-i18n="location">Localisation</span></h4><p>Casablanca, Maroc 🇲🇦 · Burkina Faso 🇧🇫</p></div>
+        </div>
+        <a href="https://linkedin.com/in/sankara-djamilatou-prisca" target="_blank" class="contact-item">
+          <i class="fab fa-linkedin"></i>
+          <div><h4>LinkedIn</h4><p>sankara-djamilatou-prisca</p></div>
+        </a>
+        <a href="https://github.com/Prisca-SANKARA" target="_blank" class="contact-item">
+          <i class="fab fa-github"></i>
+          <div><h4>GitHub</h4><p>Prisca-SANKARA</p></div>
+        </a>
+      </div>
+      <form class="contact-form reveal" id="contactForm">
+        <div class="form-group">
+          <label for="name" data-i18n="form-name">Nom complet</label>
+          <input type="text" id="name" required/>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required/>
+        </div>
+        <div class="form-group">
+          <label for="subject" data-i18n="form-subject">Sujet</label>
+          <input type="text" id="subject" required/>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> <span data-i18n="form-send">Envoyer le message</span>
+        </button>
+        <div class="form-status" id="formStatus"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>SANKARA P. DJAMILATOU PRISCA</h3>
+        <p data-i18n="footer-desc">Ingénieure Informatique — DevSecOps · Cloud · Cybersécurité</p>
+        <div class="social-links" style="justify-content:flex-start;margin-top:1rem;">
+          <a href="https://github.com/Prisca-SANKARA" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/sankara-djamilatou-prisca" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+          <a href="mailto:djamilatoupriscasankara@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="#accueil" data-i18n="nav-home">Accueil</a></li>
+          <li><a href="#about" data-i18n="nav-about">À propos</a></li>
+          <li><a href="#portfolio" data-i18n="nav-portfolio">Portfolio</a></li>
+          <li><a href="#experience" data-i18n="nav-experience">Parcours</a></li>
+          <li><a href="#articles" data-i18n="nav-articles">Articles</a></li>
+          <li><a href="#contact" data-i18n="nav-contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>CV & Liens</h3>
+        <ul class="footer-links">
+          <li><a href="assets/CV_SANKARA_Djamilatou_Prisca.pdf" download data-i18n="download-cv">Télécharger CV</a></li>
+          <li><a href="https://linkedin.com/in/sankara-djamilatou-prisca" target="_blank">LinkedIn</a></li>
+          <li><a href="https://github.com/Prisca-SANKARA" target="_blank">GitHub</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p data-i18n="footer-copy">© 2026 SANKARA P. DJAMILATOU PRISCA. Tous droits réservés.</p>
+    </div>
+  </footer>
+
+</div><!-- end main-content -->
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+<script src="js/data/projects.js"></script>
+<script src="js/data/experiences.js"></script>
+<script src="js/data/articles.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
