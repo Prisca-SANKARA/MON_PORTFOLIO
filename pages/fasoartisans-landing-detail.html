@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FasoArtisans Landing Page — SANKARA P. DJAMILATOU PRISCA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --brand:#C17B2A;--brand-deep:#8B5010;--brand-light:#F5E6CC;
+      --green:#10b981;--blue:#3b82f6;--violet:#8b5cf6;
+      --surface:rgba(255,255,255,0.85);
+      --border:rgba(193,123,42,0.15);--text:#1A1510;--muted:#6b7280;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Poppins',sans-serif;min-height:100vh;color:var(--text);overflow-x:hidden;background:linear-gradient(135deg,#fdf6ec 0%,#fff9f0 40%,#f0fdf4 70%,#fef9ec 100%)}
+    .orb{position:fixed;border-radius:50%;filter:blur(80px);opacity:.15;pointer-events:none;z-index:0}
+    .orb1{width:500px;height:500px;background:#C17B2A;top:-150px;left:-150px}
+    .orb2{width:400px;height:400px;background:#8B5010;bottom:-100px;right:50px}
+    .orb3{width:300px;height:300px;background:#10b981;top:40%;right:-80px}
+
+    /* NAV */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.875rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;background:rgba(255,255,255,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(193,123,42,0.12);box-shadow:0 2px 20px rgba(193,123,42,0.07)}
+    .nav-back{display:flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(193,123,42,.08);border:1px solid rgba(193,123,42,.2);border-radius:10px;color:var(--brand);font-size:.82rem;font-weight:600;text-decoration:none;transition:all .2s}
+    .nav-back:hover{background:rgba(193,123,42,.15)}
+    .nav-logo{font-size:.85rem;font-weight:700;color:var(--muted)}
+    .nav-links{display:flex;gap:.6rem}
+    .nav-link{padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none;transition:all .2s}
+    .nav-link.github{background:rgba(107,114,128,.08);color:var(--text);border:1px solid rgba(107,114,128,.2)}
+    .nav-link.demo{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 15px rgba(193,123,42,.35)}
+    .nav-link.demo:hover{opacity:.9;transform:translateY(-1px)}
+
+    /* WRAPPER */
+    .wrapper{position:relative;z-index:10;width:100%;max-width:1400px;margin:0 auto;padding:7rem 3rem 4rem}
+
+    /* HERO */
+    .hero{text-align:center;margin-bottom:3.5rem}
+    .hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.2rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:100px;font-size:.75rem;font-weight:700;color:#059669;margin-bottom:1.5rem}
+    .hero-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981}
+    .hero-emoji{font-size:4rem;display:block;margin-bottom:1rem}
+    .hero h1{font-size:3rem;font-weight:800;margin-bottom:.75rem;background:linear-gradient(135deg,#1A1510 30%,var(--brand));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px}
+    .hero-sub{font-size:1.05rem;color:var(--muted);max-width:620px;margin:0 auto 2rem;line-height:1.7}
+    .hero-tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .tag{display:inline-flex;align-items:center;padding:.35rem .9rem;border-radius:100px;font-size:.73rem;font-weight:600;border:1px solid}
+    .tag-brand{background:rgba(193,123,42,.08);color:var(--brand-deep);border-color:rgba(193,123,42,.2)}
+    .tag-green{background:rgba(16,185,129,.08);color:#059669;border-color:rgba(16,185,129,.2)}
+    .tag-blue{background:rgba(59,130,246,.08);color:#2563eb;border-color:rgba(59,130,246,.2)}
+    .tag-violet{background:rgba(139,92,246,.08);color:#7c3aed;border-color:rgba(139,92,246,.2)}
+    .hero-ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;border-radius:12px;font-size:.88rem;font-weight:700;text-decoration:none;transition:all .2s}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#fff;box-shadow:0 4px 20px rgba(193,123,42,.35)}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(193,123,42,.45)}
+    .btn-secondary{background:rgba(255,255,255,.8);color:var(--text);border:1.5px solid rgba(193,123,42,.2)}
+    .btn-secondary:hover{background:white;border-color:rgba(193,123,42,.4)}
+
+    /* STATS */
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:3rem}
+    .stat-card{border-radius:18px;padding:1.25rem 1.5rem;position:relative;overflow:hidden}
+    .stat-card::after{content:'';position:absolute;top:-20px;right:-20px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2)}
+    .stat-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.75);margin-bottom:.5rem}
+    .stat-value{font-size:1.75rem;font-weight:800;color:#fff}
+    .stat-desc{font-size:.7rem;color:rgba(255,255,255,.65);margin-top:.25rem}
+
+    /* SECTIONS */
+    section{margin-bottom:3rem}
+    .section-title{font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:1.25rem;display:flex;align-items:center;gap:.75rem}
+    .section-title::before{content:'';display:block;width:4px;height:20px;border-radius:2px;background:linear-gradient(to bottom,var(--brand),var(--brand-deep));flex-shrink:0}
+    .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.5rem;backdrop-filter:blur(10px);box-shadow:0 4px 20px rgba(193,123,42,.05)}
+
+    /* GALERIE */
+    .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;margin-bottom:.75rem}
+    .gallery-main{grid-column:1/-1}
+    .gallery-item{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.08);border:2px solid rgba(193,123,42,.1);transition:all .3s}
+    .gallery-item:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(193,123,42,.2);border-color:rgba(193,123,42,.3)}
+    .gallery-main{aspect-ratio:16/7;max-height:450px}
+    .gallery-item:not(.gallery-main){aspect-ratio:16/10}
+    .gallery-item img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .4s}
+    .gallery-item:hover img{transform:scale(1.03)}
+    .gallery-label{position:absolute;bottom:0;left:0;right:0;padding:.6rem 1rem;background:linear-gradient(to top,rgba(139,80,16,.85),transparent);color:white;font-size:.78rem;font-weight:700}
+
+    /* LIGHTBOX */
+    .lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:2rem}
+    .lightbox.active{display:flex}
+    .lightbox img{max-width:85vw;max-height:85vh;width:auto;height:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);object-fit:contain}
+    .lightbox-close{position:absolute;top:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:white;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .lightbox-close:hover{background:rgba(255,255,255,.25)}
+
+    /* FEATURES */
+    .features-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+    .feature-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.25rem;transition:all .2s;backdrop-filter:blur(10px)}
+    .feature-card:hover{border-color:rgba(193,123,42,.3);transform:translateY(-2px);box-shadow:0 8px 30px rgba(193,123,42,.1)}
+    .feature-icon{font-size:1.5rem;margin-bottom:.75rem}
+    .feature-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.4rem}
+    .feature-desc{font-size:.78rem;color:var(--muted);line-height:1.6}
+
+    /* DECISIONS */
+    .decision{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:.75rem;display:flex;gap:1rem;align-items:flex-start;backdrop-filter:blur(10px)}
+    .decision-icon{width:38px;height:38px;border-radius:10px;background:rgba(193,123,42,.1);border:1px solid rgba(193,123,42,.2);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .decision-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+    .decision-text{font-size:.78rem;color:var(--muted);line-height:1.6}
+
+    /* LESSONS */
+    .lesson{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.75rem}
+    .lesson-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--brand-deep));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;flex-shrink:0;margin-top:.1rem}
+    .lesson-text{font-size:.83rem;color:var(--muted);line-height:1.6}
+    .lesson-text strong{color:var(--text)}
+
+    /* CTA */
+    .cta-box{background:linear-gradient(135deg,rgba(193,123,42,.1),rgba(139,80,16,.07));border:1px solid rgba(193,123,42,.18);border-radius:22px;padding:2.5rem;text-align:center;backdrop-filter:blur(10px)}
+    .cta-box h2{font-size:1.5rem;font-weight:800;color:var(--text);margin-bottom:.75rem}
+    .cta-box p{color:var(--muted);margin-bottom:1.75rem;font-size:.9rem}
+    .cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+    @media(max-width:768px){
+      .wrapper{padding:6rem 1rem 3rem}
+      .stats-grid{grid-template-columns:repeat(2,1fr)}
+      .features-grid{grid-template-columns:1fr}
+      .gallery{grid-template-columns:1fr}
+      .gallery-main{grid-column:1;max-height:250px}
+      .hero h1{font-size:2rem}
+      .nav-logo{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="../index.html" class="nav-back">← Retour au portfolio</a>
+  <span class="nav-logo">SANKARA P. DJAMILATOU PRISCA</span>
+  <div class="nav-links">
+    <a href="https://github.com/Prisca-SANKARA" target="_blank" class="nav-link github">GitHub</a>
+    <a href="fasoartisans-landing.html" target="_blank" class="nav-link demo">Voir la page →</a>
+  </div>
+</nav>
+
+<div class="wrapper">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Terminé · En ligne</div>
+    <span class="hero-emoji">🇧🇫</span>
+    <h1>FasoArtisans — Landing Page</h1>
+    <p class="hero-sub">Page de pré-inscription pour la plateforme FasoArtisans.bf — conçue pour valider l'intérêt du marché avant de développer le backend complet.</p>
+    <div class="hero-tags">
+      <span class="tag tag-brand">HTML5</span>
+      <span class="tag tag-brand">CSS3</span>
+      <span class="tag tag-blue">JavaScript</span>
+      <span class="tag tag-green">n8n</span>
+      <span class="tag tag-green">Supabase</span>
+      <span class="tag tag-violet">WhatsApp API</span>
+    </div>
+    <div class="hero-ctas">
+      <a href="fasoartisans-landing.html" target="_blank" class="btn btn-primary">🇧🇫 Voir la landing page</a>
+      <a href="../index.html#portfolio" class="btn btn-secondary">← Retour portfolio</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card" style="background:linear-gradient(135deg,#C17B2A,#8B5010);box-shadow:0 8px 32px rgba(193,123,42,.25)">
+      <div class="stat-label">Sections</div>
+      <div class="stat-value">6</div>
+      <div class="stat-desc">Hero, Qui, Comment, Niveaux, Avis, CTA</div>
+    </div>
+    <div class="stat-card" style="background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 8px 32px rgba(16,185,129,.25)">
+      <div class="stat-label">Intégrations</div>
+      <div class="stat-value">2</div>
+      <div class="stat-desc">n8n + Supabase</div>
+    </div>
+    <div class="stat-card" style="background:linear-gradient(135deg,#3b82f6,#2563eb);box-shadow:0 8px 32px rgba(59,130,246,.25)">
+      <div class="stat-label">Métiers</div>
+      <div class="stat-value">12</div>
+      <div class="stat-desc">Catégories d'artisans</div>
+    </div>
+    <div class="stat-card" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);box-shadow:0 8px 32px rgba(139,92,246,.25)">
+      <div class="stat-label">Villes</div>
+      <div class="stat-value">6</div>
+      <div class="stat-desc">Au lancement</div>
+    </div>
+  </div>
+
+  <!-- GALERIE -->
+  <section>
+    <div class="section-title">Captures d'écran</div>
+    <div class="gallery">
+      <div class="gallery-item gallery-main" onclick="openLightbox('../images/fasoartisans-preview.png')">
+        <img src="../images/fasoartisans-preview.png" alt="FasoArtisans Landing Page"/>
+        <div class="gallery-label">🇧🇫 Hero — Formulaire de pré-inscription</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('../images/fasoartisans-preview.png')">
+        <img src="../images/fasoartisans-preview.png" alt="FasoArtisans Niveaux"/>
+        <div class="gallery-label">👑 Système de niveaux freemium</div>
+      </div>
+      <div class="gallery-item" onclick="openLightbox('../images/fasoartisans-preview.png')">
+        <img src="../images/fasoartisans-preview.png" alt="FasoArtisans Artisans"/>
+        <div class="gallery-label">🎨 Catégories de métiers</div>
+      </div>
+    </div>
+    <p style="font-size:.75rem;color:#9ca3af;text-align:center;margin-top:.5rem">Cliquez sur une image pour l'agrandir</p>
+  </section>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="section-title">Fonctionnalités</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📝</div>
+        <div class="feature-title">Formulaire de pré-inscription</div>
+        <div class="feature-desc">Collecte nom, métier, ville, téléphone avec validation en temps réel. Format téléphone normalisé automatiquement au standard burkinabè.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Onboarding automatisé via n8n</div>
+        <div class="feature-desc">Chaque soumission déclenche un webhook n8n qui sauvegarde dans Supabase et envoie un email de bienvenue personnalisé automatiquement.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Compteur de pré-inscrits dynamique</div>
+        <div class="feature-desc">Le compteur se met à jour à chaque nouvelle inscription et persiste entre les sessions via localStorage. Crée un effet de preuve sociale.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📲</div>
+        <div class="feature-title">Partage WhatsApp intégré</div>
+        <div class="feature-desc">Après inscription, un bouton WhatsApp génère un message pré-rédigé avec le lien de la page pour partager à ses collègues artisans.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👑</div>
+        <div class="feature-title">Système de niveaux freemium</div>
+        <div class="feature-desc">4 niveaux présentés : Gratuit, Vérifié, Recommandé (3 000 FCFA/mois, max 3 places/ville), VIP Vitrine (25 000 FCFA/mois, 1 place/ville).</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <div class="feature-title">Design premium sans framework</div>
+        <div class="feature-desc">100% HTML/CSS/JS vanilla — aucune dépendance externe. Animations CSS, scroll reveal, police Playfair Display pour une identité visuelle forte.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section>
+    <div class="section-title">Décisions de conception</div>
+    <div class="decision">
+      <div class="decision-icon">🎯</div>
+      <div>
+        <div class="decision-title">Valider avant de coder le backend</div>
+        <div class="decision-text">Plutôt que de construire toute la plateforme FasoArtisans (Next.js, Supabase, CinetPay, dashboard admin), on a d'abord créé une landing page pour mesurer l'intérêt réel. C'est la méthode Lean Startup — construire le minimum viable, mesurer, itérer.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">📱</div>
+      <div>
+        <div class="decision-title">WhatsApp comme canal de viralité</div>
+        <div class="decision-text">Au Burkina Faso, WhatsApp est le réseau social dominant. Le bouton de partage post-inscription génère un message pré-rédigé qui cible directement les collègues artisans — le canal d'acquisition le plus naturel pour ce marché.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">💰</div>
+      <div>
+        <div class="decision-title">Scarcité comme levier de conversion</div>
+        <div class="decision-text">Les plans Recommandé (max 3/ville) et VIP (1/ville) créent une urgence naturelle. Un artisan qui voit "Max 3 places par ville" comprend qu'attendre a un coût — c'est un levier psychologique puissant pour l'upselling futur.</div>
+      </div>
+    </div>
+    <div class="decision">
+      <div class="decision-icon">🛡️</div>
+      <div>
+        <div class="decision-title">Résilience sans dépendance à n8n</div>
+        <div class="decision-text">Le formulaire fonctionne même si n8n est éteint — try/catch + localStorage garantissent que l'artisan voit toujours le succès et que la donnée est sauvegardée localement. L'UX ne dépend jamais d'un service externe.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSONS -->
+  <section>
+    <div class="section-title">Ce que j'ai appris</div>
+    <div class="card">
+      <div class="lesson">
+        <div class="lesson-num">1</div>
+        <div class="lesson-text"><strong>Valider avant de construire</strong> — une landing page de pré-inscription prend 1 jour à faire. Un backend complet prend des semaines. Les données de pré-inscription guident les vraies priorités.</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">2</div>
+        <div class="lesson-text"><strong>Design sans framework CSS</strong> — CSS custom properties, animations keyframes et scroll reveal en vanilla JS suffisent pour un résultat premium. Zéro dépendance = zéro maintenance.</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">3</div>
+        <div class="lesson-text"><strong>La validation téléphone burkinabè</strong> — les numéros BF ont plusieurs formats valides (+226, 00226, 8 chiffres directs). Une regex unique ne suffit pas — il faut tester chaque pattern séparément.</div>
+      </div>
+      <div class="lesson">
+        <div class="lesson-num">4</div>
+        <div class="lesson-text"><strong>Connecter une landing page à un vrai pipeline</strong> (n8n + Supabase) dès le départ donne des données exploitables immédiatement — pas juste des chiffres localStorage fictifs.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <h2>Voir la landing page en action</h2>
+    <p>Remplis le formulaire et reçois l'email de bienvenue automatique — le pipeline n8n complet est connecté.</p>
+    <div class="cta-btns">
+      <a href="fasoartisans-landing.html" target="_blank" class="btn btn-primary">🇧🇫 Ouvrir FasoArtisans.bf</a>
+      <a href="n8n-onboarding.html" class="btn btn-secondary">⚡ Voir le workflow n8n</a>
+      <a href="../index.html#portfolio" class="btn btn-secondary">← Retour portfolio</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); });
+</script>
+
+</body>
+</html>

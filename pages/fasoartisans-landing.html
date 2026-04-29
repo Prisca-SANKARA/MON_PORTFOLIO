@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FasoArtisans.bf — La plateforme du savoir-faire burkinabè</title>
+<meta name="description" content="Trouvez les meilleurs artisans du Burkina Faso. Couturiers, maroquiniers, tisserands, photographes — vérifiés et disponibles en un clic.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --brand: #C17B2A;
+  --brand-deep: #8B5010;
+  --brand-light: #F5E6CC;
+  --brand-pale: #FDF6EC;
+  --ink: #1A1510;
+  --ink2: #3D2E22;
+  --surface: #FDFAF6;
+  --muted: #9A9080;
+  --border: #EDE8E0;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--surface); color: var(--ink); overflow-x: hidden; }
+
+/* ── NAVBAR ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(26,21,16,0.95); backdrop-filter: blur(12px);
+  height: 60px; display: flex; align-items: center;
+  padding: 0 clamp(20px, 5vw, 60px);
+  border-bottom: 1px solid rgba(193,123,42,0.2);
+}
+.nav-logo {
+  font-family: var(--font-display); font-size: 20px; font-weight: 700;
+  color: var(--brand); letter-spacing: -0.02em;
+}
+.nav-logo span { color: rgba(255,255,255,0.7); font-weight: 400; }
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 20px; }
+.nav-link { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+.nav-btn {
+  background: var(--brand); color: white;
+  padding: 8px 18px; border-radius: 6px;
+  font-size: 13px; font-weight: 500; border: none;
+  cursor: pointer; font-family: var(--font-body);
+  text-decoration: none; display: inline-block;
+  transition: background 0.2s;
+}
+.nav-btn:hover { background: var(--brand-deep); }
+
+/* ── HERO ── */
+.hero {
+  background: var(--ink);
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 100px clamp(20px, 5vw, 60px) 80px;
+  position: relative; overflow: hidden;
+}
+.hero-geo {
+  position: absolute; right: -60px; top: 50%; transform: translateY(-50%);
+  width: min(560px, 50vw); height: min(560px, 50vw); opacity: 0.06;
+  pointer-events: none;
+}
+.hero-noise {
+  position: absolute; inset: 0; opacity: 0.03; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(193,123,42,0.12); border: 1px solid rgba(193,123,42,0.3);
+  padding: 7px 16px; border-radius: 99px; margin-bottom: 28px;
+  width: fit-content;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+.hero-badge span { font-size: 12px; color: var(--brand); font-weight: 500; letter-spacing: 0.06em; }
+
+.hero-title {
+  font-family: var(--font-display); font-weight: 700; color: white;
+  font-size: clamp(38px, 6vw, 72px); line-height: 1.08;
+  letter-spacing: -0.03em; margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+.hero-title em { color: var(--brand); font-style: italic; display: block; }
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.5);
+  line-height: 1.7; max-width: 520px; margin-bottom: 48px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.hero-sub strong { color: rgba(255,255,255,0.8); font-weight: 400; }
+
+/* ── FORM CARD ── */
+.form-card {
+  background: white; border-radius: 16px;
+  padding: clamp(24px, 4vw, 40px);
+  max-width: 520px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.4);
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.form-title {
+  font-family: var(--font-display); font-size: 22px; font-weight: 700;
+  color: var(--ink); margin-bottom: 6px;
+}
+.form-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+.form-group { margin-bottom: 16px; }
+.form-label { display: block; font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 7px; }
+.form-input {
+  width: 100%; padding: 13px 16px; border-radius: 8px;
+  border: 1.5px solid var(--border); font-size: 14px;
+  font-family: var(--font-body); color: var(--ink);
+  background: var(--surface); outline: none;
+  transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--brand); background: white; }
+.form-input::placeholder { color: #C0B8B0; }
+.form-select {
+  width: 100%; padding: 13px 16px; border-radius: 8px;
+  border: 1.5px solid var(--border); font-size: 14px;
+  font-family: var(--font-body); color: var(--ink);
+  background: var(--surface); outline: none; cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239A9080' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  transition: border-color 0.15s;
+}
+.form-select:focus { border-color: var(--brand); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-submit {
+  width: 100%; padding: 15px; border-radius: 10px;
+  background: var(--brand); color: white; font-size: 15px;
+  font-weight: 500; border: none; cursor: pointer;
+  font-family: var(--font-body); margin-top: 8px;
+  transition: background 0.2s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.form-submit:hover { background: var(--brand-deep); }
+.form-submit:active { transform: scale(0.99); }
+.form-fine { font-size: 12px; color: var(--muted); text-align: center; margin-top: 12px; line-height: 1.6; }
+
+/* ── SUCCESS STATE ── */
+.form-success {
+  display: none; text-align: center; padding: 20px 0;
+}
+.success-icon { font-size: 48px; margin-bottom: 16px; }
+.success-title { font-family: var(--font-display); font-size: 24px; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.share-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #25D366; color: white; padding: 12px 24px;
+  border-radius: 8px; font-size: 14px; font-weight: 500;
+  border: none; cursor: pointer; font-family: var(--font-body);
+  margin-top: 20px;
+}
+
+/* ── COUNTER STRIP ── */
+.counter-strip {
+  background: var(--brand); padding: 14px clamp(20px, 5vw, 60px);
+  display: flex; justify-content: center; gap: clamp(24px, 5vw, 64px);
+  flex-wrap: wrap;
+}
+.counter-item { text-align: center; }
+.counter-num { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: white; }
+.counter-label { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; letter-spacing: 0.05em; }
+
+/* ── HOW IT WORKS ── */
+.section { padding: clamp(60px, 8vw, 100px) clamp(20px, 5vw, 60px); }
+.section-center { max-width: 1000px; margin: 0 auto; }
+.section-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 12px; }
+.section-title { font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 16px; }
+.section-sub { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 560px; }
+
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 48px; }
+.step-card {
+  background: white; border: 1.5px solid var(--border); border-radius: 16px;
+  padding: 28px 24px; position: relative; overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.step-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); }
+.step-num {
+  font-family: var(--font-display); font-size: 56px; font-weight: 700;
+  color: var(--brand-light); line-height: 1; margin-bottom: 16px;
+  position: absolute; top: 16px; right: 20px; opacity: 0.6;
+}
+.step-icon { font-size: 28px; margin-bottom: 14px; }
+.step-title { font-size: 16px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
+.step-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ── LEVELS ── */
+.levels-section { background: var(--ink); }
+.levels-section .section-eyebrow { color: var(--brand); }
+.levels-section .section-title { color: white; }
+.levels-section .section-sub { color: rgba(255,255,255,0.4); }
+.levels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 48px; }
+.level-card {
+  border-radius: 16px; padding: 24px 20px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  transition: transform 0.2s;
+}
+.level-card:hover { transform: translateY(-3px); }
+.level-card.hot {
+  background: rgba(193,123,42,0.12);
+  border-color: rgba(193,123,42,0.4);
+}
+.lc-badge { font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 99px; display: inline-block; margin-bottom: 16px; }
+.lc-free { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+.lc-verified { background: rgba(45,122,79,0.2); color: #7DD4A8; }
+.lc-reco { background: rgba(193,123,42,0.2); color: #E8A13A; }
+.lc-vip { background: linear-gradient(135deg, rgba(212,147,10,0.3), rgba(139,80,16,0.3)); color: #F0C060; border: 1px solid rgba(212,147,10,0.4); }
+.lc-price { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: white; margin-bottom: 4px; }
+.lc-price-sub { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 16px; }
+.lc-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.lc-features li { font-size: 13px; color: rgba(255,255,255,0.55); display: flex; gap: 8px; }
+.lc-check { color: var(--brand); flex-shrink: 0; }
+.lc-scarce { margin-top: 16px; font-size: 11px; background: rgba(193,123,42,0.15); color: #E8A13A; padding: 4px 10px; border-radius: 99px; display: inline-block; }
+
+/* ── WHO ── */
+.who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 40px; }
+.who-card {
+  padding: 20px 16px; border-radius: 12px; text-align: center;
+  border: 1.5px solid var(--border); background: white;
+  transition: transform 0.2s, border-color 0.2s;
+  cursor: default;
+}
+.who-card:hover { transform: translateY(-3px); border-color: var(--brand); }
+.who-icon { font-size: 28px; margin-bottom: 10px; }
+.who-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+
+/* ── SOCIAL PROOF ── */
+.proof-section { background: white; }
+.quotes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 40px; }
+.quote-card {
+  background: var(--surface); border-radius: 14px; padding: 24px;
+  border: 1.5px solid var(--border);
+}
+.quote-stars { color: var(--brand); font-size: 14px; margin-bottom: 12px; }
+.quote-text { font-size: 14px; color: var(--ink); line-height: 1.7; font-style: italic; margin-bottom: 16px; }
+.quote-author { display: flex; align-items: center; gap: 10px; }
+.quote-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; font-family: var(--font-display);
+}
+.qa1 { background: #F5E9DC; color: #8B5010; }
+.qa2 { background: #FDEEF1; color: #8B1A2E; }
+.qa3 { background: #EEEAF8; color: #2E1F6E; }
+.quote-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+.quote-craft { font-size: 12px; color: var(--muted); }
+
+/* ── CTA FINAL ── */
+.cta-section {
+  background: var(--ink); padding: clamp(60px, 8vw, 100px) clamp(20px, 5vw, 60px);
+  text-align: center;
+}
+.cta-title { font-family: var(--font-display); font-size: clamp(32px, 5vw, 54px); font-weight: 700; color: white; line-height: 1.1; margin-bottom: 20px; }
+.cta-title em { color: var(--brand); font-style: italic; }
+.cta-sub { font-size: 16px; color: rgba(255,255,255,0.45); margin-bottom: 40px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--brand); color: white; padding: 18px 40px;
+  border-radius: 10px; font-size: 16px; font-weight: 500; border: none;
+  cursor: pointer; font-family: var(--font-body); text-decoration: none;
+  transition: background 0.2s, transform 0.1s;
+}
+.cta-btn:hover { background: var(--brand-deep); transform: translateY(-2px); }
+
+/* ── FOOTER ── */
+footer {
+  background: #0F0C09; padding: 32px clamp(20px, 5vw, 60px);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--brand); }
+.footer-logo span { color: rgba(255,255,255,0.4); font-weight: 400; }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+.footer-pay { font-size: 12px; color: rgba(255,255,255,0.2); }
+
+/* ── ANIM ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.1s; } .reveal-d2 { transition-delay: 0.2s; } .reveal-d3 { transition-delay: 0.3s; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 640px) {
+  .form-row { grid-template-columns: 1fr; }
+  .nav-link { display: none; }
+  .hero { padding-top: 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">Faso<span>Artisans</span>.bf</div>
+  <div class="nav-right">
+    <a href="#comment" class="nav-link">Comment ça marche</a>
+    <a href="#inscription" class="nav-btn">S'inscrire gratuitement</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <svg class="hero-geo" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="200,20 380,380 20,380" stroke="white" stroke-width="1.5" fill="none"/>
+    <polygon points="200,60 340,340 60,340" stroke="white" stroke-width="1" fill="none"/>
+    <polygon points="200,100 300,300 100,300" stroke="white" stroke-width="0.8" fill="none"/>
+    <polygon points="200,140 260,260 140,260" stroke="white" stroke-width="0.6" fill="none"/>
+    <circle cx="200" cy="200" r="120" stroke="white" stroke-width="0.5" fill="none"/>
+    <circle cx="200" cy="200" r="80" stroke="white" stroke-width="0.5" fill="none"/>
+  </svg>
+
+  <div style="max-width:1000px; display:flex; flex-wrap:wrap; gap:60px; align-items:center;">
+    <div style="flex:1; min-width:280px;">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        <span>Lancement bientôt au Burkina Faso</span>
+      </div>
+      <h1 class="hero-title">
+        Le savoir-faire<br>burkinabè mérite
+        <em>d'être trouvé.</em>
+      </h1>
+      <p class="hero-sub">
+        Couturiers, tisserands, maroquiniers, photographes, graphistes... 
+        <strong>Des centaines de talents locaux</strong> que personne ne trouve encore.
+        FasoArtisans change ça.
+      </p>
+      <div style="display:flex; gap:20px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;flex-shrink:0"></div>
+          <span style="font-size:13px;color:rgba(255,255,255,0.5)">Inscription 100% gratuite</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;flex-shrink:0"></div>
+          <span style="font-size:13px;color:rgba(255,255,255,0.5)">Profil en 5 minutes</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#22C55E;flex-shrink:0"></div>
+          <span style="font-size:13px;color:rgba(255,255,255,0.5)">Orange Money · Wave</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORM -->
+    <div id="inscription" style="flex-shrink:0; width:min(100%, 460px);">
+      <div class="form-card">
+        <div id="form-content">
+          <div class="form-title">Inscris ton profil gratuitement</div>
+          <p class="form-sub">Rejoins les premiers artisans sur la plateforme. Aucun paiement requis pour commencer.</p>
+
+          <div class="form-group">
+            <label class="form-label">Ton prénom et nom</label>
+            <input type="text" class="form-input" id="f-name" placeholder="Ex: Aminata Konaté">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ton métier</label>
+              <select class="form-select" id="f-metier">
+                <option value="">Choisir...</option>
+                <option>Couturier / Couturière</option>
+                <option>Maroquinier</option>
+                <option>Tisserand — Faso Dan Fani</option>
+                <option>Photographe</option>
+                <option>Graphiste</option>
+                <option>Potier / Sculpteur</option>
+                <option>Bijoutier</option>
+                <option>Coiffeur / Coiffeuse</option>
+                <option>Musicien / DJ</option>
+                <option>Menuisier</option>
+                <option>Traiteur / Cuisine</option>
+                <option>Autre métier</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ta ville</label>
+              <select class="form-select" id="f-ville">
+                <option value="">Choisir...</option>
+                <option>Ouagadougou</option>
+                <option>Bobo-Dioulasso</option>
+                <option>Koudougou</option>
+                <option>Banfora</option>
+                <option>Ouahigouya</option>
+                <option>Autre ville</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Ton numéro WhatsApp</label>
+            <input type="tel" class="form-input" id="f-phone" placeholder="Ex: +226 70 00 00 00">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tu es... <span style="font-weight:300;text-transform:none;letter-spacing:0">(optionnel)</span></label>
+            <select class="form-select" id="f-type">
+              <option value="">Choisir...</option>
+              <option>Un artisan / créatif</option>
+              <option>Un entrepreneur qui cherche des artisans</option>
+              <option>Un particulier qui cherche un prestataire</option>
+              <option>Une marque / boutique</option>
+            </select>
+          </div>
+
+          <button class="form-submit" onclick="submitForm()">
+            <span>Réserver ma place gratuitement</span>
+            <span>→</span>
+          </button>
+          <p class="form-fine">Zéro spam. On te contacte uniquement à l'ouverture de la plateforme.</p>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="form-success" id="form-success">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Tu es sur la liste !</div>
+          <p class="success-sub">
+            On te contacte par WhatsApp dès l'ouverture de la plateforme.<br>
+            En attendant, <strong>partage avec tes collègues artisans</strong> — plus on est, plus la plateforme sera utile pour tout le monde.
+          </p>
+          <button class="share-btn" onclick="shareWhatsApp()">
+            📲 Partager sur WhatsApp
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COUNTER STRIP -->
+<div class="counter-strip">
+  <div class="counter-item">
+    <div class="counter-num" id="cnt-inscrits">0</div>
+    <div class="counter-label">Pré-inscrits</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">12</div>
+    <div class="counter-label">Catégories de métiers</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">6</div>
+    <div class="counter-label">Villes au lancement</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">100%</div>
+    <div class="counter-label">Gratuit pour commencer</div>
+  </div>
+</div>
+
+<!-- WHO -->
+<section class="section" style="background:white;">
+  <div class="section-center">
+    <div class="section-eyebrow reveal">Pour qui ?</div>
+    <div class="section-title reveal reveal-d1">Tous les savoir-faire,<br>une seule plateforme</div>
+    <p class="section-sub reveal reveal-d2">Pas seulement les artisans traditionnels. Tous ceux qui ont un talent, une compétence, un service — ont leur place ici.</p>
+    <div class="who-grid">
+      <div class="who-card reveal"><div class="who-icon">🪡</div><div class="who-name">Couturier</div></div>
+      <div class="who-card reveal reveal-d1"><div class="who-icon">👜</div><div class="who-name">Maroquinier</div></div>
+      <div class="who-card reveal reveal-d2"><div class="who-icon">🧵</div><div class="who-name">Tisserand</div></div>
+      <div class="who-card reveal"><div class="who-icon">📷</div><div class="who-name">Photographe</div></div>
+      <div class="who-card reveal reveal-d1"><div class="who-icon">🎨</div><div class="who-name">Graphiste</div></div>
+      <div class="who-card reveal reveal-d2"><div class="who-icon">🏺</div><div class="who-name">Potier</div></div>
+      <div class="who-card reveal"><div class="who-icon">💎</div><div class="who-name">Bijoutier</div></div>
+      <div class="who-card reveal reveal-d1"><div class="who-icon">✂️</div><div class="who-name">Coiffeur</div></div>
+      <div class="who-card reveal reveal-d2"><div class="who-icon">🎵</div><div class="who-name">DJ / Musicien</div></div>
+      <div class="who-card reveal"><div class="who-icon">🪵</div><div class="who-name">Menuisier</div></div>
+      <div class="who-card reveal reveal-d1"><div class="who-icon">🍲</div><div class="who-name">Traiteur</div></div>
+      <div class="who-card reveal reveal-d2"><div class="who-icon">⚙️</div><div class="who-name">Et bien d'autres...</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="comment" style="background:var(--surface);">
+  <div class="section-center">
+    <div class="section-eyebrow reveal">Comment ça marche</div>
+    <div class="section-title reveal reveal-d1">Simple comme un coup de fil</div>
+    <p class="section-sub reveal reveal-d2">En 5 minutes, ton profil est en ligne et visible par des centaines de clients potentiels.</p>
+    <div class="steps-grid">
+      <div class="step-card reveal">
+        <div class="step-num">01</div>
+        <div class="step-icon">📝</div>
+        <div class="step-title">Tu crées ton profil</div>
+        <div class="step-desc">Nom, métier, ville, photos de tes réalisations, numéro WhatsApp. Gratuit et en 5 minutes.</div>
+      </div>
+      <div class="step-card reveal reveal-d1">
+        <div class="step-num">02</div>
+        <div class="step-icon">✅</div>
+        <div class="step-title">Tu te fais vérifier</div>
+        <div class="step-desc">Envoie ta pièce d'identité et quelques photos de réalisations. Tu obtiens le badge Vérifié — gage de confiance.</div>
+      </div>
+      <div class="step-card reveal reveal-d2">
+        <div class="step-num">03</div>
+        <div class="step-icon">🔍</div>
+        <div class="step-title">Les clients te trouvent</div>
+        <div class="step-desc">Quelqu'un cherche un couturier à Ouaga ? Il tombe sur ton profil. Il clique, il t'appelle sur WhatsApp.</div>
+      </div>
+      <div class="step-card reveal reveal-d3">
+        <div class="step-num">04</div>
+        <div class="step-icon">👑</div>
+        <div class="step-title">Tu passes en Premium</div>
+        <div class="step-desc">Pour apparaître en 1ère position et obtenir une page vitrine dédiée — tu choisis ton niveau selon tes ambitions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEVELS -->
+<section class="section levels-section">
+  <div class="section-center">
+    <div class="section-eyebrow reveal">Les niveaux</div>
+    <div class="section-title reveal reveal-d1">Commence gratuit.<br>Monte quand tu es prêt.</div>
+    <p class="section-sub reveal reveal-d2">Pas d'obligation de payer pour démarrer. La visibilité vient avec l'ambition.</p>
+    <div class="levels-grid">
+      <div class="level-card reveal">
+        <div class="lc-badge lc-free">Gratuit</div>
+        <div class="lc-price">0</div>
+        <div class="lc-price-sub">FCFA / mois</div>
+        <ul class="lc-features">
+          <li><span class="lc-check">✓</span> Profil public visible</li>
+          <li><span class="lc-check">✓</span> Bouton WhatsApp direct</li>
+          <li><span class="lc-check">✓</span> 1 photo + description</li>
+          <li><span class="lc-check">✓</span> Avis clients</li>
+        </ul>
+      </div>
+      <div class="level-card reveal reveal-d1">
+        <div class="lc-badge lc-verified">✅ Vérifié</div>
+        <div class="lc-price">0</div>
+        <div class="lc-price-sub">FCFA (dossier requis)</div>
+        <ul class="lc-features">
+          <li><span class="lc-check">✓</span> Badge Vérifié affiché</li>
+          <li><span class="lc-check">✓</span> Jusqu'à 5 photos</li>
+          <li><span class="lc-check">✓</span> Confiance renforcée</li>
+          <li><span class="lc-check">✓</span> Identité confirmée</li>
+        </ul>
+      </div>
+      <div class="level-card hot reveal reveal-d2">
+        <div class="lc-badge lc-reco">⭐ Recommandé</div>
+        <div class="lc-price">3 000</div>
+        <div class="lc-price-sub">FCFA / mois</div>
+        <ul class="lc-features">
+          <li><span class="lc-check">✓</span> 1ère position recherches</li>
+          <li><span class="lc-check">✓</span> Badge Recommandé</li>
+          <li><span class="lc-check">✓</span> Stats de visibilité</li>
+          <li><span class="lc-check">✓</span> Mise en avant catégorie</li>
+        </ul>
+        <div class="lc-scarce">Max 3 places par ville</div>
+      </div>
+      <div class="level-card reveal reveal-d3">
+        <div class="lc-badge lc-vip">👑 VIP Vitrine</div>
+        <div class="lc-price">25 000</div>
+        <div class="lc-price-sub">FCFA / mois</div>
+        <ul class="lc-features">
+          <li><span class="lc-check">✓</span> Page vitrine dédiée</li>
+          <li><span class="lc-check">✓</span> Logo + branding</li>
+          <li><span class="lc-check">✓</span> Catalogue produits</li>
+          <li><span class="lc-check">✓</span> Pub sur la plateforme</li>
+        </ul>
+        <div class="lc-scarce">1 seule place par ville</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="section proof-section">
+  <div class="section-center">
+    <div class="section-eyebrow reveal">Ils nous ont dit</div>
+    <div class="section-title reveal reveal-d1">Ce que ressentent les artisans</div>
+    <div class="quotes-grid">
+      <div class="quote-card reveal">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"Je cherchais un maroquinier pendant 3 semaines pour ma boutique. J'ai dû aller au Sénégal finalement. Avec FasoArtisans, j'aurais trouvé en 10 minutes."</p>
+        <div class="quote-author">
+          <div class="quote-avatar qa1">IK</div>
+          <div><div class="quote-name">Ibrahim K.</div><div class="quote-craft">Entrepreneur · Ouagadougou</div></div>
+        </div>
+      </div>
+      <div class="quote-card reveal reveal-d1">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"En tant que couturière, j'ai des clients qui me demandent 'où est-ce qu'on peut voir ton travail en ligne ?' Je n'avais rien à leur montrer. Cette plateforme, c'est exactement ce qu'il nous faut."</p>
+        <div class="quote-author">
+          <div class="quote-avatar qa2">AM</div>
+          <div><div class="quote-name">Aminata M.</div><div class="quote-craft">Couturière · Bobo-Dioulasso</div></div>
+        </div>
+      </div>
+      <div class="quote-card reveal reveal-d2">
+        <div class="quote-stars">★★★★★</div>
+        <p class="quote-text">"Le Faso Dan Fani est reconnu dans le monde entier, mais les tisserands ne sont pas visibles. Une plateforme comme ça peut changer les choses pour notre génération."</p>
+        <div class="quote-author">
+          <div class="quote-avatar qa3">FO</div>
+          <div><div class="quote-name">Fatimata O.</div><div class="quote-craft">Tisserande · Koudougou</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-section">
+  <div style="max-width:640px; margin:0 auto;">
+    <div class="cta-title reveal">Ton profil<br><em>t'attend.</em></div>
+    <p class="cta-sub reveal reveal-d1">Gratuit. 5 minutes. Aucune carte bancaire requise.</p>
+    <a href="#inscription" class="cta-btn reveal reveal-d2">Réserver ma place gratuitement →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Faso<span>Artisans</span>.bf</div>
+  <div class="footer-copy">© 2026 FasoArtisans.bf — Tous droits réservés</div>
+  <div class="footer-pay">Paiements : Orange Money · Moov Money · Wave</div>
+</footer>
+
+<script>
+/* ── COUNTER ── */
+const savedLeads = JSON.parse(localStorage.getItem('fasoartisans_leads') || '[]');
+const baseCount  = 47;
+let   count      = 0;
+const realTarget = baseCount + savedLeads.length;
+const el         = document.getElementById('cnt-inscrits');
+
+const tick = () => {
+  count += Math.ceil((realTarget - count) / 8);
+  if (count >= realTarget) { el.textContent = realTarget; return; }
+  el.textContent = count;
+  setTimeout(tick, 80);
+};
+setTimeout(tick, 800);
+
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* ── PHONE VALIDATION ── */
+function validatePhone(phone) {
+  // Accepte formats : +226XXXXXXXX, 00226XXXXXXXX, 0XXXXXXXX, XXXXXXXX (8 chiffres BF)
+  const cleaned = phone.replace(/[\s\-\.]/g, '');
+  const patterns = [
+    /^\+226[0-9]{8}$/,      // +22670000000
+    /^00226[0-9]{8}$/,      // 0022670000000
+    /^0[0-9]{8}$/,          // 070000000
+    /^[0-9]{8}$/            // 70000000
+  ];
+  return patterns.some(p => p.test(cleaned));
+}
+
+function normalizePhone(phone) {
+  const cleaned = phone.replace(/[\s\-\.]/g, '');
+  if (cleaned.startsWith('+226'))  return '+226 ' + cleaned.slice(4, 6) + ' ' + cleaned.slice(6, 8) + ' ' + cleaned.slice(8, 10) + ' ' + cleaned.slice(10, 12);
+  if (cleaned.startsWith('00226')) return '+226 ' + cleaned.slice(5, 7) + ' ' + cleaned.slice(7, 9) + ' ' + cleaned.slice(9, 11) + ' ' + cleaned.slice(11, 13);
+  if (cleaned.length === 8)        return '+226 ' + cleaned.slice(0, 2) + ' ' + cleaned.slice(2, 4) + ' ' + cleaned.slice(4, 6) + ' ' + cleaned.slice(6, 8);
+  if (cleaned.startsWith('0') && cleaned.length === 9) return '+226 ' + cleaned.slice(1, 3) + ' ' + cleaned.slice(3, 5) + ' ' + cleaned.slice(5, 7) + ' ' + cleaned.slice(7, 9);
+  return phone;
+}
+
+/* ── FORM SUBMIT ── */
+async function submitForm() {
+  const name   = document.getElementById('f-name').value.trim();
+  const metier = document.getElementById('f-metier').value;
+  const ville  = document.getElementById('f-ville').value;
+  const phone  = document.getElementById('f-phone').value.trim();
+  const type   = document.getElementById('f-type').value;
+
+  // Validation
+  let valid = true;
+  const fields = [
+    { id: 'f-name',   check: name !== '' },
+    { id: 'f-metier', check: metier !== '' },
+    { id: 'f-ville',  check: ville !== '' },
+    { id: 'f-phone',  check: phone !== '' && validatePhone(phone) },
+  ];
+
+  fields.forEach(({ id, check }) => {
+    const el = document.getElementById(id);
+    if (!check) {
+      valid = false;
+      el.style.borderColor = '#E24B4A';
+      el.style.background  = '#FCEBEB';
+      setTimeout(() => { el.style.borderColor = ''; el.style.background = ''; }, 2500);
+    }
+  });
+
+  if (!valid) {
+    // Message d'erreur téléphone spécifique
+    if (phone !== '' && !validatePhone(phone)) {
+      const phoneEl = document.getElementById('f-phone');
+      phoneEl.placeholder = 'Format invalide — ex: +226 70 00 00 00';
+    }
+    return;
+  }
+
+  const normalizedPhone = normalizePhone(phone);
+
+  // Désactiver le bouton
+  const btn = document.querySelector('.form-submit');
+  btn.disabled = true;
+  btn.innerHTML = '<span>Envoi en cours...</span>';
+
+  try {
+    await fetch('http://localhost:5678/webhook/fasoartisans-inscription', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nom:         name,
+        email:       name.toLowerCase().replace(/\s+/g, '.') + '@artisan.bf',
+        telephone:   normalizedPhone,
+        metier:      metier,
+        ville:       ville,
+        description: type || 'Pré-inscription via landing page'
+      })
+    });
+  } catch (err) {
+    console.log('n8n non disponible, données sauvegardées localement');
+  }
+
+  // Sauvegarder localement
+  const data = { name, metier, ville, phone: normalizedPhone, ts: new Date().toISOString() };
+  const existing = JSON.parse(localStorage.getItem('fasoartisans_leads') || '[]');
+  existing.push(data);
+  localStorage.setItem('fasoartisans_leads', JSON.stringify(existing));
+
+  // Mettre à jour le compteur
+  document.getElementById('cnt-inscrits').textContent = baseCount + existing.length;
+
+  // Afficher succès
+  document.getElementById('form-content').style.display = 'none';
+  document.getElementById('form-success').style.display  = 'block';
+}
+
+/* ── WHATSAPP SHARE ── */
+function shareWhatsApp() {
+  const pageUrl = window.location.href.split('#')[0]; // URL propre sans ancre
+  const msg = encodeURIComponent(
+    "🎨 *FasoArtisans.bf arrive bientôt !*\n\n" +
+    "La plateforme qui va permettre à tous les artisans du Burkina Faso d'être trouvés facilement en ligne.\n\n" +
+    "Couturiers, maroquiniers, tisserands, photographes, graphistes...\n\n" +
+    "👉 Inscris-toi gratuitement ici : " + pageUrl + "\n\n" +
+    "C'est gratuit pour commencer 🇧🇫"
+  );
+  window.open('https://wa.me/?text=' + msg, '_blank');
+}
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}); 
+</script>
+</body>
+</html>

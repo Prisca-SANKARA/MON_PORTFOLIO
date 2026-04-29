@@ -17,6 +17,24 @@ const projectsData = {
       image: ""
       
     },
+
+    {
+  id: "n8n-onboarding",
+  title: "Automation FasoArtisans",
+  subtitle: "Workflow n8n — Onboarding automatique",
+  description: "Pipeline d'automatisation complet : formulaire de pré-inscription → webhook n8n → sauvegarde Supabase → email de bienvenue personnalisé → notification admin. Zéro intervention manuelle.",
+  category: "devsecops",
+  tags: ["n8n", "Supabase", "SMTP", "Webhook", "Docker"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "",
+  detail: "pages/n8n-onboarding.html",
+  company: "Projet personnel",
+  status: "Terminé",
+  statusColor: "#1d9e75",
+  emoji: "⚡",
+  image: "images/n8n-workflow.png"
+},
+
     {
   id: "taskflow",
   title: "TaskFlow",
@@ -51,21 +69,21 @@ const projectsData = {
       image: ""
     },
     {
-      id: "fasoartisans",
-      title: "FasoArtisans.bf",
-      subtitle: "Plateforme artisans burkinabè",
-      description: "Plateforme digitale permettant aux artisans du Burkina Faso d'être visibles en ligne — couturiers, tisserands, maroquiniers. Modèle freemium.",
-      category: "fullstack",
-      tags: ["Next.js", "Supabase", "CinetPay", "Tailwind CSS"],
-      github: "https://github.com/Prisca-SANKARA",
-      demo: "",
-      detail: "pages/fasoartisans.html",
-      company: "Projet entrepreneurial 🇧🇫",
-      status: "En développement",
-      statusColor: "#378add",
-      emoji: "🎨",
-      image: ""
-    },
+  id: "fasoartisans",
+  title: "FasoArtisans.bf",
+  subtitle: "Plateforme artisans burkinabè",
+  description: "Plateforme digitale permettant aux artisans du Burkina Faso d'être visibles en ligne. Landing page de pré-inscription avec workflow d'onboarding automatisé via n8n, Supabase et email.",
+  category: "fullstack",
+  tags: ["Next.js", "Supabase", "n8n", "Tailwind CSS", "CinetPay"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "",
+  detail: "pages/fasoartisans.html",
+  company: "Projet entrepreneurial 🇧🇫",
+  status: "En développement",
+  statusColor: "#378add",
+  emoji: "🎨",
+  image: "images/fasoartisans-preview.png"
+},
     {
       id: "portfolio",
       title: "Portfolio Personnel",
@@ -114,6 +132,23 @@ const projectsData = {
       emoji: "⚙️",
       image: ""
     },
+
+    {
+  id: "fasoartisans-landing",
+  title: "FasoArtisans — Landing Page",
+  subtitle: "Page de pré-inscription artisans",
+  description: "Landing page de pré-inscription pour FasoArtisans.bf. Design premium aux couleurs du Burkina Faso, formulaire de validation, compteur de pré-inscrits et partage WhatsApp intégré.",
+  category: "frontend",
+  tags: ["HTML5", "CSS3", "JavaScript", "n8n", "Supabase"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "pages/fasoartisans-landing.html",
+  detail: "pages/fasoartisans-landing-detail.html",
+  company: "Projet entrepreneurial 🇧🇫",
+  status: "Terminé",
+  statusColor: "#1d9e75",
+  emoji: "🇧🇫",
+  image: "images/fasoartisans-preview.png"
+},
     {
       id: "dashboard",
       title: "Security Dashboard",
@@ -131,6 +166,8 @@ const projectsData = {
       image: ""
     }
   ],
+
+
   en: [
     {
       id: "saas-veille",
@@ -165,21 +202,55 @@ const projectsData = {
       image: ""
     },
     {
-      id: "fasoartisans",
-      title: "FasoArtisans.bf",
-      subtitle: "Burkina Faso artisan platform",
-      description: "Digital platform for Burkina Faso artisans to gain online visibility — tailors, weavers, leatherworkers. Freemium model.",
-      category: "fullstack",
-      tags: ["Next.js", "Supabase", "CinetPay", "Tailwind CSS"],
-      github: "https://github.com/Prisca-SANKARA",
-      demo: "",
-      detail: "pages/fasoartisans.html",
-      company: "Entrepreneurial project 🇧🇫",
-      status: "In development",
-      statusColor: "#378add",
-      emoji: "🎨",
-      image: ""
-    },
+  id: "fasoartisans",
+  title: "FasoArtisans.bf",
+  subtitle: "Burkina Faso artisan platform",
+  description: "Digital platform for Burkina Faso artisans to gain online visibility. Pre-registration landing page with automated onboarding workflow via n8n, Supabase and email.",
+  category: "fullstack",
+  tags: ["Next.js", "Supabase", "n8n", "Tailwind CSS", "CinetPay"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "",
+  detail: "pages/fasoartisans.html",
+  company: "Entrepreneurial project 🇧🇫",
+  status: "In development",
+  statusColor: "#378add",
+  emoji: "🎨",
+  image: "images/fasoartisans-preview.png"
+},
+
+{
+  id: "n8n-onboarding",
+  title: "FasoArtisans Automation",
+  subtitle: "n8n workflow — Automatic onboarding",
+  description: "Complete automation pipeline: pre-registration form → n8n webhook → Supabase storage → personalized welcome email → admin notification. Zero manual intervention.",
+  category: "devsecops",
+  tags: ["n8n", "Supabase", "SMTP", "Webhook", "Docker"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "",
+  detail: "pages/n8n-onboarding.html",
+  company: "Personal project",
+  status: "Completed",
+  statusColor: "#1d9e75",
+  emoji: "⚡",
+  image: "images/n8n-workflow.png"
+},
+
+{
+  id: "taskflow",
+  title: "TaskFlow",
+  subtitle: "Full-stack Task Manager",
+  description: "Task management application with Supabase authentication, real-time analytics dashboard, interactive charts, priorities, categories, deadlines and continuous deployment on Netlify.",
+  category: "fullstack",
+  tags: ["React", "Supabase", "Tailwind CSS", "PostgreSQL", "Netlify"],
+  github: "https://github.com/Prisca-SANKARA/taskflow-app",
+  demo: "https://taskflow-prisca.netlify.app",
+  detail: "pages/taskflow.html",
+  company: "Personal project",
+  status: "Completed",
+  statusColor: "#1d9e75",
+  emoji: "📋",
+  image: "images/taskflow-preview.png"
+},
     {
       id: "portfolio",
       title: "Personal Portfolio",
@@ -228,6 +299,23 @@ const projectsData = {
       emoji: "⚙️",
       image: ""
     },
+
+    {
+  id: "fasoartisans-landing",
+  title: "FasoArtisans — Landing Page",
+  subtitle: "Artisan pre-registration page",
+  description: "Pre-registration landing page for FasoArtisans.bf. Premium design with Burkina Faso colors, form validation, pre-registration counter and integrated WhatsApp sharing.",
+  category: "frontend",
+  tags: ["HTML5", "CSS3", "JavaScript", "n8n", "Supabase"],
+  github: "https://github.com/Prisca-SANKARA",
+  demo: "pages/fasoartisans-landing.html",
+  detail: "pages/fasoartisans-landing-detail.html",
+  company: "Entrepreneurial project 🇧🇫",
+  status: "Completed",
+  statusColor: "#1d9e75",
+  emoji: "🇧🇫",
+  image: "images/fasoartisans-preview.png"
+},
     {
       id: "dashboard",
       title: "Security Dashboard",
