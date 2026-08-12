@@ -380,28 +380,24 @@ function renderProjects(lang = 'fr') {
     `
   }).join('')
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
-      btn.classList.add('active')
-      const filter = btn.getAttribute('data-filter')
-      document.querySelectorAll('.project-card').forEach(card => {
-        card.style.display = (filter === 'all' || card.classList.contains(filter)) ? 'flex' : 'none'
-      })
-    })
+  applyActiveFilter()
+}
+
+// ── FILTRES (liés une seule fois) ─────────────────────────────
+function applyActiveFilter() {
+  const activeBtn = document.querySelector('.filter-btn.active')
+  const filter = activeBtn ? activeBtn.getAttribute('data-filter') : 'all'
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.style.display = (filter === 'all' || card.classList.contains(filter)) ? 'flex' : 'none'
   })
 }
 
-  // Filters
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.getAttribute('data-filter');
-      document.querySelectorAll('.project-card').forEach(card => {
-        card.style.display = (filter === 'all' || card.classList.contains(filter)) ? 'flex' : 'none';
-      });
-    });
-  });
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'))
+    btn.classList.add('active')
+    applyActiveFilter()
+  })
+})
 
 
