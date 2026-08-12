@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projet — SANKARA P. DJAMILATOU PRISCA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#f8f9fa;--surface:#ffffff;--text:#2d3436;--muted:#636e72;
+      --accent:#e63946;--border:rgba(0,0,0,.08);--shadow:0 10px 40px rgba(0,0,0,.08);
+    }
+    html[data-theme="dark"]{
+      --bg:#0f0f0f;--surface:#1a1a1a;--text:#e7e7e7;--muted:#a0a0a0;
+      --border:rgba(255,255,255,.08);--shadow:0 10px 40px rgba(0,0,0,.5);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s}
+
+    .topbar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 1.5rem;background:color-mix(in srgb,var(--surface) 85%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .back{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);border-radius:10px;color:var(--accent);font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s}
+    .back:hover{background:rgba(230,57,70,.25)}
+    .topbar-right{display:flex;align-items:center;gap:.5rem}
+    .lang-switch{display:flex;align-items:center;gap:.35rem;font-size:.8rem;font-weight:600;color:var(--muted)}
+    .lang-switch button{background:none;border:none;color:var(--muted);cursor:pointer;font:inherit;padding:.2rem .4rem;border-radius:6px}
+    .lang-switch button.active{color:var(--accent);background:rgba(230,57,70,.1)}
+    .theme-btn{background:none;border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:.9rem}
+
+    .wrap{max-width:900px;margin:0 auto;padding:7rem 1.5rem 4rem;position:relative;z-index:10}
+
+    .hero{text-align:center;margin-bottom:2.5rem}
+    .media{width:100%;max-width:720px;margin:0 auto 2rem;border-radius:20px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .media img{width:100%;display:block}
+    .emoji-hero{font-size:4.5rem;margin-bottom:1rem;display:block}
+    .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;border-radius:100px;font-size:.75rem;font-weight:700;margin-bottom:1.2rem;border:1px solid}
+    .badge::before{content:'';width:7px;height:7px;border-radius:50%;background:currentColor}
+    .company{font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:.5rem}
+    h1{font-size:2.6rem;font-weight:800;letter-spacing:-1px;margin-bottom:.5rem;line-height:1.1}
+    .subtitle{font-size:1.1rem;color:var(--accent);font-weight:600;margin-bottom:1.5rem}
+
+    .tags{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2rem}
+    .tag{padding:.35rem .9rem;border-radius:100px;font-size:.75rem;font-weight:600;background:rgba(230,57,70,.08);color:var(--accent);border:1px solid rgba(230,57,70,.2)}
+
+    .desc{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.75rem 2rem;font-size:1rem;line-height:1.8;color:var(--muted);margin-bottom:2rem;box-shadow:var(--shadow)}
+
+    .note{background:rgba(55,138,221,.1);border:1px solid rgba(55,138,221,.25);border-radius:14px;padding:1rem 1.4rem;color:#378add;font-size:.9rem;text-align:center;margin-bottom:2rem}
+
+    .ctas{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.8rem;border-radius:12px;font-size:.9rem;font-weight:700;text-decoration:none;transition:all .2s;cursor:pointer}
+    .btn-primary{background:var(--gradient,linear-gradient(135deg,#e63946,#c1121f));color:#fff;box-shadow:0 4px 20px rgba(230,57,70,.35)}
+    .btn-primary:hover{transform:translateY(-2px)}
+    .btn-secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--border)}
+    .btn-secondary:hover{border-color:var(--accent)}
+
+    .notfound{text-align:center;padding:8rem 1.5rem}
+    .notfound .emoji-hero{font-size:4rem}
+
+    @media(max-width:600px){h1{font-size:1.9rem}.wrap{padding-top:6rem}.desc{padding:1.25rem}}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="../index.html#portfolio" class="back"><i class="fas fa-arrow-left"></i> <span id="backLabel">Retour</span></a>
+    <div class="topbar-right">
+      <div class="lang-switch">
+        <button data-lang="fr" class="active">FR</button>
+        <span>|</span>
+        <button data-lang="en">EN</button>
+      </div>
+      <button class="theme-btn" id="themeBtn"><i class="fas fa-moon"></i></button>
+    </div>
+  </div>
+
+  <div class="wrap" id="content"></div>
+
+  <script src="../js/data/projects.js"></script>
+  <script>
+    // ── Theme (partagé avec le site principal via localStorage) ──
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    function updateThemeIcon(){
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.querySelector('#themeBtn i').className = dark ? 'fas fa-sun' : 'fas fa-moon';
+    }
+    updateThemeIcon();
+    document.getElementById('themeBtn').addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      updateThemeIcon();
+    });
+
+    // ── Récupère l'id du projet dans l'URL (?id=xxx) ──
+    const projectId = new URLSearchParams(location.search).get('id');
+    let lang = localStorage.getItem('lang') || 'fr';
+
+    const IN_PROGRESS = ['En cours','In progress','En développement','In development'];
+    const COMING = ['À venir','Coming soon'];
+
+    const T = {
+      fr:{ back:'Retour', code:'Voir le code', demo:'Voir la démo', company:'Réalisé pour',
+           progress:'🚧 Projet en cours de développement — la démo arrivera bientôt.',
+           coming:'🔭 Projet à venir — bientôt disponible.',
+           notfound:'Projet introuvable', notfoundTxt:'Ce projet n\'existe pas ou a été déplacé.' },
+      en:{ back:'Back', code:'View code', demo:'View demo', company:'Built for',
+           progress:'🚧 Project under active development — demo coming soon.',
+           coming:'🔭 Upcoming project — available soon.',
+           notfound:'Project not found', notfoundTxt:'This project does not exist or has been moved.' }
+    };
+
+    function render(){
+      const t = T[lang];
+      document.documentElement.setAttribute('lang', lang);
+      document.getElementById('backLabel').textContent = t.back;
+      document.querySelectorAll('.lang-switch button').forEach(b =>
+        b.classList.toggle('active', b.dataset.lang === lang));
+
+      const list = (typeof projectsData !== 'undefined' && projectsData[lang]) || [];
+      const p = list.find(x => x.id === projectId);
+      const content = document.getElementById('content');
+
+      if (!p) {
+        document.title = t.notfound + ' — SANKARA P. DJAMILATOU PRISCA';
+        content.innerHTML = `<div class="notfound">
+          <span class="emoji-hero">🔍</span>
+          <h1>${t.notfound}</h1>
+          <p class="subtitle">${t.notfoundTxt}</p>
+          <div class="ctas"><a href="../index.html#portfolio" class="btn btn-primary"><i class="fas fa-arrow-left"></i> ${t.back}</a></div>
+        </div>`;
+        return;
+      }
+
+      document.title = p.title + ' — SANKARA P. DJAMILATOU PRISCA';
+      const hasImg = p.image && p.image !== '';
+      const color = p.statusColor || '#e63946';
+
+      const mediaBlock = hasImg
+        ? `<div class="media"><img src="../${p.image}" alt="${p.title}" onerror="this.parentElement.remove()"/></div>`
+        : `<span class="emoji-hero">${p.emoji || '📦'}</span>`;
+
+      let noteBlock = '';
+      if (IN_PROGRESS.includes(p.status)) noteBlock = `<div class="note">${t.progress}</div>`;
+      else if (COMING.includes(p.status)) noteBlock = `<div class="note">${t.coming}</div>`;
+
+      const demoBtn = (p.demo && p.demo !== '' && p.demo !== '#')
+        ? `<a href="${p.demo}" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> ${t.demo}</a>` : '';
+      const codeBtn = (p.github && p.github !== '')
+        ? `<a href="${p.github}" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> ${t.code}</a>` : '';
+
+      content.innerHTML = `
+        <div class="hero">
+          ${mediaBlock}
+          <span class="badge" style="color:${color};border-color:${color};background:${color}1a;">${p.status}</span>
+          <div class="company">${t.company} · ${p.company}</div>
+          <h1>${p.title}</h1>
+          <div class="subtitle">${p.subtitle}</div>
+        </div>
+        ${noteBlock}
+        <div class="desc">${p.description}</div>
+        <div class="tags">${(p.tags||[]).map(x => `<span class="tag">${x}</span>`).join('')}</div>
+        <div class="ctas">${demoBtn}${codeBtn}</div>
+      `;
+    }
+
+    document.querySelectorAll('.lang-switch button').forEach(b => {
+      b.addEventListener('click', () => {
+        lang = b.dataset.lang;
+        localStorage.setItem('lang', lang);
+        render();
+      });
+    });
+
+    render();
+  </script>
+</body>
+</html>
