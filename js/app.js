@@ -170,24 +170,72 @@ document.querySelectorAll('.stat-number').forEach(animateCounter);
 window.addEventListener('scroll', handleScrollAnimation);
 
 // ── CONTACT FORM ─────────────────────────────────────────────
-document.getElementById('contactForm').addEventListener('submit', e => {
+// 1. Crée un compte gratuit sur https://formspree.io (avec ton email).
+// 2. Crée un nouveau formulaire → copie l'ID (ex: "xdorwkey").
+// 3. Remplace "YOUR_FORM_ID" ci-dessous par cet ID.
+// Tant que ce n'est pas fait, le formulaire ouvre ton logiciel mail (aucun message perdu).
+const FORMSPREE_ID = 'YOUR_FORM_ID';
+const CONTACT_EMAIL = 'djamilatoupriscasankara@gmail.com';
+
+document.getElementById('contactForm').addEventListener('submit', async e => {
   e.preventDefault();
   const btn = e.target.querySelector('.submit-btn');
   const status = document.getElementById('formStatus');
   const lang = currentLang || 'fr';
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-  btn.disabled = true;
-  setTimeout(() => {
-    status.textContent = lang === 'fr'
-      ? '✓ Message envoyé ! Je vous répondrai rapidement.'
-      : '✓ Message sent! I will reply shortly.';
-    status.className = 'form-status success';
-    status.style.display = 'block';
-    e.target.reset();
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const subject = document.getElementById('subject').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  const resetBtn = () => {
     btn.innerHTML = `<i class="fas fa-paper-plane"></i> ${lang === 'fr' ? 'Envoyer le message' : 'Send message'}`;
     btn.disabled = false;
-    setTimeout(() => { status.style.display = 'none'; }, 5000);
-  }, 1800);
+  };
+  const showStatus = (text, ok) => {
+    status.textContent = text;
+    status.className = 'form-status ' + (ok ? 'success' : 'error');
+    status.style.display = 'block';
+    setTimeout(() => { status.style.display = 'none'; }, 6000);
+  };
+
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  btn.disabled = true;
+
+  // Fallback: aucun ID Formspree configuré → on ouvre le logiciel mail
+  if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+    const body = `${lang === 'fr' ? 'Nom' : 'Name'}: ${name}\nEmail: ${email}\n\n${message}`;
+    window.location.href = `mailto:${CONTACT_EMAIL}`
+      + `?subject=${encodeURIComponent(subject)}`
+      + `&body=${encodeURIComponent(body)}`;
+    showStatus(lang === 'fr'
+      ? '✉️ Votre logiciel mail s\'ouvre pour finaliser l\'envoi.'
+      : '✉️ Your email app is opening to complete sending.', true);
+    resetBtn();
+    return;
+  }
+
+  // Envoi réel via Formspree
+  try {
+    const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: JSON.stringify({ name, email, _subject: subject, message })
+    });
+    if (res.ok) {
+      showStatus(lang === 'fr'
+        ? '✓ Message envoyé ! Je vous répondrai rapidement.'
+        : '✓ Message sent! I will reply shortly.', true);
+      e.target.reset();
+    } else {
+      throw new Error('send failed');
+    }
+  } catch (err) {
+    showStatus(lang === 'fr'
+      ? '✗ Erreur d\'envoi. Écrivez-moi à ' + CONTACT_EMAIL
+      : '✗ Sending error. Please email me at ' + CONTACT_EMAIL, false);
+  }
+  resetBtn();
 });
 
 // ── SMOOTH SCROLL ─────────────────────────────────────────────

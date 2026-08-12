@@ -618,6 +618,7 @@ section { padding: 100px 80px; position: relative; }
 .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(230,57,70,.4); }
 .form-status { margin-top: 18px; padding: 14px; border-radius: 10px; text-align: center; font-size: 14px; display: none; }
 .form-status.success { background: rgba(0,184,148,.1); color: var(--success); border: 1px solid var(--success); }
+.form-status.error { background: rgba(230,57,70,.1); color: #e63946; border: 1px solid #e63946; }
 
 /* ========== FOOTER ========== */
 footer { background: var(--bg-secondary); padding: 50px 80px 25px; border-top: 1px solid rgba(230,57,70,.1); }
