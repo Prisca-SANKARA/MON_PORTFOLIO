@@ -4,7 +4,33 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="description" content="SANKARA P. DJAMILATOU PRISCA — Ingénieure Informatique DevSecOps & Cloud. Portfolio."/>
+  <meta name="author" content="SANKARA P. Djamilatou Prisca"/>
+  <meta name="keywords" content="DevSecOps, Cloud, Cybersécurité, Ingénieure Informatique, AWS, Docker, Africa Tech, Burkina Faso, Portfolio"/>
+  <meta name="theme-color" content="#e63946"/>
   <title>SANKARA P. DJAMILATOU PRISCA — Portfolio</title>
+
+  <!-- Favicon (emoji) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>"/>
+
+  <!-- SEO / Open Graph — Aperçu au partage (LinkedIn, WhatsApp, Facebook) -->
+  <!-- ⚠️ Remplace VOTRE-DOMAINE par ton URL réelle après déploiement (ex: sankara-prisca.netlify.app) -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="SANKARA P. DJAMILATOU PRISCA — Ingénieure DevSecOps & Cloud"/>
+  <meta property="og:description" content="Portfolio d'une ingénieure informatique (Bac+5) passionnée par le DevSecOps, la cybersécurité et le cloud. Africa Tech 🇧🇫"/>
+  <meta property="og:url" content="https://VOTRE-DOMAINE/"/>
+  <meta property="og:image" content="https://VOTRE-DOMAINE/images/portrait.jpg"/>
+  <meta property="og:locale" content="fr_FR"/>
+  <meta property="og:locale:alternate" content="en_US"/>
+  <meta property="og:site_name" content="Portfolio — SANKARA P. Djamilatou Prisca"/>
+
+  <!-- Twitter / X card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="SANKARA P. DJAMILATOU PRISCA — Ingénieure DevSecOps & Cloud"/>
+  <meta name="twitter:description" content="Portfolio DevSecOps · Cloud · Cybersécurité. Africa Tech 🇧🇫"/>
+  <meta name="twitter:image" content="https://VOTRE-DOMAINE/images/portrait.jpg"/>
+
+  <link rel="canonical" href="https://VOTRE-DOMAINE/"/>
+
   <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <link rel="stylesheet" href="css/style.css"/>
@@ -26,15 +52,15 @@
 <div class="custom-cursor" id="cursor"></div>
 
 <!-- MOBILE MENU BUTTON -->
-<button class="btn-rond-menu" id="menuToggle">
+<button class="btn-rond-menu" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="nav">
   <div class="menu-icon" id="menuIcon"><span></span><span></span><span></span></div>
 </button>
 
 <!-- LANGUAGE SWITCH -->
-<div class="lang-switch" id="langSwitch">
-  <button class="lang-btn active" data-lang="fr">FR</button>
+<div class="lang-switch" id="langSwitch" role="group" aria-label="Choix de la langue">
+  <button class="lang-btn active" data-lang="fr" aria-label="Français">FR</button>
   <span class="lang-sep">|</span>
-  <button class="lang-btn" data-lang="en">EN</button>
+  <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
 </div>
 
 <!-- NAV GAUCHE -->
@@ -324,7 +350,7 @@
         <button type="submit" class="submit-btn">
           <i class="fas fa-paper-plane"></i> <span data-i18n="form-send">Envoyer le message</span>
         </button>
-        <div class="form-status" id="formStatus"></div>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
     </div>
   </section>

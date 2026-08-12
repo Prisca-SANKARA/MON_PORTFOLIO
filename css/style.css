@@ -641,7 +641,7 @@ footer { background: var(--bg-secondary); padding: 50px 80px 25px; border-top: 1
     .nav-gauche.active { transform: translateX(0); }
     .btn-rond-menu { display: flex; align-items: center; justify-content: center; }
     .main-content { margin-left: 0; }
-    section { padding: 60px 40px; }
+    section { padding: 60px 40px; scroll-margin-top: 90px; }
     .hero { padding: 60px 40px; }
     .hero-wrapper { gap: 3rem; padding-left: 0; }
     .about-content { grid-template-columns: 1fr; }

@@ -31,7 +31,9 @@ const menuIcon = document.getElementById('menuIcon');
 const nav = document.getElementById('nav');
 menuToggle.addEventListener('click', () => {
   menuIcon.classList.toggle('active');
-  nav.classList.toggle('active');
+  const open = nav.classList.toggle('active');
+  menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  menuToggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
 });
 document.querySelectorAll('.nav-menu-item').forEach(item => {
   item.addEventListener('click', () => {
