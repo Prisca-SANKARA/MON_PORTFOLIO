@@ -262,37 +262,47 @@ const techCardInfo = document.getElementById('techCardInfo');
 const techCardLevel = document.getElementById('techCardLevel');
 const techCardIcon = document.getElementById('techCardIcon');
 
-document.querySelectorAll('.tech-item').forEach(item => {
-  item.addEventListener('mouseenter', (e) => {
+// Délégation (pas de binding direct) : les .tech-item sont regénérés
+// dynamiquement par renderSkills() à chaque changement de langue / chargement
+// Firestore, donc on écoute sur le conteneur stable plutôt que sur chaque item.
+const skillsSection = document.getElementById('skills');
+let hoveredTechItem = null;
+if (skillsSection) {
+  skillsSection.addEventListener('mouseover', (e) => {
+    const item = e.target.closest('.tech-item');
+    if (!item || item === hoveredTechItem) return;
+    hoveredTechItem = item;
+
     const name = item.querySelector('span').textContent;
     const info = item.getAttribute('data-info') || '';
-    const level = item.getAttribute('data-level') || '';
+    const levelLabel = item.getAttribute('data-level-label') || '';
+    const levelKey = item.getAttribute('data-level-key') || '';
     const icon = item.getAttribute('data-icon') || 'fas fa-code';
 
     techCardName.textContent = name;
     techCardInfo.textContent = info;
-    techCardLevel.textContent = level;
+    techCardLevel.textContent = levelLabel;
     techCardIcon.className = icon;
 
-    // Level color
-    const colors = {
-      'Avancé': '#1d9e75',
-      'Intermédiaire': '#378add',
-      'Notions': '#f5c842',
-      'Débutant': '#9aa3b8'
-    };
-    techCardLevel.style.background = (colors[level] || '#e63946') + '22';
-    techCardLevel.style.color = colors[level] || '#e63946';
+    const color = (typeof LEVEL_COLORS !== 'undefined' && LEVEL_COLORS[levelKey]) || '#e63946';
+    techCardLevel.style.background = color + '22';
+    techCardLevel.style.color = color;
     techCard.classList.add('visible');
     moveCard(e);
   });
 
-  item.addEventListener('mousemove', moveCard);
+  skillsSection.addEventListener('mousemove', (e) => {
+    if (e.target.closest('.tech-item')) moveCard(e);
+  });
 
-  item.addEventListener('mouseleave', () => {
+  skillsSection.addEventListener('mouseout', (e) => {
+    const item = e.target.closest('.tech-item');
+    if (!item) return;
+    if (e.relatedTarget && item.contains(e.relatedTarget)) return;
+    hoveredTechItem = null;
     techCard.classList.remove('visible');
   });
-});
+}
 
 function moveCard(e) {
   const x = e.clientX + 16;

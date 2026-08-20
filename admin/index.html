@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>Admin — Portfolio SANKARA P. DJAMILATOU PRISCA</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen" class="login-screen">
+  <form id="loginForm" class="login-box">
+    <h1><i class="fas fa-shield-halved"></i> Admin Portfolio</h1>
+    <p class="sub">Accès réservé — connecte-toi pour gérer projets, articles et expériences.</p>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="loginEmail" required autocomplete="username"/>
+    </div>
+    <div class="form-group">
+      <label>Mot de passe</label>
+      <input type="password" id="loginPassword" required autocomplete="current-password"/>
+    </div>
+    <button type="submit" class="btn-primary"><i class="fas fa-lock-open"></i> Se connecter</button>
+    <button type="button" id="forgotPasswordBtn" class="btn-ghost" style="margin-top:.8rem;width:100%;justify-content:center">Mot de passe oublié ?</button>
+    <div id="loginError" class="error-msg"></div>
+  </form>
+</div>
+
+<!-- APP -->
+<div id="app" class="app hidden">
+  <header class="admin-header">
+    <div class="brand"><i class="fas fa-shield-halved"></i> Admin Portfolio</div>
+    <div class="header-actions">
+      <a href="../index.html" target="_blank" class="btn-ghost"><i class="fas fa-eye"></i> Voir le site</a>
+      <button id="logoutBtn" class="btn-ghost"><i class="fas fa-right-from-bracket"></i> Déconnexion</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="projects"><i class="fas fa-diagram-project"></i> Projets</button>
+    <button class="tab-btn" data-tab="articles"><i class="fas fa-pen-nib"></i> Articles</button>
+    <button class="tab-btn" data-tab="experiences"><i class="fas fa-briefcase"></i> Expériences</button>
+    <button class="tab-btn" data-tab="skills"><i class="fas fa-layer-group"></i> Compétences</button>
+    <button class="tab-btn" id="migrateBespokeBtn" style="margin-left:auto;color:#378add" title="Copie le HTML de TaskFlow, n8n-onboarding et FasoArtisans-landing dans Firestore (mode HTML personnalisé)"><i class="fas fa-file-code"></i> Migrer les pages sur-mesure</button>
+    <button class="tab-btn" id="importBtn" style="color:#378add" title="À faire une seule fois : copie les données actuelles du site dans Firestore (peut être relancé sans dupliquer)"><i class="fas fa-cloud-arrow-up"></i> Importer les données du site</button>
+  </nav>
+
+  <main class="admin-main">
+
+    <!-- PROJECTS TAB -->
+    <section class="tab-panel active" id="tab-projects">
+      <div class="panel-head">
+        <h2>Projets</h2>
+        <button class="btn-primary" id="newProjectBtn"><i class="fas fa-plus"></i> Nouveau projet</button>
+      </div>
+      <div class="item-list" id="projectsList"></div>
+    </section>
+
+    <!-- ARTICLES TAB -->
+    <section class="tab-panel" id="tab-articles">
+      <div class="panel-head">
+        <h2>Articles</h2>
+        <button class="btn-primary" id="newArticleBtn"><i class="fas fa-plus"></i> Nouvel article</button>
+      </div>
+      <div class="item-list" id="articlesList"></div>
+    </section>
+
+    <!-- EXPERIENCES TAB -->
+    <section class="tab-panel" id="tab-experiences">
+      <div class="panel-head">
+        <h2>Expériences &amp; Formation</h2>
+        <button class="btn-primary" id="newExperienceBtn"><i class="fas fa-plus"></i> Nouvelle expérience</button>
+      </div>
+      <div class="item-list" id="experiencesList"></div>
+    </section>
+
+    <!-- SKILLS TAB -->
+    <section class="tab-panel" id="tab-skills">
+      <div class="panel-head">
+        <h2>Compétences</h2>
+        <button class="btn-primary" id="newSkillBtn"><i class="fas fa-plus"></i> Nouvelle compétence</button>
+      </div>
+      <div class="item-list" id="skillsList"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- MODAL: PROJECT FORM -->
+<div class="modal hidden" id="projectModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="projectModalTitle">Nouveau projet</h3><button class="close-btn" data-close="projectModal">&times;</button></div>
+    <form id="projectForm">
+      <input type="hidden" id="p_docId"/>
+      <button type="button" class="btn-ghost" id="p_translateBtn" style="margin-bottom:1rem;color:#378add"><i class="fas fa-language"></i> Traduire FR → EN</button>
+      <div class="grid-2">
+        <div class="form-group"><label>ID (slug unique)</label><input type="text" id="p_id" placeholder="ex: mon-super-projet" required/></div>
+        <div class="form-group"><label>Ordre d'affichage</label><input type="number" id="p_order" value="0" required/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Titre (FR)</label><input type="text" id="p_title_fr" required/></div>
+        <div class="form-group"><label>Titre (EN) — laisse vide pour traduction auto</label><input type="text" id="p_title_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Sous-titre (FR)</label><input type="text" id="p_subtitle_fr"/></div>
+        <div class="form-group"><label>Sous-titre (EN)</label><input type="text" id="p_subtitle_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Description (FR)</label><textarea id="p_description_fr" rows="3" required></textarea></div>
+        <div class="form-group"><label>Description (EN) — laisse vide pour traduction auto</label><textarea id="p_description_en" rows="3"></textarea></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Catégorie</label>
+          <select id="p_category">
+            <option value="fullstack">Full-Stack</option>
+            <option value="frontend">Frontend</option>
+            <option value="backend">Backend</option>
+            <option value="devsecops">DevSecOps</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Entreprise / contexte</label><input type="text" id="p_company"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Statut</label>
+          <select id="p_status">
+            <option value="Terminé">Terminé</option>
+            <option value="En cours">En cours</option>
+            <option value="En développement">En développement</option>
+            <option value="À venir">À venir</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Couleur statut (hex)</label><input type="text" id="p_statusColor" value="#1d9e75"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Emoji</label><input type="text" id="p_emoji" placeholder="🚀"/></div>
+        <div class="form-group"><label>Tags (séparés par virgule)</label><input type="text" id="p_tags" placeholder="React, Firebase, Tailwind"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Lien GitHub</label><input type="url" id="p_github"/></div>
+        <div class="form-group"><label>Lien Démo</label><input type="url" id="p_demo"/></div>
+      </div>
+      <div class="form-group">
+        <label>Lien page détail — rempli automatiquement à partir de l'ID (pages/project.html?id=...), modifiable si ce projet a sa propre page</label>
+        <input type="text" id="p_detail"/>
+      </div>
+
+      <div class="form-group">
+        <label>Mode de la page détail</label>
+        <select id="p_richMode">
+          <option value="standard">Standard — titre, description, tags (page générique)</option>
+          <option value="sections">Sections personnalisées — stats, galerie, fonctionnalités...</option>
+          <option value="html">HTML personnalisé — page sur-mesure complète</option>
+        </select>
+      </div>
+
+      <div class="form-group hidden" id="p_sectionsEditor">
+        <label>Sections de la page détail (dans l'ordre d'affichage)</label>
+        <div style="display:flex;gap:.5rem;margin-bottom:.8rem">
+          <select id="p_sectionType" style="flex:1">
+            <option value="stats">📊 Chiffres clés</option>
+            <option value="gallery">🖼️ Galerie photos</option>
+            <option value="features">✨ Fonctionnalités</option>
+            <option value="decisions">🧭 Décisions techniques</option>
+            <option value="challenges">⚡ Défis rencontrés</option>
+            <option value="lessons">🎓 Ce que j'ai appris</option>
+          </select>
+          <button type="button" class="btn-ghost" id="p_addSectionBtn"><i class="fas fa-plus"></i> Ajouter un bloc</button>
+        </div>
+        <div id="p_sectionsList"></div>
+      </div>
+
+      <div class="form-group hidden" id="p_htmlEditor">
+        <label>HTML personnalisé — page HTML/CSS/JS complète et autonome (comme TaskFlow), affichée dans un cadre isolé</label>
+        <textarea id="p_customHtml" rows="10" style="font-family:monospace;font-size:.78rem"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Image du projet</label>
+        <input type="file" id="p_imageFile" accept="image/*"/>
+        <div class="upload-progress hidden" id="p_uploadProgress"><div class="bar"></div></div>
+        <input type="hidden" id="p_image"/>
+        <img id="p_imagePreview" class="img-preview hidden"/>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" data-close="projectModal">Annuler</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: ARTICLE FORM -->
+<div class="modal hidden" id="articleModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="articleModalTitle">Nouvel article</h3><button class="close-btn" data-close="articleModal">&times;</button></div>
+    <form id="articleForm">
+      <input type="hidden" id="a_docId"/>
+      <button type="button" class="btn-ghost" id="a_translateBtn" style="margin-bottom:1rem;color:#378add"><i class="fas fa-language"></i> Traduire FR → EN</button>
+      <div class="grid-2">
+        <div class="form-group"><label>Ordre d'affichage</label><input type="number" id="a_order" value="0" required/></div>
+        <div class="form-group"><label>Emoji</label><input type="text" id="a_emoji" placeholder="🌍"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Titre (FR)</label><input type="text" id="a_title_fr" required/></div>
+        <div class="form-group"><label>Titre (EN) — laisse vide pour traduction auto</label><input type="text" id="a_title_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Extrait (FR)</label><textarea id="a_excerpt_fr" rows="3" required></textarea></div>
+        <div class="form-group"><label>Extrait (EN) — laisse vide pour traduction auto</label><textarea id="a_excerpt_en" rows="3"></textarea></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Catégorie (FR)</label><input type="text" id="a_category_fr" placeholder="Tech, Tutoriel..."/></div>
+        <div class="form-group"><label>Catégorie (EN)</label><input type="text" id="a_category_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Date affichée</label><input type="text" id="a_date" placeholder="Avril 2026"/></div>
+        <div class="form-group"><label>Temps de lecture</label><input type="text" id="a_readTime" placeholder="4 min"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Tag affiché</label><input type="text" id="a_tag" placeholder="🔐 DevSecOps"/></div>
+        <div class="form-group"><label>Lien (LinkedIn, etc.)</label><input type="url" id="a_link"/></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" data-close="articleModal">Annuler</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: EXPERIENCE FORM -->
+<div class="modal hidden" id="experienceModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="experienceModalTitle">Nouvelle expérience</h3><button class="close-btn" data-close="experienceModal">&times;</button></div>
+    <form id="experienceForm">
+      <input type="hidden" id="e_docId"/>
+      <button type="button" class="btn-ghost" id="e_translateBtn" style="margin-bottom:1rem;color:#378add"><i class="fas fa-language"></i> Traduire FR → EN</button>
+      <div class="grid-2">
+        <div class="form-group"><label>Ordre d'affichage</label><input type="number" id="e_order" value="0" required/></div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="e_type"><option value="work">Expérience professionnelle</option><option value="education">Formation</option></select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Titre du poste (FR)</label><input type="text" id="e_title_fr" required/></div>
+        <div class="form-group"><label>Titre du poste (EN) — laisse vide pour traduction auto</label><input type="text" id="e_title_en"/></div>
+      </div>
+      <div class="form-group"><label>Entreprise / Établissement</label><input type="text" id="e_company" required/></div>
+      <div class="grid-2">
+        <div class="form-group"><label>Lieu (FR)</label><input type="text" id="e_location_fr"/></div>
+        <div class="form-group"><label>Lieu (EN)</label><input type="text" id="e_location_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Période (FR)</label><input type="text" id="e_period_fr" placeholder="Mars 2026 — Août 2026"/></div>
+        <div class="form-group"><label>Période (EN)</label><input type="text" id="e_period_en" placeholder="March 2026 — August 2026"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Durée (FR)</label><input type="text" id="e_duration_fr" placeholder="6 mois"/></div>
+        <div class="form-group"><label>Durée (EN)</label><input type="text" id="e_duration_en" placeholder="6 months"/></div>
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" id="e_current"/> En cours actuellement</label>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Description (FR)</label><textarea id="e_description_fr" rows="2"></textarea></div>
+        <div class="form-group"><label>Description (EN)</label><textarea id="e_description_en" rows="2"></textarea></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Points clés FR (un par ligne)</label><textarea id="e_highlights_fr" rows="4"></textarea></div>
+        <div class="form-group"><label>Points clés EN (un par ligne)</label><textarea id="e_highlights_en" rows="4"></textarea></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" data-close="experienceModal">Annuler</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: SKILL FORM -->
+<div class="modal hidden" id="skillModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="skillModalTitle">Nouvelle compétence</h3><button class="close-btn" data-close="skillModal">&times;</button></div>
+    <form id="skillForm">
+      <input type="hidden" id="s_docId"/>
+      <button type="button" class="btn-ghost" id="s_translateBtn" style="margin-bottom:1rem;color:#378add"><i class="fas fa-language"></i> Traduire FR → EN</button>
+      <div class="grid-2">
+        <div class="form-group"><label>Nom (non traduit, ex: Docker)</label><input type="text" id="s_name" required/></div>
+        <div class="form-group"><label>Ordre d'affichage</label><input type="number" id="s_order" value="0" required/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Catégorie (FR) — les compétences avec la même catégorie sont groupées ensemble</label><input type="text" id="s_category_fr" placeholder="ex: Langages" required/></div>
+        <div class="form-group"><label>Catégorie (EN) — laisse vide pour traduction auto</label><input type="text" id="s_category_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Description courte (FR)</label><input type="text" id="s_info_fr" placeholder="ex: Conteneurs · CI/CD" required/></div>
+        <div class="form-group"><label>Description courte (EN) — laisse vide pour traduction auto</label><input type="text" id="s_info_en"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Niveau</label>
+          <select id="s_level">
+            <option value="beginner">Débutant</option>
+            <option value="notions">Notions</option>
+            <option value="intermediate">Intermédiaire</option>
+            <option value="advanced">Avancé</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Icône (classe Font Awesome, ex: fab fa-docker)</label><input type="text" id="s_icon" placeholder="fab fa-docker" required/></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-ghost" data-close="skillModal">Annuler</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="../js/data/projects.js"></script>
+<script src="../js/data/experiences.js"></script>
+<script src="../js/data/articles.js"></script>
+<script src="../js/data/skills.js"></script>
+<script type="module" src="admin.js"></script>
+</body>
+</html>

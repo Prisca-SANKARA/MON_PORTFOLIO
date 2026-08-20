@@ -96,11 +96,11 @@ function applyTranslations(lang) {
   if (typeof renderProjects === 'function') renderProjects(lang);
   if (typeof renderExperiences === 'function') renderExperiences(lang);
   if (typeof renderArticles === 'function') renderArticles(lang);
+  if (typeof renderSkills === 'function') renderSkills(lang);
 
-  // Update lang buttons
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
-  });
+  // Le bouton affiche la langue vers laquelle on basculera au prochain clic
+  const toggleLabel = document.getElementById('langToggleLabel');
+  if (toggleLabel) toggleLabel.textContent = lang === 'fr' ? 'EN' : 'FR';
 }
 
 function initTyped(lang) {
@@ -118,10 +118,11 @@ function initTyped(lang) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      applyTranslations(btn.getAttribute('data-lang'));
+  const toggleBtn = document.getElementById('langToggleBtn');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      applyTranslations(currentLang === 'fr' ? 'en' : 'fr');
     });
-  });
+  }
   applyTranslations(currentLang);
 });

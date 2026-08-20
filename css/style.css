@@ -103,18 +103,19 @@ body {
     padding: .3rem .7rem;
     backdrop-filter: blur(10px);
 }
-.lang-btn {
+.lang-toggle-btn {
     font-family: 'Poppins', sans-serif;
     font-size: .8rem; font-weight: 600;
-    color: rgba(255,255,255,.5);
+    color: rgba(255,255,255,.7);
     background: none; border: none; cursor: pointer;
     padding: .1rem .3rem; border-radius: 100px;
+    display: flex; align-items: center; gap: .4rem;
     transition: all .2s; letter-spacing: .5px;
 }
-.lang-btn.active { color: var(--accent); }
-.lang-sep { color: rgba(255,255,255,.2); font-size: .7rem; }
+.lang-toggle-btn:hover { color: var(--accent); }
+.lang-toggle-btn.translating { opacity: .6; pointer-events: none; }
 [data-theme="light"] .lang-switch { background: rgba(0,0,0,.05); border-color: rgba(0,0,0,.1); }
-[data-theme="light"] .lang-btn { color: rgba(0,0,0,.4); }
+[data-theme="light"] .lang-toggle-btn { color: rgba(0,0,0,.55); }
 
 /* ========== NAVIGATION ========== */
 .nav-gauche {

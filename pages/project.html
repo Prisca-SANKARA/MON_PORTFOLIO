@@ -24,9 +24,6 @@
     .back{display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:rgba(230,57,70,.12);border:1px solid rgba(230,57,70,.3);border-radius:10px;color:var(--accent);font-size:.85rem;font-weight:600;text-decoration:none;transition:all .2s}
     .back:hover{background:rgba(230,57,70,.25)}
     .topbar-right{display:flex;align-items:center;gap:.5rem}
-    .lang-switch{display:flex;align-items:center;gap:.35rem;font-size:.8rem;font-weight:600;color:var(--muted)}
-    .lang-switch button{background:none;border:none;color:var(--muted);cursor:pointer;font:inherit;padding:.2rem .4rem;border-radius:6px}
-    .lang-switch button.active{color:var(--accent);background:rgba(230,57,70,.1)}
     .theme-btn{background:none;border:1px solid var(--border);color:var(--text);width:36px;height:36px;border-radius:9px;cursor:pointer;font-size:.9rem}
 
     .wrap{max-width:900px;margin:0 auto;padding:7rem 1.5rem 4rem;position:relative;z-index:10}
@@ -58,6 +55,50 @@
     .notfound{text-align:center;padding:8rem 1.5rem}
     .notfound .emoji-hero{font-size:4rem}
 
+    /* SECTIONS PERSONNALISÉES (mode "sections") */
+    .sections{margin-bottom:2rem}
+    .section-block{margin-bottom:2.5rem}
+    .section-heading{font-size:1.1rem;font-weight:800;margin-bottom:1.1rem;display:flex;align-items:center;gap:.6rem}
+    .section-heading::before{content:'';display:block;width:4px;height:20px;border-radius:2px;background:var(--accent);flex-shrink:0}
+
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.3rem;box-shadow:var(--shadow)}
+    .stat-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:.4rem}
+    .stat-value{font-size:1.6rem;font-weight:800;color:var(--accent)}
+    .stat-desc{font-size:.72rem;color:var(--muted);margin-top:.25rem}
+
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+    .gallery-item{position:relative;border-radius:14px;overflow:hidden;cursor:pointer;border:1px solid var(--border);box-shadow:var(--shadow);transition:transform .25s}
+    .gallery-item:hover{transform:translateY(-3px)}
+    .gallery-item.gallery-main{grid-column:1/-1;aspect-ratio:16/8}
+    .gallery-item:not(.gallery-main){aspect-ratio:4/3}
+    .gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery-label{position:absolute;bottom:0;left:0;right:0;padding:.55rem .9rem;background:linear-gradient(to top,rgba(0,0,0,.75),transparent);color:#fff;font-size:.75rem;font-weight:600}
+    .lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:2rem}
+    .lightbox.active{display:flex}
+    .lightbox img{max-width:88vw;max-height:88vh;border-radius:10px}
+    .lightbox-close{position:absolute;top:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;font-size:1.2rem;cursor:pointer}
+
+    .features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .feature-card,.decision,.challenge{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.1rem;box-shadow:var(--shadow)}
+    .feature-icon{font-size:1.3rem;margin-bottom:.5rem}
+    .feature-title,.decision-title,.challenge-title{font-size:.85rem;font-weight:700;margin-bottom:.35rem}
+    .feature-desc,.decision-text,.challenge-text{font-size:.78rem;color:var(--muted);line-height:1.6}
+
+    .decision{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:.7rem}
+    .decision-icon{width:36px;height:36px;border-radius:9px;background:rgba(230,57,70,.1);border:1px solid rgba(230,57,70,.2);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+
+    .challenge{border-left:3px solid var(--accent);border-radius:0 14px 14px 0;margin-bottom:.7rem}
+    .challenge-solution{display:block;margin-top:.4rem;font-size:.75rem;font-weight:700;color:#1d9e75}
+
+    .lesson{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.7rem}
+    .lesson-num{width:26px;height:26px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:800;color:#fff;flex-shrink:0}
+    .lesson-text{font-size:.83rem;color:var(--muted);line-height:1.6}
+
+    /* HTML PERSONNALISÉ (mode "html") */
+    .custom-frame{width:100%;border:0;display:block}
+
+    @media(max-width:700px){.stats-grid{grid-template-columns:repeat(2,1fr)}.gallery{grid-template-columns:1fr}.gallery-item.gallery-main{aspect-ratio:16/10}.features-grid{grid-template-columns:1fr}}
     @media(max-width:600px){h1{font-size:1.9rem}.wrap{padding-top:6rem}.desc{padding:1.25rem}}
   </style>
 </head>
@@ -65,18 +106,23 @@
   <div class="topbar">
     <a href="../index.html#portfolio" class="back"><i class="fas fa-arrow-left"></i> <span id="backLabel">Retour</span></a>
     <div class="topbar-right">
-      <div class="lang-switch">
-        <button data-lang="fr" class="active">FR</button>
-        <span>|</span>
-        <button data-lang="en">EN</button>
-      </div>
       <button class="theme-btn" id="themeBtn"><i class="fas fa-moon"></i></button>
     </div>
   </div>
 
   <div class="wrap" id="content"></div>
 
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox(event)">✕</button>
+    <img id="lightbox-img" src="" alt=""/>
+  </div>
+
   <script src="../js/data/projects.js"></script>
+  <script type="module" src="../js/firebase-data.js"></script>
+  <script type="module">
+    import { translateDomTextNodes } from '../js/data/auto-translate.js';
+    window.translateDomTextNodes = translateDomTextNodes;
+  </script>
   <script>
     // ── Theme (partagé avec le site principal via localStorage) ──
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -111,12 +157,88 @@
            notfound:'Project not found', notfoundTxt:'This project does not exist or has been moved.' }
     };
 
+    // ── Blocs "sections personnalisées" (mode richMode:'sections') ──
+    const SECTION_HEADINGS = {
+      stats: 'Chiffres clés', gallery: 'Galerie', features: 'Fonctionnalités',
+      decisions: 'Décisions techniques', challenges: 'Défis rencontrés', lessons: "Ce que j'ai appris"
+    };
+    function openLightbox(src){
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e){
+      if (e) e.stopPropagation();
+      document.getElementById('lightbox').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+    function renderStats(items){
+      return `<div class="stats-grid">${items.map(s => `
+        <div class="stat-card">
+          <div class="stat-label">${s.label || ''}</div>
+          <div class="stat-value">${s.value || ''}</div>
+          ${s.desc ? `<div class="stat-desc">${s.desc}</div>` : ''}
+        </div>`).join('')}</div>`;
+    }
+    function renderGallery(items){
+      return `<div class="gallery">${items.filter(g => g.image).map((g, i) => `
+        <div class="gallery-item ${i === 0 ? 'gallery-main' : ''}" onclick="openLightbox('${g.image}')">
+          <img src="${g.image}" alt="${g.caption || ''}" loading="lazy"/>
+          ${g.caption ? `<div class="gallery-label">${g.caption}</div>` : ''}
+        </div>`).join('')}</div>`;
+    }
+    function renderFeatures(items){
+      return `<div class="features-grid">${items.map(f => `
+        <div class="feature-card">
+          ${f.icon ? `<div class="feature-icon">${f.icon}</div>` : ''}
+          <div class="feature-title">${f.title || ''}</div>
+          <div class="feature-desc">${f.desc || ''}</div>
+        </div>`).join('')}</div>`;
+    }
+    function renderDecisions(items){
+      return items.map(d => `
+        <div class="decision">
+          <div class="decision-icon">${d.icon || '🧭'}</div>
+          <div><div class="decision-title">${d.title || ''}</div><div class="decision-text">${d.text || ''}</div></div>
+        </div>`).join('');
+    }
+    function renderChallenges(items){
+      return items.map(c => `
+        <div class="challenge">
+          <div class="challenge-title">${c.title || ''}</div>
+          <div class="challenge-text">${c.text || ''}</div>
+          ${c.solution ? `<span class="challenge-solution">✅ ${c.solution}</span>` : ''}
+        </div>`).join('');
+    }
+    function renderLessons(items){
+      return items.map((l, i) => `
+        <div class="lesson">
+          <div class="lesson-num">${i + 1}</div>
+          <div class="lesson-text">${l.text || ''}</div>
+        </div>`).join('');
+    }
+    const SECTION_RENDERERS = {
+      stats: renderStats, gallery: renderGallery, features: renderFeatures,
+      decisions: renderDecisions, challenges: renderChallenges, lessons: renderLessons
+    };
+    function renderSectionsBlock(sections){
+      if (!Array.isArray(sections) || !sections.length) return '';
+      return `<div class="sections">${sections.map(block => {
+        const renderer = SECTION_RENDERERS[block.type];
+        if (!renderer || !Array.isArray(block.items) || !block.items.length) return '';
+        return `<div class="section-block">
+          <div class="section-heading">${block.heading || SECTION_HEADINGS[block.type] || ''}</div>
+          ${renderer(block.items)}
+        </div>`;
+      }).join('')}</div>`;
+    }
+
     function render(){
       const t = T[lang];
       document.documentElement.setAttribute('lang', lang);
       document.getElementById('backLabel').textContent = t.back;
-      document.querySelectorAll('.lang-switch button').forEach(b =>
-        b.classList.toggle('active', b.dataset.lang === lang));
 
       const list = (typeof projectsData !== 'undefined' && projectsData[lang]) || [];
       const p = list.find(x => x.id === projectId);
@@ -134,6 +256,31 @@
       }
 
       document.title = p.title + ' — SANKARA P. DJAMILATOU PRISCA';
+
+      // Mode "HTML personnalisé" : la page sur mesure prend toute la place,
+      // le bandeau du gabarit générique (retour/langue/thème) s'efface.
+      if (p.richMode === 'html' && p.customHtml) {
+        document.querySelector('.topbar').style.display = 'none';
+        content.style.cssText = 'max-width:none;padding:0;margin:0';
+        content.innerHTML = `<iframe class="custom-frame" id="customFrame" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>`;
+        const frame = document.getElementById('customFrame');
+        frame.srcdoc = p.customHtml;
+        const fit = () => { try { frame.style.height = frame.contentWindow.document.documentElement.scrollHeight + 'px'; } catch (e) {} };
+        frame.addEventListener('load', () => {
+          fit();
+          setTimeout(fit, 400);
+          // Ce HTML sur-mesure n'a pas de version EN écrite à la main : on le
+          // traduit à la volée quand le visiteur est en anglais.
+          if (lang === 'en' && typeof window.translateDomTextNodes === 'function') {
+            window.translateDomTextNodes(frame.contentDocument.body).then(() => setTimeout(fit, 300));
+          }
+        });
+        window.addEventListener('resize', fit);
+        return;
+      }
+      document.querySelector('.topbar').style.display = '';
+      content.style.cssText = '';
+
       const hasImg = p.image && p.image !== '';
       const color = p.statusColor || '#e63946';
 
@@ -150,6 +297,8 @@
       const codeBtn = (p.github && p.github !== '')
         ? `<a href="${p.github}" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> ${t.code}</a>` : '';
 
+      const sectionsBlock = p.richMode === 'sections' ? renderSectionsBlock(p.sections) : '';
+
       content.innerHTML = `
         <div class="hero">
           ${mediaBlock}
@@ -161,17 +310,17 @@
         ${noteBlock}
         <div class="desc">${p.description}</div>
         <div class="tags">${(p.tags||[]).map(x => `<span class="tag">${x}</span>`).join('')}</div>
+        ${sectionsBlock}
         <div class="ctas">${demoBtn}${codeBtn}</div>
       `;
-    }
 
-    document.querySelectorAll('.lang-switch button').forEach(b => {
-      b.addEventListener('click', () => {
-        lang = b.dataset.lang;
-        localStorage.setItem('lang', lang);
-        render();
-      });
-    });
+      // Les sections personnalisées n'ont pas de version EN écrite à la main :
+      // on les traduit à la volée quand le visiteur est en anglais.
+      if (lang === 'en' && sectionsBlock && typeof window.translateDomTextNodes === 'function') {
+        const sectionsEl = content.querySelector('.sections');
+        if (sectionsEl) window.translateDomTextNodes(sectionsEl);
+      }
+    }
 
     render();
   </script>

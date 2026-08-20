@@ -1,0 +1,9 @@
+{
+  "name": "portfolio-sankara-prisca",
+  "version": "1.0.0",
+  "description": "Portfolio personnel — site statique HTML/CSS/JS avec contenu dynamique via Firestore + Cloudinary.",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve . -p 5500"
+  }
+}
