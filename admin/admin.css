@@ -1,5 +1,6 @@
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Poppins',sans-serif;background:#0a0e1a;color:#e8eaf0;min-height:100vh}
+html{overflow-x:hidden}
+body{font-family:'Poppins',sans-serif;background:#0a0e1a;color:#e8eaf0;min-height:100vh;overflow-x:hidden}
 .hidden{display:none !important}
 
 /* LOGIN */
@@ -31,8 +32,8 @@ body{font-family:'Poppins',sans-serif;background:#0a0e1a;color:#e8eaf0;min-heigh
 .admin-header{display:flex;justify-content:space-between;align-items:center;padding:1.2rem 2rem;border-bottom:1px solid rgba(255,255,255,.08)}
 .brand{font-weight:700;display:flex;gap:.6rem;align-items:center;color:#e63946}
 .header-actions{display:flex;gap:.8rem}
-.tabs{display:flex;gap:.5rem;padding:1rem 2rem 0;border-bottom:1px solid rgba(255,255,255,.08)}
-.tab-btn{background:none;border:none;color:#9aa3b8;padding:.8rem 1.2rem;font-size:.9rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;display:flex;gap:.5rem;align-items:center}
+.tabs{display:flex;gap:.5rem;padding:1rem 2rem 0;border-bottom:1px solid rgba(255,255,255,.08);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab-btn{background:none;border:none;color:#9aa3b8;padding:.8rem 1.2rem;font-size:.9rem;font-weight:500;cursor:pointer;border-bottom:2px solid transparent;display:flex;gap:.5rem;align-items:center;flex-shrink:0;white-space:nowrap}
 .tab-btn.active{color:#e63946;border-color:#e63946}
 .admin-main{padding:2rem;max-width:1100px;margin:0 auto}
 .tab-panel{display:none}
@@ -54,13 +55,25 @@ body{font-family:'Poppins',sans-serif;background:#0a0e1a;color:#e8eaf0;min-heigh
 
 /* MODAL */
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:1.5rem}
-.modal-box{background:#111729;border-radius:14px;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;padding:1.8rem}
+.modal-box{background:#111729;border-radius:14px;max-width:640px;width:100%;min-width:0;max-height:88vh;overflow-y:auto;overflow-x:hidden;padding:1.8rem}
+.modal-box .form-group label{overflow-wrap:break-word}
+.grid-2 > .form-group{min-width:0}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem}
 .close-btn{background:none;border:none;color:#9aa3b8;font-size:1.5rem;cursor:pointer;line-height:1}
 .modal-actions{display:flex;justify-content:flex-end;gap:.8rem;margin-top:1rem}
 .img-preview{max-width:100%;max-height:160px;border-radius:8px;margin-top:.6rem;display:block}
 .upload-progress{height:5px;background:rgba(255,255,255,.08);border-radius:3px;margin-top:.5rem;overflow:hidden}
 .upload-progress .bar{height:100%;width:0;background:#e63946;transition:width .2s}
+
+/* MOBILE */
+@media(max-width:640px){
+  .admin-header{flex-wrap:wrap;gap:.6rem;padding:1rem}
+  .tabs{padding:1rem 1rem 0}
+  .admin-main{padding:1.2rem}
+  .modal{padding:.8rem}
+  .modal-box{padding:1.2rem}
+  .panel-head{flex-wrap:wrap;gap:.8rem}
+}
 
 /* SECTIONS EDITOR (page détail personnalisée) */
 .section-block{background:#0a0e1a;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:1rem;margin-bottom:1rem}

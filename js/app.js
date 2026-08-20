@@ -267,28 +267,33 @@ const techCardIcon = document.getElementById('techCardIcon');
 // Firestore, donc on écoute sur le conteneur stable plutôt que sur chaque item.
 const skillsSection = document.getElementById('skills');
 let hoveredTechItem = null;
+
+function showTechCard(item, e) {
+  hoveredTechItem = item;
+  const name = item.querySelector('span').textContent;
+  const info = item.getAttribute('data-info') || '';
+  const levelLabel = item.getAttribute('data-level-label') || '';
+  const levelKey = item.getAttribute('data-level-key') || '';
+  const icon = item.getAttribute('data-icon') || 'fas fa-code';
+
+  techCardName.textContent = name;
+  techCardInfo.textContent = info;
+  techCardLevel.textContent = levelLabel;
+  techCardIcon.className = icon;
+
+  const color = (typeof LEVEL_COLORS !== 'undefined' && LEVEL_COLORS[levelKey]) || '#e63946';
+  techCardLevel.style.background = color + '22';
+  techCardLevel.style.color = color;
+  techCard.classList.add('visible');
+  moveCard(e);
+}
+
 if (skillsSection) {
+  // Souris (desktop) : survol classique
   skillsSection.addEventListener('mouseover', (e) => {
     const item = e.target.closest('.tech-item');
     if (!item || item === hoveredTechItem) return;
-    hoveredTechItem = item;
-
-    const name = item.querySelector('span').textContent;
-    const info = item.getAttribute('data-info') || '';
-    const levelLabel = item.getAttribute('data-level-label') || '';
-    const levelKey = item.getAttribute('data-level-key') || '';
-    const icon = item.getAttribute('data-icon') || 'fas fa-code';
-
-    techCardName.textContent = name;
-    techCardInfo.textContent = info;
-    techCardLevel.textContent = levelLabel;
-    techCardIcon.className = icon;
-
-    const color = (typeof LEVEL_COLORS !== 'undefined' && LEVEL_COLORS[levelKey]) || '#e63946';
-    techCardLevel.style.background = color + '22';
-    techCardLevel.style.color = color;
-    techCard.classList.add('visible');
-    moveCard(e);
+    showTechCard(item, e);
   });
 
   skillsSection.addEventListener('mousemove', (e) => {
@@ -301,6 +306,27 @@ if (skillsSection) {
     if (e.relatedTarget && item.contains(e.relatedTarget)) return;
     hoveredTechItem = null;
     techCard.classList.remove('visible');
+  });
+
+  // Tactile (mobile) : il n'y a pas de "survol" sur un écran tactile, donc
+  // sans ça la carte d'info d'une techno n'est jamais consultable au doigt.
+  // Un tap affiche/masque la carte ; un tap ailleurs la referme.
+  skillsSection.addEventListener('click', (e) => {
+    const item = e.target.closest('.tech-item');
+    if (!item) return;
+    if (item === hoveredTechItem && techCard.classList.contains('visible')) {
+      techCard.classList.remove('visible');
+      hoveredTechItem = null;
+    } else {
+      showTechCard(item, e);
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.tech-item') && !e.target.closest('.tech-hover-card')) {
+      techCard.classList.remove('visible');
+      hoveredTechItem = null;
+    }
   });
 }
 
