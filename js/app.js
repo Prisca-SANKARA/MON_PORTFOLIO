@@ -172,11 +172,8 @@ document.querySelectorAll('.stat-number').forEach(animateCounter);
 window.addEventListener('scroll', handleScrollAnimation);
 
 // ── CONTACT FORM ─────────────────────────────────────────────
-// 1. Crée un compte gratuit sur https://formspree.io (avec ton email).
-// 2. Crée un nouveau formulaire → copie l'ID (ex: "xdorwkey").
-// 3. Remplace "YOUR_FORM_ID" ci-dessous par cet ID.
-// Tant que ce n'est pas fait, le formulaire ouvre ton logiciel mail (aucun message perdu).
-const FORMSPREE_ID = 'YOUR_FORM_ID';
+// Envoi réel via Formspree (https://formspree.io/f/mnpayoap).
+const FORMSPREE_ID = 'mnpayoap';
 const CONTACT_EMAIL = 'djamilatoupriscasankara@gmail.com';
 
 document.getElementById('contactForm').addEventListener('submit', async e => {
