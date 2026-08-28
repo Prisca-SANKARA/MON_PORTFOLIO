@@ -6,7 +6,7 @@ import {
   getFirestore, collection, doc, addDoc, setDoc, deleteDoc, onSnapshot, query, orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig, ADMIN_EMAILS } from '../js/firebase-config.js';
-import { uploadImageToCloudinary } from '../js/cloudinary-upload.js';
+import { uploadImageToCloudinary, uploadFileToCloudinary } from '../js/cloudinary-upload.js';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -653,6 +653,96 @@ function editSkill(s) {
   openModal('skillModal');
 }
 
+// ── PROFIL (accueil/hero + à propos + photo + CV) ─────────────
+// Document unique (pas une collection) : settings/profile.
+const PROFILE_FIELDS = ['hero_tag', 'hero_line1', 'hero_line2', 'hero_desc', 'about_sub', 'about_p1', 'about_p2', 'about_p3', 'available'];
+const profileDoc = doc(db, 'settings', 'profile');
+
+document.getElementById('pf_photoFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const progress = document.getElementById('pf_photoProgress');
+  const bar = progress.querySelector('.bar');
+  progress.classList.remove('hidden');
+  try {
+    const url = await uploadFileToCloudinary(file, 'image', (pct) => { bar.style.width = pct + '%'; });
+    document.getElementById('pf_photo').value = url;
+    const preview = document.getElementById('pf_photoPreview');
+    preview.src = url;
+    preview.classList.remove('hidden');
+  } catch (err) {
+    alert('Upload échoué : ' + err.message);
+  } finally {
+    setTimeout(() => progress.classList.add('hidden'), 600);
+  }
+});
+
+document.getElementById('pf_cvFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const progress = document.getElementById('pf_cvProgress');
+  const bar = progress.querySelector('.bar');
+  progress.classList.remove('hidden');
+  try {
+    const url = await uploadFileToCloudinary(file, 'raw', (pct) => { bar.style.width = pct + '%'; });
+    document.getElementById('pf_cv').value = url;
+    document.getElementById('pf_cvCurrent').textContent = 'Nouveau CV prêt à enregistrer : ' + file.name;
+  } catch (err) {
+    alert('Upload échoué : ' + err.message);
+  } finally {
+    setTimeout(() => progress.classList.add('hidden'), 600);
+  }
+});
+
+document.getElementById('pf_translateBtn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  setBtnLoading(btn, true);
+  await Promise.all(PROFILE_FIELDS.map(async (f) => {
+    const frInput = document.getElementById(`pf_${f}_fr`);
+    const enInput = document.getElementById(`pf_${f}_en`);
+    if (frInput.value && !enInput.value) {
+      const translated = await translateFrToEn(frInput.value);
+      if (translated) enInput.value = translated;
+    }
+  }));
+  setBtnLoading(btn, false);
+});
+
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const data = { photo: document.getElementById('pf_photo').value, cv: document.getElementById('pf_cv').value };
+  PROFILE_FIELDS.forEach(f => {
+    data[`${f}_fr`] = document.getElementById(`pf_${f}_fr`).value;
+    data[`${f}_en`] = document.getElementById(`pf_${f}_en`).value;
+  });
+  try {
+    await setDoc(profileDoc, data, { merge: true });
+    alert('Profil enregistré !');
+  } catch (err) {
+    alert('Erreur : ' + err.message);
+  }
+});
+
+function loadProfileForm(data) {
+  if (!data) return;
+  PROFILE_FIELDS.forEach(f => {
+    const frInput = document.getElementById(`pf_${f}_fr`);
+    const enInput = document.getElementById(`pf_${f}_en`);
+    if (data[`${f}_fr`] !== undefined) frInput.value = data[`${f}_fr`];
+    if (data[`${f}_en`] !== undefined) enInput.value = data[`${f}_en`];
+  });
+  if (data.photo) {
+    document.getElementById('pf_photo').value = data.photo;
+    const preview = document.getElementById('pf_photoPreview');
+    preview.src = data.photo;
+    preview.classList.remove('hidden');
+  }
+  if (data.cv) {
+    document.getElementById('pf_cv').value = data.cv;
+    document.getElementById('pf_cvCurrent').textContent = 'CV actuel : ' + data.cv;
+  }
+}
+
 // ── DELETE (delegated, works for all 3 collections) ─────────
 document.addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-delete]');
@@ -780,5 +870,8 @@ function initCollections() {
   onSnapshot(query(skillsCol, orderBy('order', 'asc')), (snap) => {
     const items = snap.docs.map(d => ({ docId: d.id, ...d.data() }));
     renderSkillsAdmin(items);
+  });
+  onSnapshot(profileDoc, (snap) => {
+    if (snap.exists()) loadProfileForm(snap.data());
   });
 }

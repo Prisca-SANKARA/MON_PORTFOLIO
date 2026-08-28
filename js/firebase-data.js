@@ -19,7 +19,7 @@
  */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
-  getFirestore, collection, getDocs, query, orderBy
+  getFirestore, collection, getDocs, query, orderBy, doc, getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from './firebase-config.js';
 import { autoTranslateItems } from './data/auto-translate.js';
@@ -100,6 +100,26 @@ async function loadSkills() {
   return { fr, en };
 }
 
+// Champs du document settings/profile → clés data-i18n correspondantes sur la page
+const PROFILE_FIELDS = ['hero_tag', 'hero_line1', 'hero_line2', 'hero_desc', 'about_sub', 'about_p1', 'about_p2', 'about_p3', 'available'];
+const PROFILE_FIELD_TO_I18N_KEY = {
+  hero_tag: 'hero-tag', hero_line1: 'hero-line1', hero_line2: 'hero-line2', hero_desc: 'hero-desc',
+  about_sub: 'about-sub', about_p1: 'about-p1', about_p2: 'about-p2', about_p3: 'about-p3', available: 'available'
+};
+
+async function loadProfile() {
+  const snap = await getDoc(doc(db, 'settings', 'profile'));
+  if (!snap.exists()) return null;
+  const data = snap.data();
+  const fr = {}, en = {};
+  PROFILE_FIELDS.forEach(field => {
+    const key = PROFILE_FIELD_TO_I18N_KEY[field];
+    if (data[`${field}_fr`]) fr[key] = data[`${field}_fr`];
+    if (data[`${field}_en`]) en[key] = data[`${field}_en`];
+  });
+  return { fr, en, photo: data.photo || '', cv: data.cv || '' };
+}
+
 // Réapplique le rendu, quelle que soit la page où ce script est chargé :
 // - page d'accueil : applyTranslations() re-render projets/articles/expériences + textes statiques
 // - pages/project.html : render() (fonction locale à cette page) redessine la fiche projet
@@ -155,6 +175,19 @@ async function refreshDynamicContent() {
         .then(changed => { if (changed) refreshCurrentPage(); });
     }
   } catch (e) { console.warn('[portfolio] Échec chargement compétences Firestore, fallback statique conservé.', e); }
+
+  try {
+    const profile = await loadProfile();
+    if (profile && typeof profileData !== 'undefined') {
+      Object.assign(profileData.fr, profile.fr);
+      Object.assign(profileData.en, profile.en);
+      profileData.photo = profile.photo;
+      profileData.cv = profile.cv;
+      refreshCurrentPage();
+      autoTranslateItems([profileData.fr], [profileData.en], Object.values(PROFILE_FIELD_TO_I18N_KEY))
+        .then(changed => { if (changed) refreshCurrentPage(); });
+    }
+  } catch (e) { console.warn('[portfolio] Échec chargement profil Firestore, fallback statique conservé.', e); }
 }
 
 document.addEventListener('DOMContentLoaded', refreshDynamicContent);

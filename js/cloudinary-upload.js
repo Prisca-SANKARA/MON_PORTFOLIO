@@ -1,16 +1,17 @@
 import { cloudinaryConfig } from './firebase-config.js';
 
 /**
- * Upload un fichier image vers Cloudinary (upload "unsigned", pas besoin de backend).
+ * Upload un fichier vers Cloudinary (upload "unsigned", pas besoin de backend).
  * @param {File} file
+ * @param {'image'|'raw'|'auto'} resourceType - 'image' pour photos, 'raw' pour PDF/documents
  * @param {(percent:number)=>void} onProgress
- * @returns {Promise<string>} l'URL sécurisée (https) de l'image uploadée
+ * @returns {Promise<string>} l'URL sécurisée (https) du fichier uploadé
  */
-export function uploadImageToCloudinary(file, onProgress = () => {}) {
+export function uploadFileToCloudinary(file, resourceType = 'image', onProgress = () => {}) {
   return new Promise((resolve, reject) => {
     if (!file) return reject(new Error('Aucun fichier fourni'));
 
-    const url = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/image/upload`;
+    const url = `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/${resourceType}/upload`;
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', cloudinaryConfig.uploadPreset);
@@ -33,4 +34,9 @@ export function uploadImageToCloudinary(file, onProgress = () => {}) {
     xhr.onerror = () => reject(new Error('Erreur réseau pendant l\'upload'));
     xhr.send(formData);
   });
+}
+
+/** Raccourci pour les images (comportement historique de cette fonction). */
+export function uploadImageToCloudinary(file, onProgress = () => {}) {
+  return uploadFileToCloudinary(file, 'image', onProgress);
 }

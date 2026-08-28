@@ -97,6 +97,7 @@ function applyTranslations(lang) {
   if (typeof renderExperiences === 'function') renderExperiences(lang);
   if (typeof renderArticles === 'function') renderArticles(lang);
   if (typeof renderSkills === 'function') renderSkills(lang);
+  if (typeof applyProfileOverrides === 'function') applyProfileOverrides(lang);
 
   // Le bouton affiche la langue vers laquelle on basculera au prochain clic
   const toggleLabel = document.getElementById('langToggleLabel');
