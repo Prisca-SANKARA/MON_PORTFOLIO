@@ -726,6 +726,7 @@ footer { background: var(--bg-secondary); padding: 50px 80px 25px; border-top: 1
 
 .project-image-wrapper.has-img .project-status-badge {
   position: absolute;
+  top: auto;
   bottom: 10px;
   right: 10px;
 }
