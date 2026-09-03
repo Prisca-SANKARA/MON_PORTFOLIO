@@ -14,7 +14,7 @@ export const firebaseConfig = {
 
 // ── Configuration Cloudinary (upload d'images sans backend) ────
 export const cloudinaryConfig = {
-  cloudName: "gkthojrx",
+  cloudName: "gkthojxr",
   uploadPreset: "mon_portfolio"
 };
 

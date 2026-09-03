@@ -343,6 +343,35 @@ document.getElementById('newProjectBtn').addEventListener('click', () => {
   openModal('projectModal');
 });
 
+// Upload d'image pour le mode "HTML personnalisé" : insère <img> à la
+// position du curseur dans le textarea (pas de champ URL séparé à gérer).
+document.getElementById('p_htmlImageUploadBtn').addEventListener('click', () => {
+  document.getElementById('p_htmlImageFile').click();
+});
+document.getElementById('p_htmlImageFile').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const progress = document.getElementById('p_htmlImageProgress');
+  const bar = progress.querySelector('.bar');
+  progress.classList.remove('hidden');
+  try {
+    const url = await uploadFileToCloudinary(file, 'image', (pct) => { bar.style.width = pct + '%'; });
+    const textarea = document.getElementById('p_customHtml');
+    const tag = `<img src="${url}" alt=""/>`;
+    const start = textarea.selectionStart ?? textarea.value.length;
+    const end = textarea.selectionEnd ?? textarea.value.length;
+    textarea.value = textarea.value.slice(0, start) + tag + textarea.value.slice(end);
+    const newPos = start + tag.length;
+    textarea.focus();
+    textarea.setSelectionRange(newPos, newPos);
+  } catch (err) {
+    alert('Upload échoué : ' + err.message);
+  } finally {
+    setTimeout(() => progress.classList.add('hidden'), 600);
+    e.target.value = '';
+  }
+});
+
 document.getElementById('p_imageFile').addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
