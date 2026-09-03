@@ -245,12 +245,18 @@
 
       <div class="form-group hidden" id="p_htmlEditor">
         <label>HTML personnalisé — page HTML/CSS/JS complète et autonome (comme TaskFlow), affichée dans un cadre isolé</label>
-        <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem">
-          <button type="button" class="btn-ghost" id="p_htmlImageUploadBtn" style="color:#378add"><i class="fas fa-image"></i> Uploader une image</button>
-          <input type="file" id="p_htmlImageFile" accept="image/*" class="hidden"/>
-          <span style="font-size:.75rem;color:#9aa3b8">insère &lt;img&gt; à l'endroit du curseur dans le champ ci-dessous</span>
+
+        <div class="section-block" style="margin-bottom:1rem">
+          <div class="section-block-head">
+            <span class="label">🖼️ Images de la page</span>
+          </div>
+          <p style="font-size:.78rem;color:#9aa3b8;margin-bottom:.8rem">
+            Dans ton code, écris <code style="background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px">{{IMAGE_1}}</code>, <code style="background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px">{{IMAGE_2}}</code>... partout où tu veux une image (dans <code>src="..."</code> ou dans <code>onclick="openLightbox('...')"</code>). Uploade ensuite ici — chaque numéro remplace automatiquement TOUTES ses occurrences dans le code, sans avoir à le modifier à la main.
+          </p>
+          <div id="p_htmlImageSlots"></div>
+          <button type="button" class="btn-ghost" id="p_htmlAddSlotBtn" style="font-size:.8rem"><i class="fas fa-plus"></i> Ajouter un emplacement image</button>
         </div>
-        <div class="upload-progress hidden" id="p_htmlImageProgress"><div class="bar"></div></div>
+
         <textarea id="p_customHtml" rows="10" style="font-family:monospace;font-size:.78rem"></textarea>
       </div>
 

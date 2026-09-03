@@ -337,39 +337,84 @@ document.getElementById('newProjectBtn').addEventListener('click', () => {
   currentSections = [];
   document.getElementById('p_richMode').value = 'standard';
   document.getElementById('p_customHtml').value = '';
+  htmlImageSlotCount = 4;
   updateRichModeVisibility();
   renderSectionsEditor();
+  renderHtmlImageSlots();
   document.getElementById('projectModalTitle').textContent = 'Nouveau projet';
   openModal('projectModal');
 });
 
-// Upload d'image pour le mode "HTML personnalisé" : insère <img> à la
-// position du curseur dans le textarea (pas de champ URL séparé à gérer).
-document.getElementById('p_htmlImageUploadBtn').addEventListener('click', () => {
-  document.getElementById('p_htmlImageFile').click();
+// ── EMPLACEMENTS IMAGES DU HTML PERSONNALISÉ ─────────────────
+// Convention : le code contient des jetons {{IMAGE_1}}, {{IMAGE_2}}... à la
+// place des URLs d'image. Chaque emplacement numéroté ici remplace TOUTES
+// les occurrences de son jeton dans le textarea au moment de l'upload —
+// pas besoin de chercher où coller l'URL dans le code.
+let htmlImageSlotCount = 4;
+
+function countExistingImageTokens(html) {
+  const matches = [...(html || '').matchAll(/\{\{IMAGE_(\d+)\}\}/g)].map(m => Number(m[1]));
+  return matches.length ? Math.max(...matches) : 0;
+}
+
+function tokenPresentCount(html, n) {
+  return ((html || '').match(new RegExp(`\\{\\{IMAGE_${n}\\}\\}`, 'g')) || []).length;
+}
+
+function renderHtmlImageSlots() {
+  const container = document.getElementById('p_htmlImageSlots');
+  const html = document.getElementById('p_customHtml').value;
+  container.innerHTML = Array.from({ length: htmlImageSlotCount }, (_, i) => i + 1).map(n => {
+    const remaining = tokenPresentCount(html, n);
+    const status = remaining > 0
+      ? `<span style="color:#f5c842">jeton présent (${remaining}×) — pas encore uploadée</span>`
+      : `<span style="color:#1d9e75">✓ remplie (ou jeton absent du code)</span>`;
+    return `
+      <div class="section-item" data-slot="${n}" style="display:flex;align-items:center;gap:.8rem;flex-wrap:wrap">
+        <strong style="min-width:70px">Image ${n}</strong>
+        <input type="file" accept="image/*" data-slot-upload style="flex:1;min-width:180px"/>
+        <span style="font-size:.75rem">${status}</span>
+        <div class="upload-progress hidden" style="flex-basis:100%"><div class="bar"></div></div>
+      </div>`;
+  }).join('');
+}
+
+document.getElementById('p_htmlAddSlotBtn').addEventListener('click', () => {
+  htmlImageSlotCount++;
+  renderHtmlImageSlots();
 });
-document.getElementById('p_htmlImageFile').addEventListener('change', async (e) => {
+
+document.getElementById('p_htmlImageSlots').addEventListener('change', async (e) => {
+  if (!e.target.matches('[data-slot-upload]')) return;
   const file = e.target.files[0];
   if (!file) return;
-  const progress = document.getElementById('p_htmlImageProgress');
+  const slotEl = e.target.closest('[data-slot]');
+  const n = Number(slotEl.dataset.slot);
+  const progress = slotEl.querySelector('.upload-progress');
   const bar = progress.querySelector('.bar');
   progress.classList.remove('hidden');
   try {
     const url = await uploadFileToCloudinary(file, 'image', (pct) => { bar.style.width = pct + '%'; });
     const textarea = document.getElementById('p_customHtml');
-    const tag = `<img src="${url}" alt=""/>`;
-    const start = textarea.selectionStart ?? textarea.value.length;
-    const end = textarea.selectionEnd ?? textarea.value.length;
-    textarea.value = textarea.value.slice(0, start) + tag + textarea.value.slice(end);
-    const newPos = start + tag.length;
-    textarea.focus();
-    textarea.setSelectionRange(newPos, newPos);
+    const token = `{{IMAGE_${n}}}`;
+    if (!textarea.value.includes(token)) {
+      alert(`Aucun jeton ${token} trouvé dans le code — ajoute-le à l'endroit voulu (ex: src="${token}") puis réessaie.`);
+      return;
+    }
+    textarea.value = textarea.value.split(token).join(url);
+    renderHtmlImageSlots();
   } catch (err) {
     alert('Upload échoué : ' + err.message);
   } finally {
     setTimeout(() => progress.classList.add('hidden'), 600);
-    e.target.value = '';
   }
+});
+
+// Re-scanne les jetons restants à chaque frappe (sans perdre le focus : léger debounce)
+let htmlSlotsScanTimer = null;
+document.getElementById('p_customHtml').addEventListener('input', () => {
+  clearTimeout(htmlSlotsScanTimer);
+  htmlSlotsScanTimer = setTimeout(renderHtmlImageSlots, 400);
 });
 
 document.getElementById('p_imageFile').addEventListener('change', async (e) => {
@@ -464,8 +509,10 @@ function editProject(p) {
   currentSections = Array.isArray(p.sections) ? JSON.parse(JSON.stringify(p.sections)) : [];
   document.getElementById('p_richMode').value = p.richMode || 'standard';
   document.getElementById('p_customHtml').value = p.customHtml || '';
+  htmlImageSlotCount = Math.max(4, countExistingImageTokens(p.customHtml || ''));
   updateRichModeVisibility();
   renderSectionsEditor();
+  renderHtmlImageSlots();
   document.getElementById('projectModalTitle').textContent = 'Modifier : ' + (p.title_fr || p.docId);
   openModal('projectModal');
 }
