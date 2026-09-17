@@ -729,9 +729,32 @@ function editSkill(s) {
   openModal('skillModal');
 }
 
-// ── PROFIL (accueil/hero + à propos + photo + CV) ─────────────
+// ── PROFIL (identité + hero + à propos + sections + contact + pied de page) ──
 // Document unique (pas une collection) : settings/profile.
-const PROFILE_FIELDS = ['hero_tag', 'hero_line1', 'hero_line2', 'hero_desc', 'about_sub', 'about_p1', 'about_p2', 'about_p3', 'available'];
+// PROFILE_FIELDS : champs bilingues FR/EN (inputs pf_{f}_fr / pf_{f}_en).
+const PROFILE_FIELDS = [
+  'hero_tag', 'hero_line1', 'hero_line2', 'hero_desc', 'hero_badge1', 'hero_badge2',
+  'nav_title', 'nav_sub',
+  'about_tag', 'about_title', 'about_sub', 'about_p1', 'about_p2', 'about_p3', 'available',
+  'location_badge1', 'location_badge2',
+  'stat1', 'stat2', 'stat3', 'stat4',
+  'skills_tag', 'skills_title', 'skills_sub',
+  'portfolio_tag', 'portfolio_title',
+  'exp_tag', 'exp_title',
+  'articles_tag', 'articles_title', 'articles_sub', 'articles_more',
+  'contact_tag', 'contact_title', 'contact_location',
+  'footer_desc', 'footer_copy',
+  'typed'
+];
+// Champs bilingues volontairement exclus du bouton "Traduire" (texte multi-ligne,
+// une traduction automatique brute mélangerait les lignes) :
+const PROFILE_FIELDS_NO_AUTOTRANSLATE = ['typed'];
+// PROFILE_SINGLE_FIELDS : champs uniques, pas de version EN (input pf_{f}).
+const PROFILE_SINGLE_FIELDS = [
+  'nav_name', 'display_name',
+  'contact_email', 'contact_phone', 'contact_linkedin_url', 'contact_linkedin_handle',
+  'contact_github_url', 'contact_github_handle'
+];
 const profileDoc = doc(db, 'settings', 'profile');
 
 document.getElementById('pf_photoFile').addEventListener('change', async (e) => {
@@ -773,7 +796,7 @@ document.getElementById('pf_cvFile').addEventListener('change', async (e) => {
 document.getElementById('pf_translateBtn').addEventListener('click', async (e) => {
   const btn = e.currentTarget;
   setBtnLoading(btn, true);
-  await Promise.all(PROFILE_FIELDS.map(async (f) => {
+  await Promise.all(PROFILE_FIELDS.filter(f => !PROFILE_FIELDS_NO_AUTOTRANSLATE.includes(f)).map(async (f) => {
     const frInput = document.getElementById(`pf_${f}_fr`);
     const enInput = document.getElementById(`pf_${f}_en`);
     if (frInput.value && !enInput.value) {
@@ -791,6 +814,9 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     data[`${f}_fr`] = document.getElementById(`pf_${f}_fr`).value;
     data[`${f}_en`] = document.getElementById(`pf_${f}_en`).value;
   });
+  PROFILE_SINGLE_FIELDS.forEach(f => {
+    data[f] = document.getElementById(`pf_${f}`).value;
+  });
   try {
     await setDoc(profileDoc, data, { merge: true });
     alert('Profil enregistré !');
@@ -806,6 +832,10 @@ function loadProfileForm(data) {
     const enInput = document.getElementById(`pf_${f}_en`);
     if (data[`${f}_fr`] !== undefined) frInput.value = data[`${f}_fr`];
     if (data[`${f}_en`] !== undefined) enInput.value = data[`${f}_en`];
+  });
+  PROFILE_SINGLE_FIELDS.forEach(f => {
+    const input = document.getElementById(`pf_${f}`);
+    if (data[f] !== undefined) input.value = data[f];
   });
   if (data.photo) {
     document.getElementById('pf_photo').value = data.photo;

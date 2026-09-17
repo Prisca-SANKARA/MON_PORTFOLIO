@@ -101,11 +101,22 @@ async function loadSkills() {
 }
 
 // Champs du document settings/profile → clés data-i18n correspondantes sur la page
-const PROFILE_FIELDS = ['hero_tag', 'hero_line1', 'hero_line2', 'hero_desc', 'about_sub', 'about_p1', 'about_p2', 'about_p3', 'available'];
 const PROFILE_FIELD_TO_I18N_KEY = {
   hero_tag: 'hero-tag', hero_line1: 'hero-line1', hero_line2: 'hero-line2', hero_desc: 'hero-desc',
-  about_sub: 'about-sub', about_p1: 'about-p1', about_p2: 'about-p2', about_p3: 'about-p3', available: 'available'
+  hero_badge1: 'hero-badge1', hero_badge2: 'hero-badge2',
+  nav_title: 'nav-title', nav_sub: 'nav-sub',
+  about_tag: 'about-tag', about_title: 'about-title', about_sub: 'about-sub',
+  about_p1: 'about-p1', about_p2: 'about-p2', about_p3: 'about-p3', available: 'available',
+  location_badge1: 'location-badge1', location_badge2: 'location-badge2',
+  stat1: 'stat1', stat2: 'stat2', stat3: 'stat3', stat4: 'stat4',
+  skills_tag: 'skills-tag', skills_title: 'skills-title', skills_sub: 'skills-sub',
+  portfolio_tag: 'portfolio-tag', portfolio_title: 'portfolio-title',
+  exp_tag: 'exp-tag', exp_title: 'exp-title',
+  articles_tag: 'articles-tag', articles_title: 'articles-title', articles_sub: 'articles-sub', articles_more: 'articles-more',
+  contact_tag: 'contact-tag', contact_title: 'contact-title',
+  footer_desc: 'footer-desc', footer_copy: 'footer-copy'
 };
+const PROFILE_FIELDS = Object.keys(PROFILE_FIELD_TO_I18N_KEY);
 
 async function loadProfile() {
   const snap = await getDoc(doc(db, 'settings', 'profile'));
@@ -117,7 +128,21 @@ async function loadProfile() {
     if (data[`${field}_fr`]) fr[key] = data[`${field}_fr`];
     if (data[`${field}_en`]) en[key] = data[`${field}_en`];
   });
-  return { fr, en, photo: data.photo || '', cv: data.cv || '' };
+  return {
+    fr, en,
+    photo: data.photo || '', cv: data.cv || '',
+    navName: data.nav_name || '', displayName: data.display_name || '',
+    typed: {
+      fr: (data.typed_fr || '').split('\n').map(s => s.trim()).filter(Boolean),
+      en: (data.typed_en || '').split('\n').map(s => s.trim()).filter(Boolean)
+    },
+    contact: {
+      email: data.contact_email || '', phone: data.contact_phone || '',
+      locationFr: data.contact_location_fr || '', locationEn: data.contact_location_en || '',
+      linkedinUrl: data.contact_linkedin_url || '', linkedinHandle: data.contact_linkedin_handle || '',
+      githubUrl: data.contact_github_url || '', githubHandle: data.contact_github_handle || ''
+    }
+  };
 }
 
 // Réapplique le rendu, quelle que soit la page où ce script est chargé :
@@ -183,6 +208,10 @@ async function refreshDynamicContent() {
       Object.assign(profileData.en, profile.en);
       profileData.photo = profile.photo;
       profileData.cv = profile.cv;
+      profileData.navName = profile.navName;
+      profileData.displayName = profile.displayName;
+      Object.assign(profileData.typed, profile.typed);
+      Object.assign(profileData.contact, profile.contact);
       refreshCurrentPage();
       autoTranslateItems([profileData.fr], [profileData.en], Object.values(PROFILE_FIELD_TO_I18N_KEY))
         .then(changed => { if (changed) refreshCurrentPage(); });

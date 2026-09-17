@@ -86,11 +86,10 @@ function applyTranslations(lang) {
     }
   });
 
-  // Update typed strings
-  if (window.typedInstance) {
-    window.typedInstance.destroy();
-    initTyped(lang);
-  }
+  // Update typed strings (destroy previous instance if any, always (re)init —
+  // sinon le texte animé ne démarre jamais au tout premier chargement)
+  if (window.typedInstance) window.typedInstance.destroy();
+  initTyped(lang);
 
   // Re-render dynamic content
   if (typeof renderProjects === 'function') renderProjects(lang);
@@ -105,9 +104,10 @@ function applyTranslations(lang) {
 }
 
 function initTyped(lang) {
-  const strings = lang === 'fr'
+  const fromProfile = typeof profileData !== 'undefined' && profileData.typed && profileData.typed[lang];
+  const strings = (fromProfile && fromProfile.length) ? fromProfile : (lang === 'fr'
     ? ['Ingénieure Full-Stack', 'DevSecOps Enthusiast', 'Cloud & Cybersécurité', 'Africa Tech Vision 🇧🇫']
-    : ['Full-Stack Engineer', 'DevSecOps Enthusiast', 'Cloud & Cybersecurity', 'Africa Tech Vision 🇧🇫'];
+    : ['Full-Stack Engineer', 'DevSecOps Enthusiast', 'Cloud & Cybersecurity', 'Africa Tech Vision 🇧🇫']);
 
   window.typedInstance = new Typed('#typed', {
     strings,

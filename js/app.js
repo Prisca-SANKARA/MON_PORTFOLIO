@@ -112,18 +112,24 @@ if (window.innerWidth > 768) {
 // ── STATS DYNAMIQUES depuis projectsData ─────────────────────
 // ── STATS DYNAMIQUES + COUNTER ───────────────────────────────
 function updateDynamicStats() {
-  if (typeof projectsData === 'undefined') return;
   const lang = currentLang || 'fr';
-  const projects = projectsData[lang] || projectsData['fr'] || [];
-  const totalProjects = projects.length;
+  const projects = (typeof projectsData !== 'undefined' && (projectsData[lang] || projectsData.fr)) || [];
+  const experiences = (typeof experiencesData !== 'undefined' && (experiencesData[lang] || experiencesData.fr)) || [];
+  const skills = (typeof skillsData !== 'undefined' && (skillsData[lang] || skillsData.fr)) || [];
 
-  
+  const workExperiences = experiences.filter(e => e.type === 'work');
+  const values = {
+    stat1: workExperiences.length, // Stages
+    stat2: projects.length,        // Projets
+    stat3: new Set(workExperiences.map(e => (e.company || '').trim()).filter(Boolean)).size, // Entreprises
+    stat4: skills.length           // Technologies
+  };
 
   document.querySelectorAll('.stat-card').forEach(card => {
     const i18nKey = card.querySelector('[data-i18n]')?.getAttribute('data-i18n');
     const numEl = card.querySelector('.stat-number');
-    if (!numEl) return;
-    if (i18nKey === 'stat2') numEl.setAttribute('data-target', totalProjects);
+    if (!numEl || !(i18nKey in values)) return;
+    numEl.setAttribute('data-target', values[i18nKey]);
   });
 }
 

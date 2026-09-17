@@ -7,7 +7,7 @@
 <title>Admin — Portfolio SANKARA P. DJAMILATOU PRISCA</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<link rel="stylesheet" href="admin.css"/>
+<link rel="stylesheet" href="admin.css?v=20260917a"/>
 </head>
 <body>
 
@@ -109,6 +109,24 @@
           <div id="pf_cvCurrent" style="font-size:.8rem;color:#9aa3b8;margin-top:.4rem"></div>
         </div>
 
+        <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">Identité</h3>
+        <div class="grid-2">
+          <div class="form-group"><label>Nom (barre latérale) — HTML simple autorisé, ex: &lt;br&gt; pour aller à la ligne</label><input type="text" id="pf_nav_name" placeholder="SANKARA P.&lt;br&gt;DJAMILATOU PRISCA"/></div>
+          <div class="form-group"><label>Nom (phrase "Je suis...")</label><input type="text" id="pf_display_name" placeholder="SANKARA DJAMILATOU PRISCA"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Titre sous le nom (FR)</label><input type="text" id="pf_nav_title_fr" placeholder="Ingénieure Informatique"/></div>
+          <div class="form-group"><label>Titre sous le nom (EN)</label><input type="text" id="pf_nav_title_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Sous-titre (FR)</label><input type="text" id="pf_nav_sub_fr" placeholder="DevSecOps · Cloud · Cybersécurité"/></div>
+          <div class="form-group"><label>Sous-titre (EN)</label><input type="text" id="pf_nav_sub_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Phrases animées qui défilent (FR) — une par ligne</label><textarea id="pf_typed_fr" rows="4" placeholder="Ingénieure Full-Stack&#10;DevSecOps Enthusiast"></textarea></div>
+          <div class="form-group"><label>Phrases animées qui défilent (EN) — une par ligne</label><textarea id="pf_typed_en" rows="4"></textarea></div>
+        </div>
+
         <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">Accueil (hero)</h3>
         <div class="grid-2">
           <div class="form-group"><label>Phrase d'accroche (FR)</label><input type="text" id="pf_hero_tag_fr" placeholder="👋 Bienvenue sur mon portfolio"/></div>
@@ -126,8 +144,24 @@
           <div class="form-group"><label>Description d'intro (FR)</label><textarea id="pf_hero_desc_fr" rows="2"></textarea></div>
           <div class="form-group"><label>Description d'intro (EN)</label><textarea id="pf_hero_desc_en" rows="2"></textarea></div>
         </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Badge photo 1 (FR)</label><input type="text" id="pf_hero_badge1_fr" placeholder="DevSecOps"/></div>
+          <div class="form-group"><label>Badge photo 1 (EN)</label><input type="text" id="pf_hero_badge1_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Badge photo 2 (FR)</label><input type="text" id="pf_hero_badge2_fr" placeholder="Cloud AWS"/></div>
+          <div class="form-group"><label>Badge photo 2 (EN)</label><input type="text" id="pf_hero_badge2_en"/></div>
+        </div>
 
         <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">À propos</h3>
+        <div class="grid-2">
+          <div class="form-group"><label>Étiquette de section (FR)</label><input type="text" id="pf_about_tag_fr" placeholder="Qui suis-je ?"/></div>
+          <div class="form-group"><label>Étiquette de section (EN)</label><input type="text" id="pf_about_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Titre de section (FR)</label><input type="text" id="pf_about_title_fr" placeholder="Passionnée par l'innovation tech"/></div>
+          <div class="form-group"><label>Titre de section (EN)</label><input type="text" id="pf_about_title_en"/></div>
+        </div>
         <div class="grid-2">
           <div class="form-group"><label>Sous-titre (FR)</label><input type="text" id="pf_about_sub_fr" placeholder="De la passion à l'expertise"/></div>
           <div class="form-group"><label>Sous-titre (EN)</label><input type="text" id="pf_about_sub_en"/></div>
@@ -147,6 +181,113 @@
         <div class="grid-2">
           <div class="form-group"><label>Disponibilité (FR)</label><input type="text" id="pf_available_fr" placeholder="Disponible Sept. 2026"/></div>
           <div class="form-group"><label>Disponibilité (EN)</label><input type="text" id="pf_available_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Badge localisation 1 (FR)</label><input type="text" id="pf_location_badge1_fr" placeholder="🇲🇦 Casablanca, Maroc"/></div>
+          <div class="form-group"><label>Badge localisation 1 (EN)</label><input type="text" id="pf_location_badge1_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Badge localisation 2 (FR)</label><input type="text" id="pf_location_badge2_fr" placeholder="🇧🇫 Burkina Faso"/></div>
+          <div class="form-group"><label>Badge localisation 2 (EN)</label><input type="text" id="pf_location_badge2_en"/></div>
+        </div>
+        <p style="color:#9aa3b8;font-size:.78rem;margin:.5rem 0">Les 4 chiffres clés (Stages/Projets/Entreprises/Technologies) sont calculés automatiquement à partir de tes vraies données — tu peux juste renommer leurs étiquettes ici.</p>
+        <div class="grid-2">
+          <div class="form-group"><label>Étiquette chiffre 1 (FR)</label><input type="text" id="pf_stat1_fr" placeholder="Stages"/></div>
+          <div class="form-group"><label>Étiquette chiffre 1 (EN)</label><input type="text" id="pf_stat1_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Étiquette chiffre 2 (FR)</label><input type="text" id="pf_stat2_fr" placeholder="Projets"/></div>
+          <div class="form-group"><label>Étiquette chiffre 2 (EN)</label><input type="text" id="pf_stat2_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Étiquette chiffre 3 (FR)</label><input type="text" id="pf_stat3_fr" placeholder="Entreprises"/></div>
+          <div class="form-group"><label>Étiquette chiffre 3 (EN)</label><input type="text" id="pf_stat3_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Étiquette chiffre 4 (FR)</label><input type="text" id="pf_stat4_fr" placeholder="Technologies"/></div>
+          <div class="form-group"><label>Étiquette chiffre 4 (EN)</label><input type="text" id="pf_stat4_en"/></div>
+        </div>
+
+        <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">Titres des sections du site</h3>
+        <div class="grid-2">
+          <div class="form-group"><label>Compétences — étiquette (FR)</label><input type="text" id="pf_skills_tag_fr" placeholder="Expertise"/></div>
+          <div class="form-group"><label>Compétences — étiquette (EN)</label><input type="text" id="pf_skills_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Compétences — titre (FR)</label><input type="text" id="pf_skills_title_fr" placeholder="Mes compétences"/></div>
+          <div class="form-group"><label>Compétences — titre (EN)</label><input type="text" id="pf_skills_title_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Compétences — sous-titre (FR)</label><input type="text" id="pf_skills_sub_fr" placeholder="Survolez une technologie pour en savoir plus"/></div>
+          <div class="form-group"><label>Compétences — sous-titre (EN)</label><input type="text" id="pf_skills_sub_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Portfolio — étiquette (FR)</label><input type="text" id="pf_portfolio_tag_fr" placeholder="Réalisations"/></div>
+          <div class="form-group"><label>Portfolio — étiquette (EN)</label><input type="text" id="pf_portfolio_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Portfolio — titre (FR)</label><input type="text" id="pf_portfolio_title_fr" placeholder="Mes Projets"/></div>
+          <div class="form-group"><label>Portfolio — titre (EN)</label><input type="text" id="pf_portfolio_title_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Expérience — étiquette (FR)</label><input type="text" id="pf_exp_tag_fr" placeholder="Parcours"/></div>
+          <div class="form-group"><label>Expérience — étiquette (EN)</label><input type="text" id="pf_exp_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Expérience — titre (FR)</label><input type="text" id="pf_exp_title_fr" placeholder="Mon expérience"/></div>
+          <div class="form-group"><label>Expérience — titre (EN)</label><input type="text" id="pf_exp_title_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Articles — étiquette (FR)</label><input type="text" id="pf_articles_tag_fr" placeholder="Blog & Réflexions"/></div>
+          <div class="form-group"><label>Articles — étiquette (EN)</label><input type="text" id="pf_articles_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Articles — titre (FR)</label><input type="text" id="pf_articles_title_fr" placeholder="Mes Articles"/></div>
+          <div class="form-group"><label>Articles — titre (EN)</label><input type="text" id="pf_articles_title_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Articles — sous-titre (FR)</label><input type="text" id="pf_articles_sub_fr"/></div>
+          <div class="form-group"><label>Articles — sous-titre (EN)</label><input type="text" id="pf_articles_sub_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Articles — lien LinkedIn (FR)</label><input type="text" id="pf_articles_more_fr" placeholder="Voir tous mes articles sur LinkedIn"/></div>
+          <div class="form-group"><label>Articles — lien LinkedIn (EN)</label><input type="text" id="pf_articles_more_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Contact — étiquette (FR)</label><input type="text" id="pf_contact_tag_fr" placeholder="Contact"/></div>
+          <div class="form-group"><label>Contact — étiquette (EN)</label><input type="text" id="pf_contact_tag_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Contact — titre (FR)</label><input type="text" id="pf_contact_title_fr" placeholder="Travaillons ensemble"/></div>
+          <div class="form-group"><label>Contact — titre (EN)</label><input type="text" id="pf_contact_title_en"/></div>
+        </div>
+
+        <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">Contact &amp; réseaux (un seul endroit, répercuté partout sur le site)</h3>
+        <div class="grid-2">
+          <div class="form-group"><label>Email</label><input type="email" id="pf_contact_email" placeholder="djamilatoupriscasankara@gmail.com"/></div>
+          <div class="form-group"><label>Téléphone</label><input type="text" id="pf_contact_phone" placeholder="+212 775 767 001"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Localisation affichée (FR)</label><input type="text" id="pf_contact_location_fr" placeholder="Casablanca, Maroc 🇲🇦 · Burkina Faso 🇧🇫"/></div>
+          <div class="form-group"><label>Localisation affichée (EN)</label><input type="text" id="pf_contact_location_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>URL LinkedIn</label><input type="url" id="pf_contact_linkedin_url" placeholder="https://linkedin.com/in/..."/></div>
+          <div class="form-group"><label>Pseudo LinkedIn affiché</label><input type="text" id="pf_contact_linkedin_handle" placeholder="sankara-djamilatou-prisca"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>URL GitHub</label><input type="url" id="pf_contact_github_url" placeholder="https://github.com/..."/></div>
+          <div class="form-group"><label>Pseudo GitHub affiché</label><input type="text" id="pf_contact_github_handle" placeholder="Prisca-SANKARA"/></div>
+        </div>
+
+        <h3 style="margin:1.5rem 0 .8rem;font-size:1rem;color:#e63946">Pied de page</h3>
+        <div class="grid-2">
+          <div class="form-group"><label>Description sous le nom (FR)</label><input type="text" id="pf_footer_desc_fr" placeholder="Ingénieure Informatique — DevSecOps · Cloud · Cybersécurité"/></div>
+          <div class="form-group"><label>Description sous le nom (EN)</label><input type="text" id="pf_footer_desc_en"/></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Copyright (FR) — l'année se met à jour toute seule</label><input type="text" id="pf_footer_copy_fr" placeholder="© 2026 SANKARA P. DJAMILATOU PRISCA. Tous droits réservés."/></div>
+          <div class="form-group"><label>Copyright (EN)</label><input type="text" id="pf_footer_copy_en"/></div>
         </div>
 
         <div class="modal-actions" style="justify-content:flex-start">
@@ -403,10 +544,10 @@
   </div>
 </div>
 
-<script src="../js/data/projects.js"></script>
-<script src="../js/data/experiences.js"></script>
-<script src="../js/data/articles.js"></script>
-<script src="../js/data/skills.js"></script>
-<script type="module" src="admin.js"></script>
+<script src="../js/data/projects.js?v=20260917a"></script>
+<script src="../js/data/experiences.js?v=20260917a"></script>
+<script src="../js/data/articles.js?v=20260917a"></script>
+<script src="../js/data/skills.js?v=20260917a"></script>
+<script type="module" src="admin.js?v=20260917a"></script>
 </body>
 </html>
