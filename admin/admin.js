@@ -272,10 +272,12 @@ document.getElementById('a_translateBtn').addEventListener('click', async (e) =>
   const title = document.getElementById('a_title_fr').value;
   const excerpt = document.getElementById('a_excerpt_fr').value;
   const category = document.getElementById('a_category_fr').value;
-  const [tEn, exEn, cEn] = await Promise.all([translateFrToEn(title), translateFrToEn(excerpt), translateFrToEn(category)]);
+  const dateFr = document.getElementById('a_date_fr').value;
+  const [tEn, exEn, cEn, dEn] = await Promise.all([translateFrToEn(title), translateFrToEn(excerpt), translateFrToEn(category), translateFrToEn(dateFr)]);
   if (tEn) document.getElementById('a_title_en').value = tEn;
   if (exEn) document.getElementById('a_excerpt_en').value = exEn;
   if (cEn) document.getElementById('a_category_en').value = cEn;
+  if (dEn) document.getElementById('a_date_en').value = dEn;
   setBtnLoading(btn, false);
 });
 
@@ -538,7 +540,8 @@ document.getElementById('articleForm').addEventListener('submit', async (e) => {
     excerpt_en: document.getElementById('a_excerpt_en').value,
     category_fr: document.getElementById('a_category_fr').value,
     category_en: document.getElementById('a_category_en').value,
-    date: document.getElementById('a_date').value,
+    date_fr: document.getElementById('a_date_fr').value,
+    date_en: document.getElementById('a_date_en').value,
     readTime: document.getElementById('a_readTime').value,
     tag: document.getElementById('a_tag').value,
     link: document.getElementById('a_link').value
@@ -555,7 +558,7 @@ function renderArticlesAdmin(items) {
     <div class="item-row">
       <div class="item-info">
         <span class="item-title">${a.emoji || ''} ${a.title_fr || ''}</span>
-        <span class="item-meta">${a.date || ''} · ${a.readTime || ''} · ordre ${a.order ?? 0}</span>
+        <span class="item-meta">${a.date_fr || ''} · ${a.readTime || ''} · ordre ${a.order ?? 0}</span>
       </div>
       <div class="item-actions">
         <button class="icon-btn" data-edit="${a.docId}" title="Modifier"><i class="fas fa-pen"></i></button>
@@ -576,7 +579,8 @@ function editArticle(a) {
   document.getElementById('a_excerpt_en').value = a.excerpt_en || '';
   document.getElementById('a_category_fr').value = a.category_fr || '';
   document.getElementById('a_category_en').value = a.category_en || '';
-  document.getElementById('a_date').value = a.date || '';
+  document.getElementById('a_date_fr').value = a.date_fr || '';
+  document.getElementById('a_date_en').value = a.date_en || '';
   document.getElementById('a_readTime').value = a.readTime || '';
   document.getElementById('a_tag').value = a.tag || '';
   document.getElementById('a_link').value = a.link || '';
@@ -919,7 +923,7 @@ document.getElementById('importBtn').addEventListener('click', async () => {
         title_fr: fr.title, title_en: en.title || fr.title,
         excerpt_fr: fr.excerpt, excerpt_en: en.excerpt || fr.excerpt,
         category_fr: fr.category, category_en: en.category || fr.category,
-        date: fr.date, readTime: fr.readTime, tag: fr.tag, link: fr.link
+        date_fr: fr.date, date_en: en.date || fr.date, readTime: fr.readTime, tag: fr.tag, link: fr.link
       }, { merge: true });
     }
 

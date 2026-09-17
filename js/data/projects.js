@@ -335,6 +335,14 @@ const projectsData = {
   ]
 };
 
+// Le statut vient de Firestore en une seule langue (toujours FR, choisi dans
+// un menu déroulant à 4 valeurs fixes côté admin) — on traduit juste l'étiquette
+// affichée ; p.status lui-même reste inchangé (utilisé pour isCompleted, etc.)
+const STATUS_LABELS_EN = {
+  'Terminé': 'Completed', 'En cours': 'In progress',
+  'En développement': 'In development', 'À venir': 'Upcoming'
+};
+
 function renderProjects(lang = 'fr') {
   const grid = document.getElementById('portfolioGrid');
   if (!grid) return;
@@ -343,16 +351,17 @@ function renderProjects(lang = 'fr') {
   grid.innerHTML = data.map(p => {
     const isCompleted = p.status === 'Terminé' || p.status === 'Completed'
     const hasImage = p.image && p.image !== ''
+    const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status
 
     const imageBlock = isCompleted && hasImage
       ? `<div class="project-image-wrapper has-img">
            <img src="${p.image}" alt="${p.title}" class="project-screenshot" loading="lazy"/>
            <div class="project-img-overlay"></div>
-           <span class="project-status-badge" style="color:${p.statusColor};border-color:${p.statusColor};background:${p.statusColor}22;">${p.status}</span>
+           <span class="project-status-badge" style="color:${p.statusColor};border-color:${p.statusColor};background:${p.statusColor}22;">${statusLabel}</span>
          </div>`
       : `<div class="project-image-wrapper">
            <div class="project-emoji">${p.emoji}</div>
-           <span class="project-status-badge" style="color:${p.statusColor};border-color:${p.statusColor};background:${p.statusColor}22;">${p.status}</span>
+           <span class="project-status-badge" style="color:${p.statusColor};border-color:${p.statusColor};background:${p.statusColor}22;">${statusLabel}</span>
          </div>`
 
     return `

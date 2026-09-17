@@ -65,7 +65,7 @@ async function loadArticles() {
   const fr = [], en = [];
   snap.forEach(d => {
     const data = d.data();
-    const { fr: frItem, en: enItem } = splitLang(data, ['title', 'excerpt', 'category']);
+    const { fr: frItem, en: enItem } = splitLang(data, ['title', 'excerpt', 'category', 'date']);
     fr.push({ ...frItem, id: d.id });
     en.push({ ...enItem, id: d.id });
   });
@@ -176,7 +176,7 @@ async function refreshDynamicContent() {
     if (articles && typeof articlesData !== 'undefined') {
       Object.assign(articlesData, articles);
       refreshCurrentPage();
-      autoTranslateItems(articles.fr, articles.en, ['title', 'excerpt', 'category'])
+      autoTranslateItems(articles.fr, articles.en, ['title', 'excerpt', 'category', 'date'])
         .then(changed => { if (changed) refreshCurrentPage(); });
     }
   } catch (e) { console.warn('[portfolio] Échec chargement articles Firestore, fallback statique conservé.', e); }

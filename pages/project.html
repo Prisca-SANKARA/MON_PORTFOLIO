@@ -145,6 +145,9 @@
 
     const IN_PROGRESS = ['En cours','In progress','En développement','In development'];
     const COMING = ['À venir','Coming soon'];
+    // STATUS_LABELS_EN est déjà déclaré par ../js/data/projects.js (chargé
+    // juste avant ce script, même portée globale) — ne pas le redéclarer ici
+    // sous peine de "Identifier has already been declared".
 
     const T = {
       fr:{ back:'Retour', code:'Voir le code', demo:'Voir la démo', company:'Réalisé pour',
@@ -159,8 +162,10 @@
 
     // ── Blocs "sections personnalisées" (mode richMode:'sections') ──
     const SECTION_HEADINGS = {
-      stats: 'Chiffres clés', gallery: 'Galerie', features: 'Fonctionnalités',
-      decisions: 'Décisions techniques', challenges: 'Défis rencontrés', lessons: "Ce que j'ai appris"
+      fr: { stats: 'Chiffres clés', gallery: 'Galerie', features: 'Fonctionnalités',
+            decisions: 'Décisions techniques', challenges: 'Défis rencontrés', lessons: "Ce que j'ai appris" },
+      en: { stats: 'Key figures', gallery: 'Gallery', features: 'Features',
+            decisions: 'Technical decisions', challenges: 'Challenges faced', lessons: "What I learned" }
     };
     function openLightbox(src){
       document.getElementById('lightbox-img').src = src;
@@ -229,7 +234,7 @@
         const renderer = SECTION_RENDERERS[block.type];
         if (!renderer || !Array.isArray(block.items) || !block.items.length) return '';
         return `<div class="section-block">
-          <div class="section-heading">${block.heading || SECTION_HEADINGS[block.type] || ''}</div>
+          <div class="section-heading">${block.heading || SECTION_HEADINGS[lang]?.[block.type] || ''}</div>
           ${renderer(block.items)}
         </div>`;
       }).join('')}</div>`;
@@ -298,11 +303,12 @@
         ? `<a href="${p.github}" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> ${t.code}</a>` : '';
 
       const sectionsBlock = p.richMode === 'sections' ? renderSectionsBlock(p.sections) : '';
+      const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status;
 
       content.innerHTML = `
         <div class="hero">
           ${mediaBlock}
-          <span class="badge" style="color:${color};border-color:${color};background:${color}1a;">${p.status}</span>
+          <span class="badge" style="color:${color};border-color:${color};background:${color}1a;">${statusLabel}</span>
           <div class="company">${t.company} · ${p.company}</div>
           <h1>${p.title}</h1>
           <div class="subtitle">${p.subtitle}</div>
