@@ -977,7 +977,14 @@ function initCollections() {
     const items = snap.docs.map(d => ({ docId: d.id, ...d.data() }));
     renderSkillsAdmin(items);
   });
+  // Le profil est un FORMULAIRE (pas une simple liste en lecture seule) :
+  // on ne le pré-remplit qu'UNE fois au chargement. Sans ça, si Firestore
+  // renvoie un second instantané pendant que tu tapes (comportement Firebase
+  // normal juste après l'ouverture de la page), ça écrase silencieusement
+  // ce que tu es en train de saisir avant même que tu aies cliqué "Enregistrer".
+  let profileFormLoaded = false;
   onSnapshot(profileDoc, (snap) => {
-    if (snap.exists()) loadProfileForm(snap.data());
+    if (profileFormLoaded) return;
+    if (snap.exists()) { loadProfileForm(snap.data()); profileFormLoaded = true; }
   });
 }
