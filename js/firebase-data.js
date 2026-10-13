@@ -17,19 +17,55 @@
  * créerait une variable globale différente que les fonctions de rendu ne
  * liraient jamais). On MUTE l'objet existant en place avec Object.assign.
  */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore, collection, getDocs, query, orderBy, doc, getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { firebaseConfig } from './firebase-config.js';
 import { autoTranslateItems } from './data/auto-translate.js';
 
-let db = null;
-try {
-  const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-} catch (e) {
-  console.warn('[portfolio] Firebase init a échoué, fallback sur les données statiques.', e);
+// ── Lecture Firestore par l'API REST (sans le SDK Firebase) ──────────────
+// Le site public ne fait que LIRE des données publiques : une simple requête
+// HTTP suffit. Le SDK Firebase (plusieurs centaines de Ko, ~1 s de calcul sur
+// mobile) n'est plus chargé ici — seul /admin l'utilise, car il faut s'y connecter.
+// Les règles Firestore s'appliquent pareil (lecture publique, écriture refusée).
+const FIRESTORE_REST = `https://firestore.googleapis.com/v1/projects/${firebaseConfig.projectId}/databases/(default)/documents`;
+
+// Convertit une valeur au format REST ({stringValue: "…"}, {arrayValue: …}…) en valeur JS
+function fromFirestoreValue(v) {
+  if (!v) return null;
+  if ('stringValue' in v) return v.stringValue;
+  if ('integerValue' in v) return Number(v.integerValue);
+  if ('doubleValue' in v) return v.doubleValue;
+  if ('booleanValue' in v) return v.booleanValue;
+  if ('nullValue' in v) return null;
+  if ('timestampValue' in v) return v.timestampValue;
+  if ('arrayValue' in v) return (v.arrayValue.values || []).map(fromFirestoreValue);
+  if ('mapValue' in v) return fromFirestoreFields(v.mapValue.fields);
+  return null;
+}
+function fromFirestoreFields(fields = {}) {
+  const out = {};
+  for (const [k, v] of Object.entries(fields)) out[k] = fromFirestoreValue(v);
+  return out;
+}
+
+// Tous les documents d'une collection, triés par le champ "order"
+async function fetchCollection(name) {
+  const docs = [];
+  let pageToken = '';
+  do {
+    const res = await fetch(`${FIRESTORE_REST}/${name}?pageSize=300${pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : ''}`);
+    if (!res.ok) throw new Error(`Firestore "${name}" : HTTP ${res.status}`);
+    const json = await res.json();
+    (json.documents || []).forEach(d => docs.push({ id: d.name.split('/').pop(), data: fromFirestoreFields(d.fields) }));
+    pageToken = json.nextPageToken || '';
+  } while (pageToken);
+  return docs.sort((a, b) => (a.data.order ?? 0) - (b.data.order ?? 0));
+}
+
+// Un document précis (null s'il n'existe pas)
+async function fetchDocument(path) {
+  const res = await fetch(`${FIRESTORE_REST}/${path}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`Firestore "${path}" : HTTP ${res.status}`);
+  return fromFirestoreFields((await res.json()).fields);
 }
 
 function splitLang(doc, fields) {
@@ -47,37 +83,34 @@ function splitLang(doc, fields) {
 }
 
 async function loadProjects() {
-  const snap = await getDocs(query(collection(db, 'projects'), orderBy('order', 'asc')));
-  if (snap.empty) return null;
+  const docs = await fetchCollection('projects');
+  if (!docs.length) return null;
   const fr = [], en = [];
-  snap.forEach(d => {
-    const data = d.data();
+  docs.forEach(({ id, data }) => {
     const { fr: frItem, en: enItem } = splitLang(data, ['title', 'subtitle', 'description']);
-    fr.push({ ...frItem, id: d.id });
-    en.push({ ...enItem, id: d.id });
+    fr.push({ ...frItem, id });
+    en.push({ ...enItem, id });
   });
   return { fr, en };
 }
 
 async function loadArticles() {
-  const snap = await getDocs(query(collection(db, 'articles'), orderBy('order', 'asc')));
-  if (snap.empty) return null;
+  const docs = await fetchCollection('articles');
+  if (!docs.length) return null;
   const fr = [], en = [];
-  snap.forEach(d => {
-    const data = d.data();
+  docs.forEach(({ id, data }) => {
     const { fr: frItem, en: enItem } = splitLang(data, ['title', 'excerpt', 'category', 'date']);
-    fr.push({ ...frItem, id: d.id });
-    en.push({ ...enItem, id: d.id });
+    fr.push({ ...frItem, id });
+    en.push({ ...enItem, id });
   });
   return { fr, en };
 }
 
 async function loadExperiences() {
-  const snap = await getDocs(query(collection(db, 'experiences'), orderBy('order', 'asc')));
-  if (snap.empty) return null;
+  const docs = await fetchCollection('experiences');
+  if (!docs.length) return null;
   const fr = [], en = [];
-  snap.forEach(d => {
-    const data = d.data();
+  docs.forEach(({ data }) => {
     const { fr: frItem, en: enItem } = splitLang(data, ['title', 'description', 'location', 'period', 'duration']);
     frItem.highlights = data.highlights_fr || data.highlights || [];
     enItem.highlights = data.highlights_en || data.highlights || [];
@@ -88,14 +121,13 @@ async function loadExperiences() {
 }
 
 async function loadSkills() {
-  const snap = await getDocs(query(collection(db, 'skills'), orderBy('order', 'asc')));
-  if (snap.empty) return null;
+  const docs = await fetchCollection('skills');
+  if (!docs.length) return null;
   const fr = [], en = [];
-  snap.forEach(d => {
-    const data = d.data();
+  docs.forEach(({ id, data }) => {
     const { fr: frItem, en: enItem } = splitLang(data, ['category', 'info']);
-    fr.push({ ...frItem, id: d.id });
-    en.push({ ...enItem, id: d.id });
+    fr.push({ ...frItem, id });
+    en.push({ ...enItem, id });
   });
   return { fr, en };
 }
@@ -119,9 +151,8 @@ const PROFILE_FIELD_TO_I18N_KEY = {
 const PROFILE_FIELDS = Object.keys(PROFILE_FIELD_TO_I18N_KEY);
 
 async function loadProfile() {
-  const snap = await getDoc(doc(db, 'settings', 'profile'));
-  if (!snap.exists()) return null;
-  const data = snap.data();
+  const data = await fetchDocument('settings/profile');
+  if (!data) return null;
   const fr = {}, en = {};
   PROFILE_FIELDS.forEach(field => {
     const key = PROFILE_FIELD_TO_I18N_KEY[field];
@@ -149,12 +180,16 @@ async function loadProfile() {
 // suivante, js/data/cached-data.js l'affiche immédiatement, sans repasser
 // par l'ancien texte écrit en dur dans le code. Même clé que cached-data.js.
 const CACHE_KEY = 'portfolioCache:v1';
+// Renvoie true si les données ont changé depuis la version gardée en mémoire.
 function saveToCache(name, data) {
   try {
     const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+    const fresh = JSON.stringify(data);
+    if (JSON.stringify(cache[name]) === fresh) return false;
     cache[name] = data;
     localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-  } catch { /* stockage indisponible ou plein : on s'en passe */ }
+    return true;
+  } catch { return true; /* stockage indisponible ou plein : on considère que c'est nouveau */ }
 }
 
 // Réapplique le rendu, quelle que soit la page où ce script est chargé :
@@ -227,25 +262,29 @@ const COLLECTIONS = {
 };
 
 async function refreshDynamicContent() {
-  if (db) {
-    const names = Object.keys(COLLECTIONS).filter(name => COLLECTIONS[name].present());
-    const results = await Promise.allSettled(names.map(name => COLLECTIONS[name].load()));
-    results.forEach((result, i) => {
-      const name = names[i];
-      if (result.status === 'rejected') {
-        console.warn(`[portfolio] Échec chargement "${name}" depuis Firestore, version précédente conservée.`, result.reason);
-        return;
-      }
-      const data = result.value;
-      if (!data) return; // collection vide : on garde les données du code
-      saveToCache(name, data);
-      COLLECTIONS[name].apply(data);
-      translationJobs.push(() => COLLECTIONS[name].translate(data));
-    });
-  }
+  const names = Object.keys(COLLECTIONS).filter(name => COLLECTIONS[name].present());
+  const results = await Promise.allSettled(names.map(name => COLLECTIONS[name].load()));
+  let changed = false;
+  results.forEach((result, i) => {
+    const name = names[i];
+    if (result.status === 'rejected') {
+      console.warn(`[portfolio] Échec chargement "${name}" depuis Firestore, version précédente conservée.`, result.reason);
+      return;
+    }
+    const data = result.value;
+    if (!data) return; // collection vide : on garde les données du code
+    if (saveToCache(name, data)) changed = true;
+    COLLECTIONS[name].apply(data);
+    translationJobs.push(() => COLLECTIONS[name].translate(data));
+  });
   window.projectsReady = true; // la page projet peut afficher "introuvable" en connaissance de cause
-  refreshCurrentPage();        // un seul rafraîchissement, une fois tout reçu
+  // Rien de neuf depuis la dernière visite (déjà affiché depuis le cache) : on ne
+  // redessine pas la page d'accueil — ce rafraîchissement inutile coûtait ~1 s sur
+  // mobile et retardait l'affichage. La page projet, elle, doit sortir de "Chargement".
+  if (changed || typeof render === 'function') refreshCurrentPage();
   runTranslationJobs();
 }
 
-document.addEventListener('DOMContentLoaded', refreshDynamicContent);
+// Script chargé en "async" : la page n'attend plus Firestore pour s'afficher.
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', refreshDynamicContent);
+else refreshDynamicContent();

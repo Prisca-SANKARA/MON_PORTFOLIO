@@ -267,7 +267,11 @@ body {
 }
 .accent { color: var(--accent); }
 .hero-subtitle { font-size: clamp(16px, 2vw, 20px); margin-bottom: 15px; font-weight: 300; color: rgba(255,255,255,0.9); }
+/* Texte animé sur sa propre ligne, à hauteur réservée : sinon il change de
+   nombre de lignes en s'écrivant et fait sauter les boutons en dessous */
 .typed-text { font-weight: 600; color: #f5c842; }
+.typed-line { display: block; min-height: 1.6em; }
+@media (max-width: 640px) { .typed-line { min-height: 3.2em; } }
 .hero-description { font-size: 16px; line-height: 1.7; margin: 25px 0; opacity: 0.9; color: rgba(255,255,255,0.85); }
 .hero-buttons { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 30px; }
 .btn {
@@ -612,6 +616,8 @@ section { padding: 100px 80px; position: relative; }
 [data-theme="light"] .contact-item { border-color: rgba(0,0,0,.06); }
 .contact-form { background: var(--bg-secondary); padding: 40px; border-radius: 20px; box-shadow: var(--shadow-md); }
 .form-group { margin-bottom: 25px; }
+/* Champ piège anti-spam : hors écran plutôt que display:none (certains robots ignorent les champs masqués) */
+.form-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
 .form-group input, .form-group textarea {
     width: 100%; padding: 14px 18px;

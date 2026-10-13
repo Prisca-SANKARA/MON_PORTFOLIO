@@ -79,17 +79,33 @@ const translations = {
 
 let currentLang = localStorage.getItem('lang') || 'fr';
 
+// Remplace le contenu d'un élément SEULEMENT s'il change : réécrire un texte
+// identique force le navigateur à tout recalculer et redessiner (coûteux sur
+// mobile, et Google compte ce nouveau dessin comme un affichage tardif).
+const lastHTML = new WeakMap();
+function setHTML(el, html) {
+  if (!el || lastHTML.get(el) === html) return;
+  el.innerHTML = html;
+  lastHTML.set(el, html);
+}
+// Même principe pour les listes (projets, parcours, articles, compétences)
+const renderHTML = setHTML;
+
 function applyTranslations(lang) {
   currentLang = lang;
   localStorage.setItem('lang', lang);
   document.documentElement.setAttribute('lang', lang);
   document.documentElement.setAttribute('data-lang', lang);
 
+  // Texte final de chaque élément : celui de l'admin (profil Firestore) s'il
+  // existe, sinon le texte par défaut ci-dessus — écrit une seule fois.
+  // (Un texte d'admin fait uniquement d'espaces = élément vidé, donc masqué.)
+  const overrides = (typeof profileData !== 'undefined' && profileData[lang]) || {};
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
-    if (translations[lang] && translations[lang][key]) {
-      el.innerHTML = translations[lang][key];
-    }
+    const fromAdmin = overrides[key];
+    if (fromAdmin) setHTML(el, fromAdmin.trim());
+    else if (translations[lang] && translations[lang][key]) setHTML(el, translations[lang][key]);
   });
 
   initTyped(lang);
@@ -149,5 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
       applyTranslations(currentLang === 'fr' ? 'en' : 'fr');
     });
   }
-  applyTranslations(currentLang);
+  // Laisse d'abord le navigateur dessiner la page (le haut est déjà dans le HTML),
+  // PUIS construit les listes (projets, compétences, parcours…). Sans ça, tout
+  // était calculé avant le premier affichage : écran blanc plus long sur mobile.
+  let started = false;
+  const start = () => { if (!started) { started = true; applyTranslations(currentLang); } };
+  requestAnimationFrame(() => setTimeout(start, 0));
+  setTimeout(start, 250); // filet : onglet ouvert en arrière-plan (pas d'image dessinée)
 });

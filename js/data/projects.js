@@ -348,7 +348,7 @@ function renderProjects(lang = 'fr') {
   if (!grid) return;
   const data = projectsData[lang];
 
-  grid.innerHTML = data.map(p => {
+  renderHTML(grid, data.map(p => {
     const isCompleted = p.status === 'Terminé' || p.status === 'Completed'
     const hasImage = p.image && p.image !== ''
     const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status
@@ -392,7 +392,7 @@ function renderProjects(lang = 'fr') {
         </div>
       </div>
     `
-  }).join('')
+  }).join(''))
 
   applyActiveFilter()
 }

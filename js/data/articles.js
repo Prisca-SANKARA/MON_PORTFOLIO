@@ -14,7 +14,7 @@ const articlesData = {
 function renderArticles(lang = 'fr') {
   const grid = document.getElementById('articlesGrid');
   if (!grid) return;
-  grid.innerHTML = articlesData[lang].map(a => {
+  renderHTML(grid, articlesData[lang].map(a => {
     // Pas de vrai lien (article à venir) : carte non cliquable, au lieu d'ouvrir
     // une copie du portfolio dans un nouvel onglet
     const hasLink = a.link && a.link !== '#';
@@ -36,5 +36,5 @@ function renderArticles(lang = 'fr') {
         </div>
       </div>
     </${tag}>`;
-  }).join('');
+  }).join(''));
 }

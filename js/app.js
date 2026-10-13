@@ -3,12 +3,10 @@
 // toutes les images, polices et scripts externes aient fini (événement "load") :
 // le contenu s'affiche ~0,5 s après l'arrivée au lieu de 2 s minimum.
 document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    loader.style.opacity = '0';
-    setTimeout(() => { loader.style.display = 'none'; }, 400);
-    handleScrollAnimation();
-  }, 400);
+  const loader = document.getElementById('loader');
+  loader.style.opacity = '0';
+  setTimeout(() => { loader.style.display = 'none'; }, 400);
+  handleScrollAnimation();
 });
 
 // ── PROGRESS BAR ─────────────────────────────────────────────
@@ -252,7 +250,8 @@ document.getElementById('contactForm').addEventListener('submit', async e => {
     const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
       method: 'POST',
       headers: { 'Accept': 'application/json' },
-      body: JSON.stringify({ name, email, _subject: subject, message })
+      // _gotcha : champ piège anti-spam (vide pour un humain) — Formspree ignore le message s'il est rempli
+      body: JSON.stringify({ name, email, _subject: subject, message, _gotcha: document.getElementById('website').value })
     });
     if (res.ok) {
       showStatus(lang === 'fr'

@@ -70,7 +70,7 @@ function renderSkills(lang = 'fr') {
     cat.items.push(item);
   });
 
-  container.innerHTML = categories.map((cat, ci) => {
+  renderHTML(container, categories.map((cat, ci) => {
     const trackClass = ci % 2 === 1 ? 'tech-track tech-track-reverse' : 'tech-track';
     const cardsHtml = cat.items.map(item => `
       <div class="tech-item" data-info="${(item.info || '').replace(/"/g, '&quot;')}" data-level-label="${LEVEL_LABELS[lang]?.[item.level] || item.level}" data-level-key="${item.level}" data-icon="${item.icon}">
@@ -83,5 +83,5 @@ function renderSkills(lang = 'fr') {
           <div class="${trackClass}">${cardsHtml}${cardsHtml}</div>
         </div>
       </div>`;
-  }).join('');
+  }).join(''));
 }

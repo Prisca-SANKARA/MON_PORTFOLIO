@@ -42,18 +42,15 @@ function fillProfileEnglishDefaults() {
   });
 }
 
+// Les textes du profil (data-i18n) sont appliqués par applyTranslations (i18n.js).
+// Ici : photo, CV, nom, contact, année du copyright.
 function applyProfileOverrides(lang = 'fr') {
-  const overrides = profileData[lang] || {};
-  Object.keys(overrides).forEach(key => {
-    const val = overrides[key];
-    if (!val) return;
-    // Un champ rempli uniquement d'espaces dans l'admin = "masquer cet élément"
-    // (un champ vide, lui, garde le texte par défaut) — vidé, il est caché en CSS.
-    document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => { el.innerHTML = val.trim(); });
-  });
-
   if (profileData.photo) {
-    document.querySelectorAll('.hero-photo, .cercle-portrait img').forEach(img => { img.src = profileData.photo; });
+    document.querySelectorAll('.hero-photo, .cercle-portrait img').forEach(img => {
+      if (img.getAttribute('src') === profileData.photo) return;
+      img.removeAttribute('srcset'); // sinon le navigateur garderait la photo par défaut
+      img.src = profileData.photo;
+    });
   }
   if (profileData.cv) {
     // "download" est ignoré par les navigateurs sur une URL cross-origin (Cloudinary) :
@@ -75,7 +72,8 @@ function applyProfileOverrides(lang = 'fr') {
   // Toujours l'année en cours dans le copyright, quel que soit le texte
   // enregistré (statique ou Firestore) — jamais à corriger à la main.
   document.querySelectorAll('[data-i18n="footer-copy"]').forEach(el => {
-    el.innerHTML = el.innerHTML.replace(/©\s*\d{4}/, '© ' + new Date().getFullYear());
+    const updated = el.innerHTML.replace(/©\s*\d{4}/, '© ' + new Date().getFullYear());
+    if (updated !== el.innerHTML) el.innerHTML = updated;
   });
 }
 

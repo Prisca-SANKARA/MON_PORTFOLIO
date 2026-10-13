@@ -18,7 +18,7 @@ const experiencesData = {
 function renderExperiences(lang = 'fr') {
   const timeline = document.getElementById('timeline');
   if (!timeline) return;
-  timeline.innerHTML = experiencesData[lang].map((exp, i) => `
+  renderHTML(timeline, experiencesData[lang].map((exp, i) => `
     <div class="timeline-item ${i % 2 === 0 ? 'left' : 'right'}" data-aos="fade-up">
       <div class="timeline-content">
         <div class="timeline-badges">
@@ -39,5 +39,5 @@ function renderExperiences(lang = 'fr') {
         </ul>
       </div>
     </div>
-  `).join('');
+  `).join(''));
 }
