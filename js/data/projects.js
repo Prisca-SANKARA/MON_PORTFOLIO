@@ -336,10 +336,10 @@ const projectsData = {
 };
 
 // Le statut vient de Firestore en une seule langue (toujours FR, choisi dans
-// un menu déroulant à 4 valeurs fixes côté admin) — on traduit juste l'étiquette
+// un menu déroulant à valeurs fixes côté admin) — on traduit juste l'étiquette
 // affichée ; p.status lui-même reste inchangé (utilisé pour isCompleted, etc.)
 const STATUS_LABELS_EN = {
-  'Terminé': 'Completed', 'En cours': 'In progress',
+  'En ligne': 'Live', 'Terminé': 'Completed', 'En cours': 'In progress',
   'En développement': 'In development', 'À venir': 'Upcoming'
 };
 
@@ -349,7 +349,8 @@ function renderProjects(lang = 'fr') {
   const data = projectsData[lang];
 
   renderHTML(grid, data.map(p => {
-    const isCompleted = p.status === 'Terminé' || p.status === 'Completed'
+    // Image affichée pour un projet terminé OU en activité (site en ligne)
+    const isCompleted = ['Terminé', 'Completed', 'En ligne', 'Live'].includes(p.status)
     const hasImage = p.image && p.image !== ''
     const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status
     // Page détail gérée depuis l'admin (HTML personnalisé ou sections) → toujours
