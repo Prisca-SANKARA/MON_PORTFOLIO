@@ -7,18 +7,18 @@ const translations = {
     "nav-articles": "Articles", "nav-contact": "Contact",
     "download-cv": "Télécharger CV",
     "hero-tag": "👋 Bienvenue sur mon portfolio",
-    "hero-line1": "Ingénieure informatique <br> DevSecOps",
-    "hero-line2": "& Cloud · Africa Tech 🇧🇫",
+    "hero-line1": "Ingénieure informatique <br> DevSecOps <br> &",
+    "hero-line2": "Full-Stack",
     "hero-iam": "Je suis",
     "hero-desc": "Ingénieure informatique diplômée, passionnée par le DevSecOps, la cybersécurité et le cloud.",
     "hero-btn1": "Voir mes projets", "hero-btn2": "Me contacter", "hero-btn3": "Télécharger CV",
-    "about-tag": "Qui suis-je ?", "about-title": "Passionnée par l'innovation tech",
-    "about-sub": "De la passion à l'expertise",
-    "about-p1": "Ingénieure informatique diplômée (Bac+5), avec une expérience pratique en développement logiciel et une orientation DevSecOps, cybersécurité et cloud AWS. J'ai récemment effectué mon stage de fin d'études chez <span class='highlight'>Arcashield Cybersecurity</span> à Casablanca, où j'ai conçu une plateforme SaaS de veille et de scoring de vulnérabilités CVE.",
-    "about-p2": "Deux stages terrain au Burkina Faso — <span class='highlight'>Box Africa</span> et Switch Maker — m'ont donné une vision concrète de la transformation digitale en Afrique.",
+    "about-tag": "Qui suis-je ?", "about-title": "Mon profil",
+    "about-sub": "Ingénieure DevSecOps & Full-Stack",
+    "about-p1": "Ingénieure informatique diplômée (Bac+5), avec une expérience pratique en développement logiciel et une orientation DevSecOps, cybersécurité et cloud AWS. J'ai récemment effectué mon stage de fin d'études chez Arcashield Cybersecurity à Casablanca, où j'ai conçu une plateforme SaaS de veille et de scoring de vulnérabilités CVE.",
+    "about-p2": "Avant cela, deux stages terrain au Burkina Faso m'ont formée aux réalités du numérique en Afrique : chez Box Africa, j'ai mené un audit interne de l'entreprise et contribué à des solutions digitales concrètes ; chez Switch Maker, j'ai développé un agenda collaboratif temps réel (Angular, Spring Boot). Ces expériences ont forgé une approche pragmatique, orientée impact.",
     "about-p3": "Aujourd'hui, je recherche un poste où allier sécurité et développement (DevSecOps), sécurité applicative ou développement full-stack pour continuer à grandir techniquement au sein d'une équipe exigeante et engagée sur des problématiques concrètes.",
     "hero-badge1": "DevSecOps", "hero-badge2": "Cloud AWS",
-    "location-badge1": "🇲🇦 Casablanca, Maroc", "location-badge2": "🇧🇫 Burkina Faso",
+    "location-badge1": "Casablanca, Maroc", "location-badge2": "",
     "available": "Disponible maintenant",
     "stat1": "Stages", "stat2": "Projets", "stat3": "Entreprises", "stat4": "Technologies",
     "learning": "(en apprentissage)",
@@ -44,18 +44,18 @@ const translations = {
     "nav-articles": "Articles", "nav-contact": "Contact",
     "download-cv": "Download CV",
     "hero-tag": "👋 Welcome to my portfolio",
-    "hero-line1": "Computer Engineer <br> DevSecOps",
-    "hero-line2": "& Cloud · Africa Tech 🇧🇫",
+    "hero-line1": "IT Engineer <br> DevSecOps <br> &",
+    "hero-line2": "Full-Stack",
     "hero-iam": "I am",
     "hero-desc": "Graduate IT engineer, passionate about DevSecOps, cybersecurity and the cloud.",
     "hero-btn1": "See my projects", "hero-btn2": "Contact me", "hero-btn3": "Download CV",
-    "about-tag": "Who am I?", "about-title": "Passionate about tech innovation",
-    "about-sub": "From passion to expertise",
-    "about-p1": "Graduate IT Engineer (Bac+5), with hands-on experience in software development and a DevSecOps, cybersecurity and AWS cloud orientation. I recently completed my graduate internship at <span class='highlight'>Arcashield Cybersecurity</span> in Casablanca, where I designed a SaaS platform for monitoring and scoring CVE vulnerabilities.",
-    "about-p2": "Two internships in Burkina Faso — <span class='highlight'>Box Africa</span> and Switch Maker — gave me a concrete vision of digital transformation in Africa.",
+    "about-tag": "Who am I?", "about-title": "My profile",
+    "about-sub": "DevSecOps & Full-Stack Engineer",
+    "about-p1": "Graduate IT Engineer (Bac+5), with hands-on experience in software development and a DevSecOps, cybersecurity and AWS cloud orientation. I recently completed my graduate internship at Arcashield Cybersecurity in Casablanca, where I designed a SaaS platform for monitoring and scoring CVE vulnerabilities.",
+    "about-p2": "Before that, two field internships in Burkina Faso trained me in the realities of digital in Africa: at Box Africa, I conducted an internal audit of the company and contributed to concrete digital solutions; at Switch Maker, I developed a collaborative real-time agenda (Angular, Spring Boot). These experiences have forged a pragmatic, impact-oriented approach.",
     "about-p3": "Today, I am looking for a position where I can combine security and development (DevSecOps), application security or full-stack development to continue to grow technically within a demanding and committed team on concrete issues.",
     "hero-badge1": "DevSecOps", "hero-badge2": "Cloud AWS",
-    "location-badge1": "🇲🇦 Casablanca, Morocco", "location-badge2": "🇧🇫 Burkina Faso",
+    "location-badge1": "Casablanca, Morocco", "location-badge2": "",
     "available": "Available now",
     "stat1": "Internships", "stat2": "Projects", "stat3": "Companies", "stat4": "Technologies",
     "learning": "(learning)",
@@ -110,8 +110,8 @@ function applyTranslations(lang) {
 function initTyped(lang) {
   const fromProfile = typeof profileData !== 'undefined' && profileData.typed && profileData.typed[lang];
   const strings = (fromProfile && fromProfile.length) ? fromProfile : (lang === 'fr'
-    ? ['Ingénieure Full-Stack', 'DevSecOps Enthusiast', 'Cloud & Cybersécurité', 'Africa Tech Vision 🇧🇫']
-    : ['Full-Stack Engineer', 'DevSecOps Enthusiast', 'Cloud & Cybersecurity', 'Africa Tech Vision 🇧🇫']);
+    ? ['Ingénieure Full-Stack', 'avec une orientation DevSecOps', 'cybersécurité', 'cloud']
+    : ['Full-Stack Engineer', 'with a DevSecOps focus', 'cybersecurity', 'cloud']);
 
   window.typedInstance = new Typed('#typed', {
     strings,

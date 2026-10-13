@@ -379,9 +379,9 @@ function renderProjects(lang = 'fr') {
             <a href="${p.detail}" class="btn-project btn-detail">
               <i class="fas fa-eye"></i> ${lang === 'fr' ? 'Détails' : 'Details'}
             </a>
-            <a href="${p.github}" target="_blank" class="btn-project btn-github">
-              <i class="fab fa-github"></i> Code
-            </a>
+            ${p.github
+              ? `<a href="${p.github}" target="_blank" class="btn-project btn-github"><i class="fab fa-github"></i> Code</a>`
+              : `<span class="btn-project btn-private" title="${lang === 'fr' ? 'Projet d\'entreprise — code non public' : 'Company project — code not public'}"><i class="fas fa-lock"></i> ${lang === 'fr' ? 'Code confidentiel' : 'Private code'}</span>`}
             ${p.demo && p.demo !== '' ? `<a href="${p.demo}" target="_blank" class="btn-project btn-demo"><i class="fas fa-external-link-alt"></i> Demo</a>` : ''}
           </div>
         </div>

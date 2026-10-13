@@ -117,8 +117,9 @@
     <img id="lightbox-img" src="" alt=""/>
   </div>
 
-  <script src="../js/data/projects.js?v=20260917a"></script>
-  <script type="module" src="../js/firebase-data.js?v=20260917a"></script>
+  <script src="../js/data/projects.js?v=20261013a"></script>
+  <script src="../js/data/cached-data.js?v=20261013a"></script>
+  <script type="module" src="../js/firebase-data.js?v=20261013a"></script>
   <script type="module">
     import { translateDomTextNodes } from '../js/data/auto-translate.js';
     window.translateDomTextNodes = translateDomTextNodes;
@@ -150,11 +151,11 @@
     // sous peine de "Identifier has already been declared".
 
     const T = {
-      fr:{ back:'Retour', code:'Voir le code', demo:'Voir la démo', company:'Réalisé pour',
+      fr:{ back:'Retour', code:'Voir le code', privateCode:'Code confidentiel', demo:'Voir la démo', company:'Réalisé pour',
            progress:'🚧 Projet en cours de développement — la démo arrivera bientôt.',
            coming:'🔭 Projet à venir — bientôt disponible.',
            notfound:'Projet introuvable', notfoundTxt:'Ce projet n\'existe pas ou a été déplacé.' },
-      en:{ back:'Back', code:'View code', demo:'View demo', company:'Built for',
+      en:{ back:'Back', code:'View code', privateCode:'Private code', demo:'View demo', company:'Built for',
            progress:'🚧 Project under active development — demo coming soon.',
            coming:'🔭 Upcoming project — available soon.',
            notfound:'Project not found', notfoundTxt:'This project does not exist or has been moved.' }
@@ -274,9 +275,11 @@
         frame.addEventListener('load', () => {
           fit();
           setTimeout(fit, 400);
-          // Ce HTML sur-mesure n'a pas de version EN écrite à la main : on le
-          // traduit à la volée quand le visiteur est en anglais.
-          if (lang === 'en' && typeof window.translateDomTextNodes === 'function') {
+          // HTML sans version EN écrite à la main : on le traduit à la volée
+          // en anglais. Une page qui porte <html data-bilingual> gère déjà
+          // elle-même FR/EN (lit localStorage 'lang') : on n'y touche pas.
+          const bilingual = frame.contentDocument?.documentElement.hasAttribute('data-bilingual');
+          if (lang === 'en' && !bilingual && typeof window.translateDomTextNodes === 'function') {
             window.translateDomTextNodes(frame.contentDocument.body).then(() => setTimeout(fit, 300));
           }
         });
@@ -290,7 +293,8 @@
       const color = p.statusColor || '#e63946';
 
       const mediaBlock = hasImg
-        ? `<div class="media"><img src="../${p.image}" alt="${p.title}" onerror="this.parentElement.remove()"/></div>`
+        // Image du dépôt (images/...) → relative à la racine ; image Cloudinary → URL complète telle quelle
+        ? `<div class="media"><img src="${/^(https?:)?\/\//.test(p.image) ? p.image : '../' + p.image}" alt="${p.title}" onerror="this.parentElement.remove()"/></div>`
         : `<span class="emoji-hero">${p.emoji || '📦'}</span>`;
 
       let noteBlock = '';
@@ -300,7 +304,8 @@
       const demoBtn = (p.demo && p.demo !== '' && p.demo !== '#')
         ? `<a href="${p.demo}" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i> ${t.demo}</a>` : '';
       const codeBtn = (p.github && p.github !== '')
-        ? `<a href="${p.github}" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> ${t.code}</a>` : '';
+        ? `<a href="${p.github}" target="_blank" class="btn btn-secondary"><i class="fab fa-github"></i> ${t.code}</a>`
+        : `<span class="btn btn-secondary" style="cursor:default;border-style:dashed"><i class="fas fa-lock"></i> ${t.privateCode}</span>`;
 
       const sectionsBlock = p.richMode === 'sections' ? renderSectionsBlock(p.sections) : '';
       const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status;

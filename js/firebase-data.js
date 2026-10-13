@@ -145,6 +145,18 @@ async function loadProfile() {
   };
 }
 
+// Garde la dernière réponse Firestore dans le navigateur : à la visite
+// suivante, js/data/cached-data.js l'affiche immédiatement, sans repasser
+// par l'ancien texte écrit en dur dans le code. Même clé que cached-data.js.
+const CACHE_KEY = 'portfolioCache:v1';
+function saveToCache(name, data) {
+  try {
+    const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}');
+    cache[name] = data;
+    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+  } catch { /* stockage indisponible ou plein : on s'en passe */ }
+}
+
 // Réapplique le rendu, quelle que soit la page où ce script est chargé :
 // - page d'accueil : applyTranslations() re-render projets/articles/expériences + textes statiques
 // - pages/project.html : render() (fonction locale à cette page) redessine la fiche projet
@@ -164,6 +176,7 @@ async function refreshDynamicContent() {
   try {
     const projects = await loadProjects();
     if (projects && typeof projectsData !== 'undefined') {
+      saveToCache('projects', projects);
       Object.assign(projectsData, projects);
       refreshCurrentPage();
       autoTranslateItems(projects.fr, projects.en, ['title', 'subtitle', 'description'])
@@ -174,6 +187,7 @@ async function refreshDynamicContent() {
   try {
     const articles = await loadArticles();
     if (articles && typeof articlesData !== 'undefined') {
+      saveToCache('articles', articles);
       Object.assign(articlesData, articles);
       refreshCurrentPage();
       autoTranslateItems(articles.fr, articles.en, ['title', 'excerpt', 'category', 'date'])
@@ -184,6 +198,7 @@ async function refreshDynamicContent() {
   try {
     const experiences = await loadExperiences();
     if (experiences && typeof experiencesData !== 'undefined') {
+      saveToCache('experiences', experiences);
       Object.assign(experiencesData, experiences);
       refreshCurrentPage();
       autoTranslateItems(experiences.fr, experiences.en, ['title', 'description', 'location', 'period', 'duration'], ['highlights'])
@@ -194,6 +209,7 @@ async function refreshDynamicContent() {
   try {
     const skills = await loadSkills();
     if (skills && typeof skillsData !== 'undefined') {
+      saveToCache('skills', skills);
       Object.assign(skillsData, skills);
       refreshCurrentPage();
       autoTranslateItems(skills.fr, skills.en, ['category', 'info'])
@@ -204,14 +220,8 @@ async function refreshDynamicContent() {
   try {
     const profile = await loadProfile();
     if (profile && typeof profileData !== 'undefined') {
-      Object.assign(profileData.fr, profile.fr);
-      Object.assign(profileData.en, profile.en);
-      profileData.photo = profile.photo;
-      profileData.cv = profile.cv;
-      profileData.navName = profile.navName;
-      profileData.displayName = profile.displayName;
-      Object.assign(profileData.typed, profile.typed);
-      Object.assign(profileData.contact, profile.contact);
+      saveToCache('profile', profile);
+      applyProfileData(profile);
       refreshCurrentPage();
       autoTranslateItems([profileData.fr], [profileData.en], Object.values(PROFILE_FIELD_TO_I18N_KEY))
         .then(changed => { if (changed) refreshCurrentPage(); });

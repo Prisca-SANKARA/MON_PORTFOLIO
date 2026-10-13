@@ -377,6 +377,7 @@ section { padding: 100px 80px; position: relative; }
 .about-text strong { color: var(--text-primary); font-weight: 600; }
 .highlight { color: var(--accent-primary); font-weight: 600; }
 .about-flags { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; font-size: .9rem; color: var(--text-secondary); }
+.about-flags > span:empty { display: none; } /* badge vidé depuis l'admin (champ rempli d'espaces) */
 .available-badge { color: var(--teal); font-weight: 600; animation: pulse 2s infinite; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
 
@@ -538,6 +539,8 @@ section { padding: 100px 80px; position: relative; }
 .btn-demo { background: rgba(55,138,221,.15); color: var(--blue); border: 1px solid rgba(55,138,221,.2); }
 .btn-demo:hover { background: var(--blue); color: #fff; }
 [data-theme="light"] .btn-github { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.1); }
+.btn-private { color: var(--text-secondary); border: 1px dashed rgba(255,255,255,.18); cursor: default; }
+[data-theme="light"] .btn-private { border-color: rgba(0,0,0,.18); }
 
 /* ========== TIMELINE ========== */
 .experience { background: var(--bg-primary); }

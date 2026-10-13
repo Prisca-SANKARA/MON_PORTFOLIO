@@ -13,12 +13,30 @@ const profileData = {
   contact: {} // { email, phone, locationFr, locationEn, linkedinUrl, linkedinHandle, githubUrl, githubHandle }
 };
 
+// Remplace profileData par un profil complet (venu de Firestore ou du cache
+// local). fr/en sont VIDÉS avant : un champ effacé dans l'admin ne doit pas
+// survivre via une ancienne valeur en mémoire.
+function applyProfileData(profile) {
+  ['fr', 'en'].forEach(lang => {
+    Object.keys(profileData[lang]).forEach(k => delete profileData[lang][k]);
+    Object.assign(profileData[lang], profile[lang] || {});
+  });
+  profileData.photo = profile.photo || '';
+  profileData.cv = profile.cv || '';
+  profileData.navName = profile.navName || '';
+  profileData.displayName = profile.displayName || '';
+  profileData.typed = { fr: [], en: [], ...(profile.typed || {}) };
+  profileData.contact = { ...(profile.contact || {}) };
+}
+
 function applyProfileOverrides(lang = 'fr') {
   const overrides = profileData[lang] || {};
   Object.keys(overrides).forEach(key => {
     const val = overrides[key];
     if (!val) return;
-    document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => { el.innerHTML = val; });
+    // Un champ rempli uniquement d'espaces dans l'admin = "masquer cet élément"
+    // (un champ vide, lui, garde le texte par défaut) — vidé, il est caché en CSS.
+    document.querySelectorAll(`[data-i18n="${key}"]`).forEach(el => { el.innerHTML = val.trim(); });
   });
 
   if (profileData.photo) {
