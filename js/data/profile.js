@@ -29,6 +29,19 @@ function applyProfileData(profile) {
   profileData.contact = { ...(profile.contact || {}) };
 }
 
+// Champ EN vide dans l'admin mais texte FR identique au texte par défaut du
+// site → on reprend la traduction écrite à la main dans js/i18n.js plutôt que
+// de la faire refaire (moins bien) par la traduction automatique.
+function fillProfileEnglishDefaults() {
+  if (typeof translations === 'undefined') return;
+  const same = (a, b) => (a || '').replace(/\s+/g, ' ').trim() === (b || '').replace(/\s+/g, ' ').trim(); // ignore les espaces en trop
+  Object.keys(profileData.fr).forEach(key => {
+    if (!profileData.en[key] && same(profileData.fr[key], translations.fr?.[key]) && translations.en?.[key]) {
+      profileData.en[key] = translations.en[key];
+    }
+  });
+}
+
 function applyProfileOverrides(lang = 'fr') {
   const overrides = profileData[lang] || {};
   Object.keys(overrides).forEach(key => {

@@ -14,8 +14,14 @@ const articlesData = {
 function renderArticles(lang = 'fr') {
   const grid = document.getElementById('articlesGrid');
   if (!grid) return;
-  grid.innerHTML = articlesData[lang].map(a => `
-    <a href="${a.link}" target="_blank" class="article-card" data-aos="fade-up">
+  grid.innerHTML = articlesData[lang].map(a => {
+    // Pas de vrai lien (article à venir) : carte non cliquable, au lieu d'ouvrir
+    // une copie du portfolio dans un nouvel onglet
+    const hasLink = a.link && a.link !== '#';
+    const tag = hasLink ? 'a' : 'div';
+    const attrs = hasLink ? `href="${a.link}" target="_blank" rel="noopener"` : 'aria-disabled="true"';
+    return `
+    <${tag} ${attrs} class="article-card${hasLink ? '' : ' article-soon'}" data-aos="fade-up">
       <div class="article-emoji">${a.emoji}</div>
       <div class="article-content">
         <div class="article-meta">
@@ -26,9 +32,9 @@ function renderArticles(lang = 'fr') {
         <p class="article-excerpt">${a.excerpt}</p>
         <div class="article-footer">
           <span class="article-date">${a.date}</span>
-          <span class="article-cta">${lang==='fr'?'Lire l\'article':'Read article'} →</span>
+          <span class="article-cta">${hasLink ? (lang==='fr'?'Lire l\'article':'Read article') + ' →' : (lang==='fr'?'Bientôt disponible':'Coming soon')}</span>
         </div>
       </div>
-    </a>
-  `).join('');
+    </${tag}>`;
+  }).join('');
 }

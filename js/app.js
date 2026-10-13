@@ -31,18 +31,25 @@ const menuIcon = document.getElementById('menuIcon');
 const nav = document.getElementById('nav');
 menuToggle.addEventListener('click', () => {
   menuIcon.classList.toggle('active');
-  const open = nav.classList.toggle('active');
-  menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  menuToggle.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  nav.classList.toggle('active');
+  updateMenuLabel();
 });
 document.querySelectorAll('.nav-menu-item').forEach(item => {
   item.addEventListener('click', () => {
     if (window.innerWidth <= 1024) {
       menuIcon.classList.remove('active');
       nav.classList.remove('active');
+      updateMenuLabel();
     }
   });
 });
+// Libellé accessible du bouton menu, dans la langue courante (rappelé par applyTranslations)
+function updateMenuLabel() {
+  const open = nav.classList.contains('active');
+  const en = (typeof currentLang !== 'undefined' ? currentLang : 'fr') === 'en';
+  menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  menuToggle.setAttribute('aria-label', open ? (en ? 'Close menu' : 'Fermer le menu') : (en ? 'Open menu' : 'Ouvrir le menu'));
+}
 
 // ── ACTIVE NAV ───────────────────────────────────────────────
 const sections = document.querySelectorAll('section');
@@ -86,7 +93,9 @@ function updateThemeUI(theme) {
 }
 
 // ── PARTICLES ────────────────────────────────────────────────
-if (window.innerWidth > 768) {
+// Décoratif : si le CDN est bloqué (bloqueur, réseau d'entreprise…), on s'en
+// passe — sans ce test, l'erreur arrêtait tout le script (formulaire de contact inclus).
+if (window.innerWidth > 768 && typeof particlesJS === 'function') {
   particlesJS('particles-js', {
     particles: {
       number: { value: 70, density: { enable: true, value_area: 800 } },
@@ -137,10 +146,11 @@ function animateCounter(el) {
   const target = +el.getAttribute('data-target');
   const step = Math.max(1, Math.ceil(target / 60));
   let current = 0;
-  const timer = setInterval(() => {
+  clearInterval(el._counterTimer); // une seule animation à la fois par compteur
+  el._counterTimer = setInterval(() => {
     current = Math.min(current + step, target);
     el.textContent = current;
-    if (current >= target) clearInterval(timer);
+    if (current >= target) clearInterval(el._counterTimer);
   }, 25);
 }
 

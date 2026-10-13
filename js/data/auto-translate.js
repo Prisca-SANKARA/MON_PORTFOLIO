@@ -17,11 +17,20 @@ function writeCache(cache) {
 
 async function translateOne(text, cache) {
   if (!text || !text.trim()) return text;
-  if (cache[text]) return cache[text];
+  if (cache[text]) {
+    // Nettoie un ancien avertissement de quota resté en cache avant ce correctif
+    if (!/MYMEMORY WARNING/i.test(cache[text])) return cache[text];
+    delete cache[text];
+  }
   try {
     const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=fr|en`);
     const json = await res.json();
-    const translated = json?.responseData?.translatedText || text;
+    const translated = json?.responseData?.translatedText;
+    // Quota dépassé / erreur : l'API renvoie un message d'avertissement À LA PLACE
+    // de la traduction (avec un statut ≠ 200). On garde alors le français, et on
+    // ne met rien en cache pour réessayer à la prochaine visite.
+    const ok = Number(json?.responseStatus) === 200 && translated && !/MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(translated);
+    if (!ok) return text;
     cache[text] = translated;
     return translated;
   } catch {
@@ -29,11 +38,24 @@ async function translateOne(text, cache) {
   }
 }
 
+// Texte contenant des retours à la ligne <br> : on traduit chaque morceau
+// séparément pour que les <br> restent à leur place (sinon l'API les déplace
+// ou les mélange avec le texte, et la mise en page casse).
+async function translateText(text, cache) {
+  if (!/<br\s*\/?>/i.test(text || '')) return translateOne(text, cache);
+  const parts = text.split(/(<br\s*\/?>)/i);
+  const out = await Promise.all(parts.map(async part => {
+    if (/^<br/i.test(part) || !part.trim()) return part;
+    const translated = await translateOne(part.trim(), cache);
+    return part.replace(part.trim(), translated);
+  }));
+  return out.join('');
+}
+
 /**
  * Remplit en place les champs manquants d'un tableau d'objets "en" en se basant
  * sur le tableau "fr" correspondant, pour la liste de champs donnée.
- * Un champ est considéré "manquant" s'il est vide OU identique au FR (= pas
- * de traduction manuelle fournie).
+ * Un champ est considéré "manquant" uniquement s'il est vide.
  * @param {Array} frItems
  * @param {Array} enItems
  * @param {string[]} fields - noms de champs simples (string) à traduire
@@ -49,9 +71,11 @@ export async function autoTranslateItems(frItems, enItems, fields = [], arrayFie
     if (!fr || !en) continue;
 
     for (const f of fields) {
-      const needsTranslation = !en[f] || en[f] === fr[f];
-      if (needsTranslation && fr[f]) {
-        en[f] = await translateOne(fr[f], cache);
+      // Seul un champ EN VIDE est traduit : un champ EN rempli à la main est
+      // respecté même s'il est identique au FR (noms propres : "TaskFlow",
+      // "ARCASHIELD Cyber-Alerts"… que l'API déformerait).
+      if (!en[f] && fr[f]) {
+        en[f] = await translateText(fr[f], cache);
         changed = true;
       }
     }
@@ -59,9 +83,8 @@ export async function autoTranslateItems(frItems, enItems, fields = [], arrayFie
     for (const f of arrayFields) {
       const frArr = fr[f] || [];
       const enArr = en[f] || [];
-      const sameAsFr = JSON.stringify(enArr) === JSON.stringify(frArr);
-      if ((enArr.length === 0 || sameAsFr) && frArr.length) {
-        en[f] = await Promise.all(frArr.map(t => translateOne(t, cache)));
+      if (enArr.length === 0 && frArr.length) {
+        en[f] = await Promise.all(frArr.map(t => translateText(t, cache)));
         changed = true;
       }
     }

@@ -352,6 +352,11 @@ function renderProjects(lang = 'fr') {
     const isCompleted = p.status === 'Terminé' || p.status === 'Completed'
     const hasImage = p.image && p.image !== ''
     const statusLabel = lang === 'en' ? (STATUS_LABELS_EN[p.status] || p.status) : p.status
+    // Page détail gérée depuis l'admin (HTML personnalisé ou sections) → toujours
+    // la page dynamique, même si le champ "detail" pointe encore vers un ancien fichier
+    const detailUrl = (p.richMode === 'html' || p.richMode === 'sections')
+      ? `pages/project.html?id=${encodeURIComponent(p.id)}`
+      : p.detail
 
     const imageBlock = isCompleted && hasImage
       ? `<div class="project-image-wrapper has-img">
@@ -376,7 +381,7 @@ function renderProjects(lang = 'fr') {
             ${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}
           </div>
           <div class="project-links">
-            <a href="${p.detail}" class="btn-project btn-detail">
+            <a href="${detailUrl}" class="btn-project btn-detail">
               <i class="fas fa-eye"></i> ${lang === 'fr' ? 'Détails' : 'Details'}
             </a>
             ${p.github

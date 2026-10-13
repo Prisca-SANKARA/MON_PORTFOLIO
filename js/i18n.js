@@ -34,7 +34,8 @@ const translations = {
     "phone": "Téléphone", "location": "Localisation",
     "form-name": "Nom complet", "form-subject": "Sujet", "form-send": "Envoyer le message",
     "footer-desc": "Ingénieure Informatique — DevSecOps · Cloud · Cybersécurité",
-    "footer-copy": "© 2026 SANKARA P. DJAMILATOU PRISCA. Tous droits réservés."
+    "footer-copy": "© 2026 SANKARA P. DJAMILATOU PRISCA. Tous droits réservés.",
+    "footer-nav": "Navigation", "footer-links": "CV & Liens"
   },
   en: {
     "nav-title": "Computer Engineer",
@@ -71,7 +72,8 @@ const translations = {
     "phone": "Phone", "location": "Location",
     "form-name": "Full name", "form-subject": "Subject", "form-send": "Send message",
     "footer-desc": "Computer Engineer — DevSecOps · Cloud · Cybersecurity",
-    "footer-copy": "© 2026 SANKARA P. DJAMILATOU PRISCA. All rights reserved."
+    "footer-copy": "© 2026 SANKARA P. DJAMILATOU PRISCA. All rights reserved.",
+    "footer-nav": "Navigation", "footer-links": "Resume & Links"
   }
 };
 
@@ -90,9 +92,6 @@ function applyTranslations(lang) {
     }
   });
 
-  // Update typed strings (destroy previous instance if any, always (re)init —
-  // sinon le texte animé ne démarre jamais au tout premier chargement)
-  if (window.typedInstance) window.typedInstance.destroy();
   initTyped(lang);
 
   // Re-render dynamic content
@@ -105,6 +104,13 @@ function applyTranslations(lang) {
   // Le bouton affiche la langue vers laquelle on basculera au prochain clic
   const toggleLabel = document.getElementById('langToggleLabel');
   if (toggleLabel) toggleLabel.textContent = lang === 'fr' ? 'EN' : 'FR';
+
+  // Libellés gérés par app.js (bouton thème, bouton menu)
+  if (typeof updateThemeUI === 'function') updateThemeUI(document.documentElement.getAttribute('data-theme'));
+  if (typeof updateMenuLabel === 'function') updateMenuLabel();
+
+  // Prévient js/firebase-data.js (traduction automatique lancée seulement en anglais)
+  document.dispatchEvent(new CustomEvent('langchange', { detail: lang }));
 }
 
 function initTyped(lang) {
@@ -112,6 +118,20 @@ function initTyped(lang) {
   const strings = (fromProfile && fromProfile.length) ? fromProfile : (lang === 'fr'
     ? ['Ingénieure Full-Stack', 'avec une orientation DevSecOps', 'cybersécurité', 'cloud']
     : ['Full-Stack Engineer', 'with a DevSecOps focus', 'cybersecurity', 'cloud']);
+
+  // Textes inchangés → on laisse l'animation en cours (sinon elle redémarre à chaque rafraîchissement)
+  const key = JSON.stringify(strings);
+  if (window.typedInstance && window.typedKey === key) return;
+  if (window.typedInstance) window.typedInstance.destroy();
+  window.typedKey = key;
+
+  // CDN Typed.js indisponible : on affiche simplement le premier texte
+  if (typeof Typed !== 'function') {
+    window.typedInstance = null;
+    const el = document.getElementById('typed');
+    if (el) el.textContent = strings[0];
+    return;
+  }
 
   window.typedInstance = new Typed('#typed', {
     strings,

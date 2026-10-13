@@ -15,24 +15,6 @@ const db = getFirestore(app);
 const loginScreen = document.getElementById('loginScreen');
 const appEl = document.getElementById('app');
 
-// ── SLUG (pour des IDs Firestore stables et déterministes) ──────
-function slugify(text) {
-  return (text || '')
-    .toString()
-    .normalize('NFD').replace(/[̀-ͯ]/g, '') // accents
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-// Pages détail "sur mesure" (contenu riche non stocké dans Firestore) :
-// leur lien ne doit pas être remplacé par le lien générique pages/project.html?id=...
-const BESPOKE_DETAIL_PAGES = {
-  'taskflow': 'pages/taskflow.html',
-  'n8n-onboarding': 'pages/n8n-onboarding.html',
-  'fasoartisans-landing': 'pages/fasoartisans-landing-detail.html'
-};
-
 // ── ÉDITEUR DE SECTIONS (page détail enrichie, mode "sections") ──
 // Contenu volontairement non traduit FR/EN (comme les pages sur-mesure
 // actuelles type taskflow.html, qui n'ont elles-mêmes pas de switch de langue).
@@ -314,16 +296,44 @@ document.querySelectorAll('[data-close]').forEach(el => {
 function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
 function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+// Message compréhensible pour un échec d'écriture Firestore
+function explainSaveError(err) {
+  const code = err?.code || '';
+  const msg = err?.message || String(err);
+  if (code === 'permission-denied' || code === 'unauthenticated') {
+    return "Enregistrement refusé : ta session a sans doute expiré. Reconnecte-toi puis réessaie.";
+  }
+  if (/maximum allowed size|exceeds|too large/i.test(msg)) {
+    return "Contenu trop volumineux (limite Firestore : 1 Mo par élément). Allège le HTML, par exemple en remplaçant les images intégrées (base64) par des images envoyées via les emplacements Image.";
+  }
+  return 'Enregistrement échoué : ' + msg;
+}
+
+// Enregistre puis ferme la fenêtre. En cas d'échec : message clair, fenêtre
+// laissée ouverte (rien de ce qui a été saisi n'est perdu), bouton réactivé.
+async function saveAndClose(form, modalId, write) {
+  const btn = form.querySelector('[type="submit"]');
+  if (btn) btn.disabled = true;
+  try {
+    await write();
+    closeModal(modalId);
+  } catch (err) {
+    alert(explainSaveError(err));
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 // ── PROJECTS ─────────────────────────────────────────────────
 const projectsCol = collection(db, 'projects');
+let knownProjectIds = new Set(); // tenu à jour par l'écoute en temps réel (initCollections)
 
-// Le lien détail se déduit automatiquement du slug (pages/project.html?id=...),
-// sauf pour les 3 pages "sur mesure" qui gardent leur propre fichier.
+// Le lien détail se déduit automatiquement du slug (pages/project.html?id=...).
 // Si l'utilisateur modifie ce champ à la main, on ne l'écrase plus.
 const pIdInput = document.getElementById('p_id');
 const pDetailInput = document.getElementById('p_detail');
 function computeDetail(slug) {
-  return BESPOKE_DETAIL_PAGES[slug] || (slug ? `pages/project.html?id=${slug}` : '');
+  return slug ? `pages/project.html?id=${slug}` : '';
 }
 pIdInput.addEventListener('input', () => {
   if (!pDetailInput.dataset.manual) pDetailInput.value = computeDetail(pIdInput.value.trim());
@@ -440,31 +450,44 @@ document.getElementById('p_imageFile').addEventListener('change', async (e) => {
 
 document.getElementById('projectForm').addEventListener('submit', async (e) => {
   e.preventDefault();
+  const isNew = !document.getElementById('p_docId').value;
   const docId = document.getElementById('p_docId').value || document.getElementById('p_id').value.trim();
+  if (isNew) {
+    // L'ID sert d'adresse de la page détail : lettres minuscules, chiffres et tirets uniquement
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(docId)) {
+      alert('ID invalide : utilise uniquement des lettres minuscules sans accent, des chiffres et des tirets (ex : mon-projet-2).');
+      return;
+    }
+    // Sans ce contrôle, un nouveau projet avec un ID déjà pris écrasait l'autre sans prévenir
+    if (knownProjectIds.has(docId)) {
+      alert(`Un projet avec l'ID "${docId}" existe déjà. Choisis un autre ID, ou clique sur "Modifier" sur ce projet.`);
+      return;
+    }
+  }
+  const val = id => document.getElementById(id).value.trim(); // trim : retire espaces/tabulations collés par copier-coller
   const data = {
     order: Number(document.getElementById('p_order').value) || 0,
-    title_fr: document.getElementById('p_title_fr').value,
-    title_en: document.getElementById('p_title_en').value,
-    subtitle_fr: document.getElementById('p_subtitle_fr').value,
-    subtitle_en: document.getElementById('p_subtitle_en').value,
-    description_fr: document.getElementById('p_description_fr').value,
-    description_en: document.getElementById('p_description_en').value,
+    title_fr: val('p_title_fr'),
+    title_en: val('p_title_en'),
+    subtitle_fr: val('p_subtitle_fr'),
+    subtitle_en: val('p_subtitle_en'),
+    description_fr: val('p_description_fr'),
+    description_en: val('p_description_en'),
     category: document.getElementById('p_category').value,
     company: document.getElementById('p_company').value,
     status: document.getElementById('p_status').value,
     statusColor: document.getElementById('p_statusColor').value,
     emoji: document.getElementById('p_emoji').value,
     tags: document.getElementById('p_tags').value.split(',').map(t => t.trim()).filter(Boolean),
-    github: document.getElementById('p_github').value,
-    demo: document.getElementById('p_demo').value,
+    github: val('p_github'),
+    demo: val('p_demo'),
     detail: document.getElementById('p_detail').value || computeDetail(docId),
     image: document.getElementById('p_image').value,
     richMode: document.getElementById('p_richMode').value,
     sections: document.getElementById('p_richMode').value === 'sections' ? currentSections : [],
     customHtml: document.getElementById('p_richMode').value === 'html' ? document.getElementById('p_customHtml').value : ''
   };
-  await setDoc(doc(projectsCol, docId), data, { merge: true });
-  closeModal('projectModal');
+  await saveAndClose(e.target, 'projectModal', () => setDoc(doc(projectsCol, docId), data, { merge: true }));
 });
 
 function renderProjectsAdmin(items) {
@@ -546,9 +569,8 @@ document.getElementById('articleForm').addEventListener('submit', async (e) => {
     tag: document.getElementById('a_tag').value,
     link: document.getElementById('a_link').value
   };
-  if (docId) await setDoc(doc(articlesCol, docId), data, { merge: true });
-  else await addDoc(articlesCol, data);
-  closeModal('articleModal');
+  await saveAndClose(e.target, 'articleModal', () =>
+    docId ? setDoc(doc(articlesCol, docId), data, { merge: true }) : addDoc(articlesCol, data));
 });
 
 function renderArticlesAdmin(items) {
@@ -618,9 +640,8 @@ document.getElementById('experienceForm').addEventListener('submit', async (e) =
     highlights_fr: document.getElementById('e_highlights_fr').value.split('\n').map(s => s.trim()).filter(Boolean),
     highlights_en: document.getElementById('e_highlights_en').value.split('\n').map(s => s.trim()).filter(Boolean)
   };
-  if (docId) await setDoc(doc(experiencesCol, docId), data, { merge: true });
-  else await addDoc(experiencesCol, data);
-  closeModal('experienceModal');
+  await saveAndClose(e.target, 'experienceModal', () =>
+    docId ? setDoc(doc(experiencesCol, docId), data, { merge: true }) : addDoc(experiencesCol, data));
 });
 
 function renderExperiencesAdmin(items) {
@@ -696,9 +717,8 @@ document.getElementById('skillForm').addEventListener('submit', async (e) => {
     level: document.getElementById('s_level').value,
     icon: document.getElementById('s_icon').value
   };
-  if (docId) await setDoc(doc(skillsCol, docId), data, { merge: true });
-  else await addDoc(skillsCol, data);
-  closeModal('skillModal');
+  await saveAndClose(e.target, 'skillModal', () =>
+    docId ? setDoc(doc(skillsCol, docId), data, { merge: true }) : addDoc(skillsCol, data));
 });
 
 function renderSkillsAdmin(items) {
@@ -825,7 +845,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     await setDoc(profileDoc, data, { merge: true });
     alert('Profil enregistré !');
   } catch (err) {
-    alert('Erreur : ' + err.message);
+    alert(explainSaveError(err));
   }
 });
 
@@ -858,115 +878,22 @@ document.addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-delete]');
   if (!btn) return;
   if (!confirm('Supprimer définitivement cet élément ?')) return;
-  await deleteDoc(doc(collection(db, btn.dataset.col), btn.dataset.delete));
-});
-
-// ── MIGRATION DES 3 PAGES SUR-MESURE VERS FIRESTORE ──────────
-// Récupère le HTML déjà écrit dans pages/taskflow.html etc. et le colle tel
-// quel dans le champ customHtml du projet correspondant (mode "html").
-// Idempotent (merge:true) : peut être relancé sans risque.
-document.getElementById('migrateBespokeBtn').addEventListener('click', async () => {
-  if (!confirm('Copier le HTML de TaskFlow, n8n-onboarding et FasoArtisans-landing dans Firestore (mode "HTML personnalisé") ? Les fichiers pages/*.html existants ne sont pas modifiés ni supprimés.')) return;
-  const targets = {
-    'taskflow': '../pages/taskflow.html',
-    'n8n-onboarding': '../pages/n8n-onboarding.html',
-    'fasoartisans-landing': '../pages/fasoartisans-landing-detail.html'
-  };
   try {
-    for (const [slug, path] of Object.entries(targets)) {
-      const res = await fetch(path);
-      if (!res.ok) throw new Error(`${path} introuvable (${res.status})`);
-      const html = await res.text();
-      await setDoc(doc(projectsCol, slug), { richMode: 'html', customHtml: html }, { merge: true });
-    }
-    alert('Migration terminée ! Les 3 projets utilisent maintenant le mode "HTML personnalisé" — modifiable directement depuis "Modifier" > "HTML personnalisé".');
+    await deleteDoc(doc(collection(db, btn.dataset.col), btn.dataset.delete));
   } catch (err) {
-    alert('Erreur pendant la migration : ' + err.message);
-  }
-});
-
-// ── IMPORT ONE-TIME DES DONNÉES STATIQUES ────────────────────
-// Utilise des IDs déterministes pour les 3 collections : relancer l'import
-// met à jour les documents existants au lieu d'en créer des doublons.
-document.getElementById('importBtn').addEventListener('click', async () => {
-  if (!confirm('Importer les données statiques actuelles du site (projets, articles, expériences, compétences) dans Firestore ? Les documents existants avec le même ID seront mis à jour, aucun doublon ne sera créé.')) return;
-
-  try {
-    // Projets (projectsData/articlesData/experiencesData viennent des scripts
-    // classiques js/data/*.js chargés par admin/index.html — variables globales
-    // partagées, PAS des propriétés de window, d'où l'accès direct par nom ici)
-    const frP = projectsData?.fr || [];
-    const enP = projectsData?.en || [];
-    for (let i = 0; i < frP.length; i++) {
-      const fr = frP[i], en = enP.find(x => x.id === fr.id) || {};
-      await setDoc(doc(projectsCol, fr.id), {
-        order: i,
-        title_fr: fr.title, title_en: en.title || fr.title,
-        subtitle_fr: fr.subtitle, subtitle_en: en.subtitle || fr.subtitle,
-        description_fr: fr.description, description_en: en.description || fr.description,
-        category: fr.category, company: fr.company, status: fr.status,
-        statusColor: fr.statusColor, emoji: fr.emoji, tags: fr.tags || [],
-        github: fr.github, demo: fr.demo, detail: computeDetail(fr.id), image: fr.image
-        // (richMode/sections/customHtml volontairement omis : l'import ne doit jamais
-        // écraser une page détail enrichie déjà configurée à la main dans l'admin)
-      }, { merge: true });
-    }
-
-    // Articles — ID stable dérivé du champ "id" numérique des données statiques
-    const frA = articlesData?.fr || [];
-    const enA = articlesData?.en || [];
-    for (let i = 0; i < frA.length; i++) {
-      const fr = frA[i], en = enA[i] || {};
-      const articleId = 'article-' + (fr.id ?? i);
-      await setDoc(doc(articlesCol, articleId), {
-        order: i, emoji: fr.emoji,
-        title_fr: fr.title, title_en: en.title || fr.title,
-        excerpt_fr: fr.excerpt, excerpt_en: en.excerpt || fr.excerpt,
-        category_fr: fr.category, category_en: en.category || fr.category,
-        date_fr: fr.date, date_en: en.date || fr.date, readTime: fr.readTime, tag: fr.tag, link: fr.link
-      }, { merge: true });
-    }
-
-    // Expériences — ID stable dérivé de l'entreprise + du titre du poste
-    const frE = experiencesData?.fr || [];
-    const enE = experiencesData?.en || [];
-    for (let i = 0; i < frE.length; i++) {
-      const fr = frE[i], en = enE[i] || {};
-      const expId = slugify(`${fr.company}-${fr.title}`) || ('exp-' + i);
-      await setDoc(doc(experiencesCol, expId), {
-        order: i, type: fr.type, company: fr.company, current: !!fr.current,
-        title_fr: fr.title, title_en: en.title || fr.title,
-        location_fr: fr.location, location_en: en.location || fr.location,
-        period_fr: fr.period, period_en: en.period || fr.period,
-        duration_fr: fr.duration, duration_en: en.duration || fr.duration,
-        description_fr: fr.description, description_en: en.description || fr.description,
-        highlights_fr: fr.highlights || [], highlights_en: en.highlights || fr.highlights || []
-      }, { merge: true });
-    }
-
-    // Compétences — ID stable dérivé du nom (technologie, pas de traduction)
-    const frS = skillsData?.fr || [];
-    const enS = skillsData?.en || [];
-    for (let i = 0; i < frS.length; i++) {
-      const fr = frS[i], en = enS[i] || {};
-      const skillId = slugify(fr.name) || ('skill-' + i);
-      await setDoc(doc(skillsCol, skillId), {
-        order: fr.order ?? i, name: fr.name, icon: fr.icon, level: fr.level,
-        category_fr: fr.category, category_en: en.category || fr.category,
-        info_fr: fr.info, info_en: en.info || fr.info
-      }, { merge: true });
-    }
-
-    alert('Import terminé ! Les données sont maintenant dans Firestore. Le site public va automatiquement les afficher au prochain chargement.');
-  } catch (err) {
-    alert('Erreur pendant l\'import : ' + err.message);
+    alert(explainSaveError(err).replace('Enregistrement', 'Suppression'));
   }
 });
 
 // ── LIVE LISTENERS ───────────────────────────────────────────
+let collectionsStarted = false;
 function initCollections() {
+  // Déconnexion puis reconnexion : les écoutes tournent déjà, ne pas les doubler
+  if (collectionsStarted) return;
+  collectionsStarted = true;
   onSnapshot(query(projectsCol, orderBy('order', 'asc')), (snap) => {
     const items = snap.docs.map(d => ({ docId: d.id, ...d.data() }));
+    knownProjectIds = new Set(items.map(p => p.docId));
     renderProjectsAdmin(items);
   });
   onSnapshot(query(articlesCol, orderBy('order', 'asc')), (snap) => {

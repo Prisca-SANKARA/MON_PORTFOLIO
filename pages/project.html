@@ -117,9 +117,9 @@
     <img id="lightbox-img" src="" alt=""/>
   </div>
 
-  <script src="../js/data/projects.js?v=20261013a"></script>
-  <script src="../js/data/cached-data.js?v=20261013a"></script>
-  <script type="module" src="../js/firebase-data.js?v=20261013a"></script>
+  <script src="../js/data/projects.js?v=20261013b"></script>
+  <script src="../js/data/cached-data.js?v=20261013b"></script>
+  <script type="module" src="../js/firebase-data.js?v=20261013b"></script>
   <script type="module">
     import { translateDomTextNodes } from '../js/data/auto-translate.js';
     window.translateDomTextNodes = translateDomTextNodes;
@@ -151,11 +151,11 @@
     // sous peine de "Identifier has already been declared".
 
     const T = {
-      fr:{ back:'Retour', code:'Voir le code', privateCode:'Code confidentiel', demo:'Voir la démo', company:'Réalisé pour',
+      fr:{ back:'Retour', code:'Voir le code', privateCode:'Code confidentiel', demo:'Voir la démo', company:'Réalisé pour', loading:'Chargement du projet…',
            progress:'🚧 Projet en cours de développement — la démo arrivera bientôt.',
            coming:'🔭 Projet à venir — bientôt disponible.',
            notfound:'Projet introuvable', notfoundTxt:'Ce projet n\'existe pas ou a été déplacé.' },
-      en:{ back:'Back', code:'View code', privateCode:'Private code', demo:'View demo', company:'Built for',
+      en:{ back:'Back', code:'View code', privateCode:'Private code', demo:'View demo', company:'Built for', loading:'Loading project…',
            progress:'🚧 Project under active development — demo coming soon.',
            coming:'🔭 Upcoming project — available soon.',
            notfound:'Project not found', notfoundTxt:'This project does not exist or has been moved.' }
@@ -250,6 +250,12 @@
       const p = list.find(x => x.id === projectId);
       const content = document.getElementById('content');
 
+      // Projet pas (encore) connu : tant que Firestore n'a pas répondu, c'est
+      // peut-être un projet ajouté depuis l'admin → "Chargement", pas "introuvable".
+      if (!p && !window.projectsReady) {
+        content.innerHTML = `<div class="notfound"><span class="emoji-hero"><i class="fas fa-spinner fa-spin" style="font-size:2.5rem;color:var(--accent)"></i></span><p class="subtitle">${t.loading}</p></div>`;
+        return;
+      }
       if (!p) {
         document.title = t.notfound + ' — SANKARA P. DJAMILATOU PRISCA';
         content.innerHTML = `<div class="notfound">
@@ -266,6 +272,9 @@
       // Mode "HTML personnalisé" : la page sur mesure prend toute la place,
       // le bandeau du gabarit générique (retour/langue/thème) s'efface.
       if (p.richMode === 'html' && p.customHtml) {
+        // Même contenu déjà affiché (rafraîchissement après Firestore) : on ne recharge pas le cadre
+        const shown = document.getElementById('customFrame');
+        if (shown && shown.srcdoc === p.customHtml) return;
         document.querySelector('.topbar').style.display = 'none';
         content.style.cssText = 'max-width:none;padding:0;margin:0';
         content.innerHTML = `<iframe class="custom-frame" id="customFrame" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>`;
@@ -273,6 +282,13 @@
         frame.srcdoc = p.customHtml;
         const fit = () => { try { frame.style.height = frame.contentWindow.document.documentElement.scrollHeight + 'px'; } catch (e) {} };
         frame.addEventListener('load', () => {
+          // Un lien sans cible (ex. "Retour au portfolio") doit ouvrir la page
+          // entière, pas s'afficher à l'intérieur du cadre. Les ancres (#…) restent internes.
+          try {
+            frame.contentDocument.querySelectorAll('a[href]').forEach(a => {
+              if (!a.getAttribute('target') && !a.getAttribute('href').startsWith('#')) a.target = '_top';
+            });
+          } catch (e) {}
           fit();
           setTimeout(fit, 400);
           // HTML sans version EN écrite à la main : on le traduit à la volée
@@ -283,7 +299,7 @@
             window.translateDomTextNodes(frame.contentDocument.body).then(() => setTimeout(fit, 300));
           }
         });
-        window.addEventListener('resize', fit);
+        window.onresize = fit; // un seul écouteur, même si le cadre est recréé
         return;
       }
       document.querySelector('.topbar').style.display = '';
@@ -334,6 +350,9 @@
     }
 
     render();
+    // Filet de sécurité : si Firestore ne répond jamais (réseau bloqué), on
+    // finit par afficher "Projet introuvable" au lieu de charger indéfiniment.
+    setTimeout(() => { if (!window.projectsReady) { window.projectsReady = true; render(); } }, 8000);
   </script>
 </body>
 </html>

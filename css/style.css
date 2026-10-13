@@ -583,6 +583,8 @@ section { padding: 100px 80px; position: relative; }
 .article-card { background: var(--bg-primary); border-radius: 16px; border: 1px solid rgba(255,255,255,.06); overflow: hidden; transition: transform .3s, border-color .3s; display: flex; flex-direction: column; text-decoration: none; color: inherit; }
 .article-card:hover { transform: translateY(-5px); border-color: rgba(230,57,70,.3); }
 [data-theme="light"] .article-card { border-color: rgba(0,0,0,.06); }
+.article-card.article-soon { cursor: default; opacity: .75; }
+.article-card.article-soon:hover { transform: none; border-color: rgba(255,255,255,.06); }
 .article-emoji { height: 120px; background: linear-gradient(135deg, #111827, #1a2035); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
 .article-content { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
 .article-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; }

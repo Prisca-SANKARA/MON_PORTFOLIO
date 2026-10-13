@@ -160,73 +160,92 @@ function saveToCache(name, data) {
 // Réapplique le rendu, quelle que soit la page où ce script est chargé :
 // - page d'accueil : applyTranslations() re-render projets/articles/expériences + textes statiques
 // - pages/project.html : render() (fonction locale à cette page) redessine la fiche projet
-function refreshCurrentPage() {
-  const lang = typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('lang') || 'fr');
-  if (typeof applyTranslations === 'function') applyTranslations(lang);
-  if (typeof render === 'function') render();
-  if (typeof updateDynamicStats === 'function') updateDynamicStats();
-  document.querySelectorAll('.stat-number').forEach(el => {
-    if (typeof animateCounter === 'function') animateCounter(el);
-  });
+function currentLanguage() {
+  return typeof currentLang !== 'undefined' ? currentLang : (localStorage.getItem('lang') || 'fr');
 }
 
+function refreshCurrentPage() {
+  if (typeof applyTranslations === 'function') applyTranslations(currentLanguage());
+  if (typeof render === 'function') render();
+  if (typeof updateDynamicStats === 'function') updateDynamicStats();
+  // Compteurs : relancés seulement si la section "À propos" a déjà été vue (sinon
+  // app.js les anime en arrivant dessus) et seulement si le chiffre a changé.
+  if (typeof animateCounter === 'function' && (typeof statsAnimated === 'undefined' || statsAnimated)) {
+    document.querySelectorAll('.stat-number').forEach(el => {
+      if (el.textContent !== el.getAttribute('data-target')) animateCounter(el);
+    });
+  }
+}
+
+// ── Traduction automatique : uniquement quand le site est affiché en anglais ──
+// Un visiteur qui reste en français ne déclenche aucun appel à l'API.
+const translationJobs = [];
+let translating = false;
+async function runTranslationJobs() {
+  if (translating || !translationJobs.length || currentLanguage() !== 'en') return;
+  translating = true;
+  const jobs = translationJobs.splice(0);
+  const results = await Promise.all(jobs.map(job => job().catch(() => false)));
+  translating = false;
+  if (results.some(Boolean)) refreshCurrentPage();
+}
+document.addEventListener('langchange', e => { if (e.detail === 'en') runTranslationJobs(); });
+
+// Chaque collection : où l'appliquer sur la page, et quels champs traduire.
+// Une page ne charge que ce qu'elle affiche (la page projet ne lit que "projects").
+const COLLECTIONS = {
+  projects: {
+    present: () => typeof projectsData !== 'undefined',
+    load: loadProjects,
+    apply: data => Object.assign(projectsData, data),
+    translate: data => autoTranslateItems(data.fr, data.en, ['title', 'subtitle', 'description'])
+  },
+  articles: {
+    present: () => typeof articlesData !== 'undefined',
+    load: loadArticles,
+    apply: data => Object.assign(articlesData, data),
+    translate: data => autoTranslateItems(data.fr, data.en, ['title', 'excerpt', 'category', 'date'])
+  },
+  experiences: {
+    present: () => typeof experiencesData !== 'undefined',
+    load: loadExperiences,
+    apply: data => Object.assign(experiencesData, data),
+    translate: data => autoTranslateItems(data.fr, data.en, ['title', 'description', 'location', 'period', 'duration'], ['highlights'])
+  },
+  skills: {
+    present: () => typeof skillsData !== 'undefined',
+    load: loadSkills,
+    apply: data => Object.assign(skillsData, data),
+    translate: data => autoTranslateItems(data.fr, data.en, ['category', 'info'])
+  },
+  profile: {
+    present: () => typeof profileData !== 'undefined',
+    load: loadProfile,
+    apply: data => { applyProfileData(data); fillProfileEnglishDefaults(); },
+    translate: () => autoTranslateItems([profileData.fr], [profileData.en], Object.values(PROFILE_FIELD_TO_I18N_KEY))
+  }
+};
+
 async function refreshDynamicContent() {
-  if (!db) return;
-
-  try {
-    const projects = await loadProjects();
-    if (projects && typeof projectsData !== 'undefined') {
-      saveToCache('projects', projects);
-      Object.assign(projectsData, projects);
-      refreshCurrentPage();
-      autoTranslateItems(projects.fr, projects.en, ['title', 'subtitle', 'description'])
-        .then(changed => { if (changed) refreshCurrentPage(); });
-    }
-  } catch (e) { console.warn('[portfolio] Échec chargement projets Firestore, fallback statique conservé.', e); }
-
-  try {
-    const articles = await loadArticles();
-    if (articles && typeof articlesData !== 'undefined') {
-      saveToCache('articles', articles);
-      Object.assign(articlesData, articles);
-      refreshCurrentPage();
-      autoTranslateItems(articles.fr, articles.en, ['title', 'excerpt', 'category', 'date'])
-        .then(changed => { if (changed) refreshCurrentPage(); });
-    }
-  } catch (e) { console.warn('[portfolio] Échec chargement articles Firestore, fallback statique conservé.', e); }
-
-  try {
-    const experiences = await loadExperiences();
-    if (experiences && typeof experiencesData !== 'undefined') {
-      saveToCache('experiences', experiences);
-      Object.assign(experiencesData, experiences);
-      refreshCurrentPage();
-      autoTranslateItems(experiences.fr, experiences.en, ['title', 'description', 'location', 'period', 'duration'], ['highlights'])
-        .then(changed => { if (changed) refreshCurrentPage(); });
-    }
-  } catch (e) { console.warn('[portfolio] Échec chargement expériences Firestore, fallback statique conservé.', e); }
-
-  try {
-    const skills = await loadSkills();
-    if (skills && typeof skillsData !== 'undefined') {
-      saveToCache('skills', skills);
-      Object.assign(skillsData, skills);
-      refreshCurrentPage();
-      autoTranslateItems(skills.fr, skills.en, ['category', 'info'])
-        .then(changed => { if (changed) refreshCurrentPage(); });
-    }
-  } catch (e) { console.warn('[portfolio] Échec chargement compétences Firestore, fallback statique conservé.', e); }
-
-  try {
-    const profile = await loadProfile();
-    if (profile && typeof profileData !== 'undefined') {
-      saveToCache('profile', profile);
-      applyProfileData(profile);
-      refreshCurrentPage();
-      autoTranslateItems([profileData.fr], [profileData.en], Object.values(PROFILE_FIELD_TO_I18N_KEY))
-        .then(changed => { if (changed) refreshCurrentPage(); });
-    }
-  } catch (e) { console.warn('[portfolio] Échec chargement profil Firestore, fallback statique conservé.', e); }
+  if (db) {
+    const names = Object.keys(COLLECTIONS).filter(name => COLLECTIONS[name].present());
+    const results = await Promise.allSettled(names.map(name => COLLECTIONS[name].load()));
+    results.forEach((result, i) => {
+      const name = names[i];
+      if (result.status === 'rejected') {
+        console.warn(`[portfolio] Échec chargement "${name}" depuis Firestore, version précédente conservée.`, result.reason);
+        return;
+      }
+      const data = result.value;
+      if (!data) return; // collection vide : on garde les données du code
+      saveToCache(name, data);
+      COLLECTIONS[name].apply(data);
+      translationJobs.push(() => COLLECTIONS[name].translate(data));
+    });
+  }
+  window.projectsReady = true; // la page projet peut afficher "introuvable" en connaissance de cause
+  refreshCurrentPage();        // un seul rafraîchissement, une fois tout reçu
+  runTranslationJobs();
 }
 
 document.addEventListener('DOMContentLoaded', refreshDynamicContent);

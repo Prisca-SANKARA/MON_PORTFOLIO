@@ -7,8 +7,9 @@
  * ici — avant le premier rendu — la dernière réponse Firestore gardée dans
  * le navigateur par js/firebase-data.js (même clé de cache).
  *
- * À charger APRÈS les js/data/*.js présents sur la page, et AVANT i18n.js /
- * le script de rendu de la page.
+ * À charger APRÈS les js/data/*.js et i18n.js présents sur la page, et AVANT
+ * app.js / le script de rendu de la page (le premier rendu se fait au
+ * DOMContentLoaded, donc après ce script).
  */
 (function () {
   let cache = null;
@@ -28,11 +29,11 @@
       const fr = frItems[i];
       if (!fr || !en) return;
       fields.forEach(f => {
-        if ((!en[f] || en[f] === fr[f]) && fr[f] && translations[fr[f]]) en[f] = translations[fr[f]];
+        if (!en[f] && fr[f] && translations[fr[f]] && !/MYMEMORY WARNING/i.test(translations[fr[f]])) en[f] = translations[fr[f]];
       });
       arrayFields.forEach(f => {
         const frArr = fr[f] || [], enArr = en[f] || [];
-        if ((!enArr.length || JSON.stringify(enArr) === JSON.stringify(frArr)) && frArr.every(t => translations[t])) {
+        if (!enArr.length && frArr.length && frArr.every(t => translations[t])) {
           en[f] = frArr.map(t => translations[t]);
         }
       });
@@ -56,7 +57,8 @@
     Object.assign(skillsData, cache.skills);
   }
   if (cache.profile && typeof profileData !== 'undefined' && typeof applyProfileData === 'function') {
-    fillEnglish([cache.profile.fr || {}], [cache.profile.en = cache.profile.en || {}], Object.keys(cache.profile.fr || {}));
     applyProfileData(cache.profile);
+    if (typeof fillProfileEnglishDefaults === 'function') fillProfileEnglishDefaults();
+    fillEnglish([profileData.fr], [profileData.en], Object.keys(profileData.fr));
   }
 })();
