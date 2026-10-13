@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com"/>
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net"/>
+  <!-- Firebase (scripts + base de données) : connexion ouverte dès le début -->
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin/>
 
   <meta name="description" content="SANKARA P. DJAMILATOU PRISCA — Ingénieure informatique diplômée, DevSecOps & Full-Stack, cybersécurité et cloud. Portfolio."/>
   <meta name="author" content="SANKARA P. Djamilatou Prisca"/>
@@ -39,9 +42,14 @@
 
   <link rel="canonical" href="https://prisca-sankara.github.io/MON_PORTFOLIO/"/>
 
-  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <link rel="stylesheet" href="css/style.css?v=20261013b"/>
+  <!-- Polices et icônes chargées sans bloquer l'affichage de la page -->
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'"/>
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300;400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  </noscript>
+  <link rel="stylesheet" href="css/style.css?v=20261013c"/>
 </head>
 <body>
 
@@ -139,7 +147,7 @@
         <div class="hero-photo-ring"></div>
         <div class="hero-photo-ring ring2"></div>
         <div class="hero-photo-frame">
-          <img src="images/portrait.jpg" alt="SANKARA P. Djamilatou Prisca" class="hero-photo" onerror="this.parentElement.classList.add('no-img')"/>
+          <img src="images/portrait.jpg" alt="SANKARA P. Djamilatou Prisca" class="hero-photo" width="700" height="1052" fetchpriority="high" onerror="this.parentElement.classList.add('no-img')"/>
           <div class="hero-photo-placeholder"><i class="fas fa-user"></i></div>
         </div>
         <div class="hero-photo-badge">
@@ -339,14 +347,14 @@
 
 <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-<script src="js/data/projects.js?v=20261013b"></script>
-<script src="js/data/experiences.js?v=20261013b"></script>
-<script src="js/data/articles.js?v=20261013b"></script>
-<script src="js/data/skills.js?v=20261013b"></script>
-<script src="js/data/profile.js?v=20261013b"></script>
-<script src="js/i18n.js?v=20261013b"></script>
-<script src="js/data/cached-data.js?v=20261013b"></script>
-<script src="js/app.js?v=20261013b"></script>
-<script type="module" src="js/firebase-data.js?v=20261013b"></script>
+<script src="js/data/projects.js?v=20261013c"></script>
+<script src="js/data/experiences.js?v=20261013c"></script>
+<script src="js/data/articles.js?v=20261013c"></script>
+<script src="js/data/skills.js?v=20261013c"></script>
+<script src="js/data/profile.js?v=20261013c"></script>
+<script src="js/i18n.js?v=20261013c"></script>
+<script src="js/data/cached-data.js?v=20261013c"></script>
+<script src="js/app.js?v=20261013c"></script>
+<script type="module" src="js/firebase-data.js?v=20261013c"></script>
 </body>
 </html>

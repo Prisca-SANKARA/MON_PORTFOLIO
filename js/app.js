@@ -1,18 +1,23 @@
 // ── LOADER ──────────────────────────────────────────────────
-window.addEventListener('load', () => {
+// Retiré dès que la page est construite (DOMContentLoaded), sans attendre que
+// toutes les images, polices et scripts externes aient fini (événement "load") :
+// le contenu s'affiche ~0,5 s après l'arrivée au lieu de 2 s minimum.
+document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
-    document.getElementById('loader').style.opacity = '0';
-    setTimeout(() => document.getElementById('loader').style.display = 'none', 600);
+    const loader = document.getElementById('loader');
+    loader.style.opacity = '0';
+    setTimeout(() => { loader.style.display = 'none'; }, 400);
     handleScrollAnimation();
-  }, 1400);
+  }, 400);
 });
 
 // ── PROGRESS BAR ─────────────────────────────────────────────
-window.addEventListener('scroll', () => {
+const progressBar = document.getElementById('progressBar');
+function updateProgressBar() {
   const s = document.body.scrollTop || document.documentElement.scrollTop;
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  document.getElementById('progressBar').style.width = (s/h*100) + '%';
-});
+  progressBar.style.width = (h > 0 ? s / h * 100 : 0) + '%';
+}
 
 // ── CURSOR ───────────────────────────────────────────────────
 const cursor = document.getElementById('cursor');
@@ -54,16 +59,15 @@ function updateMenuLabel() {
 // ── ACTIVE NAV ───────────────────────────────────────────────
 const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-menu-item');
-window.addEventListener('scroll', () => {
+function updateActiveNav() {
   let current = '';
   sections.forEach(s => {
     if (scrollY >= s.offsetTop - 200) current = s.id;
   });
   navLinks.forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href').includes(current)) link.classList.add('active');
+    link.classList.toggle('active', link.getAttribute('href') === '#' + current);
   });
-});
+}
 
 // ── THEME TOGGLE ─────────────────────────────────────────────
 const themeToggle = document.getElementById('themeToggle');
@@ -170,7 +174,7 @@ function elementInView(el, offset = 100) {
 }
 
 function handleScrollAnimation() {
-  document.querySelectorAll('.reveal').forEach(el => {
+  document.querySelectorAll('.reveal:not(.active)').forEach(el => {
     if (elementInView(el)) el.classList.add('active');
   });
   const about = document.querySelector('.about');
@@ -185,7 +189,20 @@ document.querySelectorAll('.stat-number').forEach(animateCounter);
     skillsAnimated = true;
   }
 }
-window.addEventListener('scroll', handleScrollAnimation);
+// Un seul écouteur de défilement, limité à une mise à jour par image affichée
+// (requestAnimationFrame) : avant, 3 écouteurs recalculaient la mise en page à
+// chaque événement de défilement, ce qui saccadait sur mobile.
+let scrollTicking = false;
+window.addEventListener('scroll', () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    updateProgressBar();
+    updateActiveNav();
+    handleScrollAnimation();
+    scrollTicking = false;
+  });
+}, { passive: true });
 
 // ── CONTACT FORM ─────────────────────────────────────────────
 // Envoi réel via Formspree (https://formspree.io/f/mnpayoap).
